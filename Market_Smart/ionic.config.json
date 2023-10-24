@@ -1,0 +1,7 @@
+{
+  "name": "Market_Smart",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
