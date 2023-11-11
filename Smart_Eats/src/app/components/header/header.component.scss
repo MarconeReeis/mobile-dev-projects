@@ -1,0 +1,40 @@
+ion-header {
+    .container-header {
+        width: 100%;
+        height: 20vh;
+        padding: 10px;
+        background-image: url('/assets/backgrounds/background_header.jpg');
+        background-size: cover;
+        background-position: center;
+        display: flex;
+        justify-content: flex-end;
+        align-items: start;
+
+        .status-box {
+            display: flex;
+            align-items: center;
+            padding: 5px;
+            background-color: #ffffff;
+            border-radius: 5px;
+            opacity: 0.9;
+
+            .info-restaurant {
+                display: flex;
+                flex-direction: column;
+
+                p {
+                    margin: 0px;
+                }
+                .status,
+                p {
+                    font-size: 12px;
+                    font-weight: bold;
+                }
+                .info,
+                p {
+                    font-size: 10px;
+                }
+            }
+        }
+    }
+}
