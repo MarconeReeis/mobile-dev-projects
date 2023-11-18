@@ -1,0 +1,4 @@
+#Mon Aug 21 14:26:16 BRT 2023
+base.0=/Users/marconetrajano/Documents/Developer/Flutter/habitos_check/build/app/intermediates/dex/debug/mergeDexDebug/classes.dex
+path.0=classes.dex
+renamed.0=classes.dex
