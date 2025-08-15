@@ -1,12 +1,12 @@
 // Variáveis CSS personalizadas
 :host {
-  --delivery-red: #e53e3e;
-  --delivery-orange: #ed8936;
-  --delivery-yellow: #f6e05e;
-  --delivery-green: #38a169;
-  --gradient-primary: linear-gradient(135deg, var(--delivery-red), var(--delivery-orange));
-  --shadow-card: 0 2px 10px rgba(0, 0, 0, 0.08);
-  --shadow-hover: 0 8px 25px rgba(0, 0, 0, 0.15);
+  --delivery-red: var(--foodflow-primary);
+  --delivery-orange: var(--foodflow-secondary);
+  --delivery-yellow: var(--foodflow-warning);
+  --delivery-green: var(--foodflow-success);
+  --gradient-primary: var(--foodflow-gradient);
+  --shadow-card: 0 2px 10px var(--foodflow-shadow-light);
+  --shadow-hover: 0 8px 25px var(--foodflow-shadow-medium);
 }
 
 // Header como div dentro do conteúdo
@@ -17,16 +17,16 @@
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid var(--foodflow-border-light);
   transition: all 0.3s ease;
-  padding: 16px;
+  padding: var(--foodflow-spacing-md);
   
   @supports (backdrop-filter: blur(10px)) {
     background: rgba(255, 255, 255, 0.6);
   }
   
   @supports (padding-top: env(safe-area-inset-top)) {
-    padding-top: calc(env(safe-area-inset-top) + 16px);
+    padding-top: calc(env(safe-area-inset-top) + var(--foodflow-spacing-md));
   }
 }
 
@@ -44,35 +44,35 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
+  margin-bottom: var(--foodflow-spacing-md);
 }
 
 .logo-section {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--foodflow-spacing-sm);
 }
 
 .logo-icon {
   width: 32px;
   height: 32px;
-  background: var(--gradient-primary);
-  border-radius: 8px;
+  background: var(--foodflow-gradient);
+  border-radius: var(--foodflow-border-radius-md);
   display: flex;
   align-items: center;
   justify-content: center;
   
   span {
-    color: white;
-    font-weight: bold;
-    font-size: 14px;
+    color: var(--foodflow-white);
+    font-weight: var(--foodflow-font-weight-bold);
+    font-size: var(--foodflow-font-size-sm);
   }
 }
 
 .logo-text {
-  font-size: 20px;
-  font-weight: bold;
-  background: var(--gradient-primary);
+  font-size: var(--foodflow-font-size-xl);
+  font-weight: var(--foodflow-font-weight-bold);
+  background: var(--foodflow-gradient);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -80,27 +80,27 @@
 }
 
 .profile-button {
-  --color: var(--ion-color-dark);
+  --color: var(--foodflow-text-primary);
   --background: transparent;
   --border-radius: 50%;
   width: 40px;
   height: 40px;
   
   &:hover {
-    --background: rgba(0, 0, 0, 0.05);
+    --background: var(--foodflow-shadow-light);
   }
 }
 
 .delivery-address {
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin-bottom: 12px;
+  gap: var(--foodflow-spacing-md);
+  margin-bottom: var(--foodflow-spacing-md);
 }
 
 .location-icon {
-  color: var(--delivery-red);
-  font-size: 20px;
+  color: var(--foodflow-primary);
+  font-size: var(--foodflow-font-size-xl);
 }
 
 .address-info {
@@ -108,42 +108,49 @@
 }
 
 .address-label {
-  font-size: 12px;
-  font-weight: 500;
+  font-size: var(--foodflow-font-size-xs);
+  font-weight: var(--foodflow-font-weight-medium);
   margin: 0;
-  color: var(--ion-color-medium);
+  color: var(--foodflow-text-muted);
 }
 
 .address-text {
-  font-size: 12px;
+  font-size: var(--foodflow-font-size-xs);
   margin: 0;
-  color: var(--ion-color-medium-shade);
+  color: var(--foodflow-text-secondary);
 }
 
 .search-container {
   position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
 }
 
 .search-icon {
   position: absolute;
-  left: 12px;
+  left: var(--foodflow-spacing-md);
   top: 50%;
   transform: translateY(-50%);
-  color: var(--ion-color-medium);
+  color: var(--foodflow-text-muted);
   z-index: 1;
 }
 
 .custom-searchbar {
   --background: rgba(0, 0, 0, 0.05);
-  --border-radius: 12px;
+  --border-radius: var(--foodflow-border-radius-lg);
   --box-shadow: none;
-  --placeholder-color: var(--ion-color-medium);
-  --color: var(--ion-color-dark);
-  padding-left: 40px;
+  --placeholder-color: var(--foodflow-text-muted);
+  --color: var(--foodflow-text-primary);
+  --padding-start: var(--foodflow-spacing-md);
+  --padding-end: var(--foodflow-spacing-md);
+  width: 100%;
+  max-width: 400px;
   
   &:focus-within {
     --background: rgba(255, 255, 255, 0.9);
-    --box-shadow: 0 0 0 2px var(--delivery-red);
+    --box-shadow: 0 0 0 2px var(--foodflow-primary);
   }
 }
 
@@ -154,17 +161,17 @@
   align-items: center;
   justify-content: center;
   height: 50vh;
-  gap: 16px;
+  gap: var(--foodflow-spacing-md);
   
   ion-spinner {
     width: 48px;
     height: 48px;
-    --color: var(--delivery-red);
+    --color: var(--foodflow-primary);
   }
   
   p {
-    color: var(--ion-color-medium);
-    font-size: 14px;
+    color: var(--foodflow-text-muted);
+    font-size: var(--foodflow-font-size-sm);
     margin: 0;
   }
 }
@@ -175,33 +182,33 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 48px 16px;
+  padding: var(--foodflow-spacing-2xl) var(--foodflow-spacing-md);
   text-align: center;
   
   .empty-icon {
     font-size: 64px;
-    color: var(--ion-color-medium);
-    margin-bottom: 16px;
+    color: var(--foodflow-text-muted);
+    margin-bottom: var(--foodflow-spacing-md);
   }
   
   p {
-    color: var(--ion-color-medium);
-    font-size: 16px;
-    margin: 0 0 16px 0;
+    color: var(--foodflow-text-muted);
+    font-size: var(--foodflow-font-size-md);
+    margin: 0 0 var(--foodflow-spacing-md) 0;
   }
 }
 
 // Featured Section
 .featured-section {
-  padding: 24px 16px;
+  padding: var(--foodflow-spacing-lg) var(--foodflow-spacing-md);
 }
 
 .featured-card {
   position: relative;
-  border-radius: 16px;
+  border-radius: var(--foodflow-border-radius-xl);
   overflow: hidden;
   height: 192px;
-  background: var(--gradient-primary);
+  background: var(--foodflow-gradient);
 }
 
 .featured-image {
@@ -228,72 +235,72 @@
   bottom: 0;
   left: 0;
   right: 0;
-  padding: 24px;
-  color: white;
+  padding: var(--foodflow-spacing-lg);
+  color: var(--foodflow-white);
   z-index: 1;
 }
 
 .featured-title {
-  font-size: 24px;
-  font-weight: bold;
-  margin: 0 0 8px 0;
+  font-size: var(--foodflow-font-size-2xl);
+  font-weight: var(--foodflow-font-weight-bold);
+  margin: 0 0 var(--foodflow-spacing-sm) 0;
 }
 
 .featured-description {
-  font-size: 14px;
-  margin: 0 0 16px 0;
+  font-size: var(--foodflow-font-size-sm);
+  margin: 0 0 var(--foodflow-spacing-md) 0;
   opacity: 0.9;
 }
 
 .featured-info {
   display: flex;
-  gap: 16px;
-  margin-bottom: 16px;
+  gap: var(--foodflow-spacing-md);
+  margin-bottom: var(--foodflow-spacing-md);
 }
 
 .rating, .delivery-time {
   display: flex;
   align-items: center;
-  gap: 4px;
-  font-size: 12px;
+  gap: var(--foodflow-spacing-xs);
+  font-size: var(--foodflow-font-size-xs);
 }
 
 .star-icon {
-  color: var(--delivery-yellow);
+  color: var(--foodflow-warning);
 }
 
 .order-button {
-  --background: white;
-  --color: var(--delivery-red);
-  --border-radius: 8px;
-  font-weight: 500;
+  --background: var(--foodflow-white);
+  --color: var(--foodflow-primary);
+  --border-radius: var(--foodflow-border-radius-md);
+  font-weight: var(--foodflow-font-weight-medium);
 }
 
 // Categories Section
 .categories-section {
-  padding: 0 16px 24px;
+  padding: 0 var(--foodflow-spacing-md) var(--foodflow-spacing-lg);
 }
 
 .section-title {
-  font-size: 18px;
-  font-weight: 600;
-  margin: 0 0 16px 0;
-  color: var(--ion-color-dark);
+  font-size: var(--foodflow-font-size-lg);
+  font-weight: var(--foodflow-font-weight-semibold);
+  margin: 0 0 var(--foodflow-spacing-md) 0;
+  color: var(--foodflow-text-primary);
 }
 
 .categories-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
+  gap: var(--foodflow-spacing-md);
 }
 
 .category-card {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 16px;
-  border-radius: 12px;
-  background: white;
+  padding: var(--foodflow-spacing-md);
+  border-radius: var(--foodflow-border-radius-lg);
+  background: var(--foodflow-white);
   box-shadow: var(--shadow-card);
   transition: all 0.3s ease;
   cursor: pointer;
@@ -311,11 +318,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 8px;
+  margin-bottom: var(--foodflow-spacing-sm);
   transition: transform 0.3s ease;
   
   ion-icon {
-    font-size: 24px;
+    font-size: var(--foodflow-font-size-2xl);
   }
 }
 
@@ -324,26 +331,26 @@
 }
 
 .category-name {
-  font-size: 12px;
-  font-weight: 500;
+  font-size: var(--foodflow-font-size-xs);
+  font-weight: var(--foodflow-font-weight-medium);
   text-align: center;
-  color: var(--ion-color-dark);
+  color: var(--foodflow-text-primary);
 }
 
 // Restaurants Section
 .restaurants-section {
-  padding: 0 16px 24px;
+  padding: 0 var(--foodflow-spacing-md) var(--foodflow-spacing-lg);
 }
 
 .restaurants-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 16px;
+  gap: var(--foodflow-spacing-md);
 }
 
 .restaurant-card {
-  border-radius: 12px;
-  background: white;
+  border-radius: var(--foodflow-border-radius-lg);
+  background: var(--foodflow-white);
   box-shadow: var(--shadow-card);
   overflow: hidden;
   transition: all 0.3s ease;
@@ -374,53 +381,53 @@
 
 .restaurant-badges {
   position: absolute;
-  top: 8px;
-  left: 8px;
-  right: 8px;
+  top: var(--foodflow-spacing-sm);
+  left: var(--foodflow-spacing-sm);
+  right: var(--foodflow-spacing-sm);
   display: flex;
   justify-content: space-between;
 }
 
 .discount-badge, .new-badge {
-  font-size: 10px;
-  font-weight: 500;
-  padding: 4px 8px;
+  font-size: var(--foodflow-font-size-xs);
+  font-weight: var(--foodflow-font-weight-medium);
+  padding: var(--foodflow-spacing-xs) var(--foodflow-spacing-sm);
 }
 
 .restaurant-info {
-  padding: 16px;
+  padding: var(--foodflow-spacing-md);
 }
 
 .restaurant-name {
-  font-size: 16px;
-  font-weight: 600;
-  margin: 0 0 4px 0;
-  color: var(--ion-color-dark);
+  font-size: var(--foodflow-font-size-md);
+  font-weight: var(--foodflow-font-weight-semibold);
+  margin: 0 0 var(--foodflow-spacing-xs) 0;
+  color: var(--foodflow-text-primary);
   transition: color 0.3s ease;
 }
 
 .restaurant-card:hover .restaurant-name {
-  color: var(--delivery-red);
+  color: var(--foodflow-primary);
 }
 
 .restaurant-cuisine {
-  font-size: 12px;
-  color: var(--ion-color-medium);
-  margin: 0 0 12px 0;
+  font-size: var(--foodflow-font-size-xs);
+  color: var(--foodflow-text-muted);
+  margin: 0 0 var(--foodflow-spacing-md) 0;
 }
 
 .restaurant-details {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 12px;
-  color: var(--ion-color-medium);
+  font-size: var(--foodflow-font-size-xs);
+  color: var(--foodflow-text-muted);
 }
 
 .rating, .delivery-time, .delivery-fee {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: var(--foodflow-spacing-xs);
 }
 
 // Cart FAB
@@ -432,7 +439,7 @@
   position: absolute;
   top: -8px;
   right: -8px;
-  font-size: 10px;
+  font-size: var(--foodflow-font-size-xs);
   min-width: 18px;
   height: 18px;
   border-radius: 9px;
@@ -453,12 +460,8 @@
     margin: 0 auto;
   }
   
-  .sticky-header {
-    padding: 20px 24px; // Header maior em tablets
-  }
-  
   .logo-text {
-    font-size: 24px;
+    font-size: var(--foodflow-font-size-2xl);
   }
   
   .logo-icon {
@@ -466,7 +469,7 @@
     height: 36px;
     
     span {
-      font-size: 16px;
+      font-size: var(--foodflow-font-size-md);
     }
   }
   
@@ -483,11 +486,11 @@
   }
   
   .featured-title {
-    font-size: 32px;
+    font-size: var(--foodflow-font-size-3xl);
   }
   
   .featured-description {
-    font-size: 16px;
+    font-size: var(--foodflow-font-size-md);
   }
 }
 
@@ -500,16 +503,6 @@
     }
   }
   
-  .header-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 24px 32px;
-  }
-  
-  .sticky-header {
-    padding: 24px 32px; // Header maior em desktop
-  }
-  
   .restaurants-grid {
     grid-template-columns: repeat(3, 1fr);
   }
@@ -519,7 +512,7 @@
 @media (prefers-color-scheme: dark) {
   .sticky-header {
     background: rgba(0, 0, 0, 0.95);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid var(--foodflow-border-dark);
     
     @supports (backdrop-filter: blur(10px)) {
       background: rgba(0, 0, 0, 0.6);
@@ -528,7 +521,7 @@
   
   .custom-searchbar {
     --background: rgba(255, 255, 255, 0.1);
-    --color: white;
+    --color: var(--foodflow-white);
     
     &:focus-within {
       --background: rgba(255, 255, 255, 0.2);
@@ -536,7 +529,7 @@
   }
   
   .profile-button {
-    --color: white;
+    --color: var(--foodflow-white);
     
     &:hover {
       --background: rgba(255, 255, 255, 0.1);

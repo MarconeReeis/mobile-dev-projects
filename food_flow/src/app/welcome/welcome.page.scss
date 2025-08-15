@@ -1,0 +1,232 @@
+// Variáveis CSS personalizadas
+:host {
+  --delivery-red: #e53e3e;
+  --delivery-orange: #ed8936;
+  --delivery-yellow: #f6e05e;
+  --delivery-green: #38a169;
+  --gradient-primary: linear-gradient(135deg, var(--delivery-red), var(--delivery-orange));
+}
+
+// Conteúdo da tela de boas-vindas
+.welcome-content {
+  --background: var(--foodflow-bg-primary);
+  --padding-top: 0;
+  --padding-bottom: 0;
+}
+
+.welcome-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: var(--foodflow-spacing-lg);
+  text-align: center;
+}
+
+// Seção do Logo
+.logo-section {
+  margin-bottom: var(--foodflow-spacing-xl);
+}
+
+.logo-circle {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: var(--foodflow-gradient);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto var(--foodflow-spacing-lg);
+  box-shadow: 0 8px 32px var(--foodflow-shadow-dark);
+}
+
+.logo-icon {
+  width: 80px;
+  height: 80px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: var(--foodflow-border-radius-xl);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  span {
+    font-size: 48px;
+    font-weight: var(--foodflow-font-weight-bold);
+    color: var(--foodflow-primary);
+  }
+}
+
+// Título do App
+.app-title {
+  font-size: var(--foodflow-font-size-3xl);
+  font-weight: var(--foodflow-font-weight-bold);
+  color: var(--foodflow-text-primary);
+  margin: 0 0 var(--foodflow-spacing-md) 0;
+  background: var(--foodflow-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+// Descrição do App
+.app-description {
+  font-size: var(--foodflow-font-size-md);
+  color: var(--foodflow-text-secondary);
+  line-height: 1.5;
+  margin: 0 0 var(--foodflow-spacing-2xl) 0;
+  max-width: 280px;
+}
+
+// Botões de Ação
+.action-buttons {
+  width: 100%;
+  max-width: 320px;
+  margin-bottom: var(--foodflow-spacing-xl);
+}
+
+.login-button {
+  --background: var(--foodflow-primary);
+  --border-radius: var(--foodflow-border-radius-lg);
+  --box-shadow: 0 4px 16px var(--foodflow-shadow-medium);
+  margin-bottom: var(--foodflow-spacing-md);
+  height: 48px;
+  font-weight: var(--foodflow-font-weight-semibold);
+  font-size: var(--foodflow-font-size-md);
+  
+  &:hover {
+    --background: var(--foodflow-primary-dark);
+  }
+}
+
+.register-button {
+  --border-color: var(--foodflow-primary);
+  --color: var(--foodflow-primary);
+  --border-radius: var(--foodflow-border-radius-lg);
+  --border-width: 2px;
+  margin-bottom: var(--foodflow-spacing-md);
+  height: 48px;
+  font-weight: var(--foodflow-font-weight-semibold);
+  font-size: var(--foodflow-font-size-md);
+  
+  &:hover {
+    --background: var(--foodflow-shadow-light);
+  }
+}
+
+.guest-button {
+  --color: var(--foodflow-text-primary);
+  font-weight: var(--foodflow-font-weight-semibold);
+  font-size: var(--foodflow-font-size-sm);
+  text-transform: none;
+  margin-top: var(--foodflow-spacing-sm);
+  
+  &:hover {
+    --color: var(--foodflow-primary);
+  }
+}
+
+// Seção de Termos
+.terms-section {
+  position: absolute;
+  bottom: 40px;
+  left: 0;
+  right: 0;
+  padding: 0 var(--foodflow-spacing-lg);
+}
+
+.terms-text {
+  font-size: var(--foodflow-font-size-xs);
+  color: var(--foodflow-text-muted);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.terms-link {
+  color: var(--foodflow-primary);
+  text-decoration: underline;
+  font-weight: var(--foodflow-font-weight-medium);
+  
+  &:hover {
+    color: var(--foodflow-primary-dark);
+  }
+}
+
+// Responsividade
+@media (min-width: 768px) {
+  .welcome-container {
+    padding: var(--foodflow-spacing-2xl);
+  }
+  
+  .logo-circle {
+    width: 140px;
+    height: 140px;
+  }
+  
+  .logo-icon {
+    width: 90px;
+    height: 90px;
+    
+    span {
+      font-size: 56px;
+    }
+  }
+  
+  .app-title {
+    font-size: var(--foodflow-font-size-4xl);
+  }
+  
+  .app-description {
+    font-size: var(--foodflow-font-size-lg);
+    max-width: 400px;
+  }
+  
+  .action-buttons {
+    max-width: 400px;
+  }
+  
+  .login-button, .register-button {
+    height: 56px;
+    font-size: var(--foodflow-font-size-lg);
+  }
+}
+
+@media (min-width: 1024px) {
+  .welcome-container {
+    padding: 60px;
+  }
+  
+  .logo-circle {
+    width: 160px;
+    height: 160px;
+  }
+  
+  .logo-icon {
+    width: 100px;
+    height: 100px;
+    
+    span {
+      font-size: 64px;
+    }
+  }
+  
+  .app-title {
+    font-size: 48px;
+  }
+  
+  .app-description {
+    font-size: var(--foodflow-font-size-xl);
+    max-width: 500px;
+  }
+  
+  .action-buttons {
+    max-width: 450px;
+  }
+}
+
+// Melhorias para dispositivos com notch
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .terms-section {
+    bottom: calc(40px + env(safe-area-inset-bottom));
+  }
+}

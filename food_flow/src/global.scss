@@ -35,3 +35,170 @@
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import "@ionic/angular/css/palettes/dark.system.css";
+
+/**
+ * FoodFlow App Color Scheme
+ * -----------------------------------------------------
+ * Custom color variables for the FoodFlow delivery app
+ */
+
+:root {
+  /* Primary Colors */
+  --foodflow-primary: #e53e3e;
+  --foodflow-primary-light: #ff6b6b;
+  --foodflow-primary-dark: #c53030;
+  
+  /* Secondary Colors */
+  --foodflow-secondary: #ed8936;
+  --foodflow-secondary-light: #ffa726;
+  --foodflow-secondary-dark: #e65100;
+  
+  /* Gradient Colors */
+  --foodflow-gradient: linear-gradient(135deg, var(--foodflow-primary), var(--foodflow-secondary));
+  --foodflow-gradient-light: linear-gradient(135deg, var(--foodflow-primary-light), var(--foodflow-secondary-light));
+  --foodflow-gradient-dark: linear-gradient(135deg, var(--foodflow-primary-dark), var(--foodflow-secondary-dark));
+  
+  /* Neutral Colors */
+  --foodflow-white: #ffffff;
+  --foodflow-light: #f8f9fa;
+  --foodflow-light-gray: #e9ecef;
+  --foodflow-gray: #6c757d;
+  --foodflow-dark-gray: #495057;
+  --foodflow-dark: #212529;
+  
+  /* Status Colors */
+  --foodflow-success: #28a745;
+  --foodflow-warning: #ffc107;
+  --foodflow-danger: #dc3545;
+  --foodflow-info: #17a2b8;
+  
+  /* Background Colors */
+  --foodflow-bg-primary: var(--foodflow-white);
+  --foodflow-bg-secondary: var(--foodflow-light);
+  --foodflow-bg-tertiary: var(--foodflow-light-gray);
+  
+  /* Text Colors */
+  --foodflow-text-primary: var(--foodflow-dark);
+  --foodflow-text-secondary: var(--foodflow-dark-gray);
+  --foodflow-text-muted: var(--foodflow-gray);
+  --foodflow-text-light: var(--foodflow-white);
+  
+  /* Border Colors */
+  --foodflow-border-light: var(--foodflow-light-gray);
+  --foodflow-border-medium: var(--foodflow-gray);
+  --foodflow-border-dark: var(--foodflow-dark-gray);
+  
+  /* Shadow Colors */
+  --foodflow-shadow-light: rgba(229, 62, 62, 0.1);
+  --foodflow-shadow-medium: rgba(229, 62, 62, 0.2);
+  --foodflow-shadow-dark: rgba(229, 62, 62, 0.3);
+  
+  /* Override Ionic Colors */
+  --ion-color-primary: var(--foodflow-primary);
+  --ion-color-primary-rgb: 229, 62, 62;
+  --ion-color-primary-contrast: var(--foodflow-white);
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary-shade: var(--foodflow-primary-dark);
+  --ion-color-primary-tint: var(--foodflow-primary-light);
+  
+  --ion-color-secondary: var(--foodflow-secondary);
+  --ion-color-secondary-rgb: 237, 137, 54;
+  --ion-color-secondary-contrast: var(--foodflow-white);
+  --ion-color-secondary-contrast-rgb: 255, 255, 255;
+  --ion-color-secondary-shade: var(--foodflow-secondary-dark);
+  --ion-color-secondary-tint: var(--foodflow-secondary-light);
+  
+  --ion-color-success: var(--foodflow-success);
+  --ion-color-warning: var(--foodflow-warning);
+  --ion-color-danger: var(--foodflow-danger);
+  --ion-color-info: var(--foodflow-info);
+  
+  /* Background and Text */
+  --ion-background-color: var(--foodflow-bg-primary);
+  --ion-background-color-rgb: 255, 255, 255;
+  --ion-text-color: var(--foodflow-text-primary);
+  --ion-text-color-rgb: 33, 37, 41;
+  
+  /* Card and Item Colors */
+  --ion-card-background: var(--foodflow-bg-primary);
+  --ion-item-background: var(--foodflow-bg-primary);
+  --ion-toolbar-background: var(--foodflow-bg-primary);
+  --ion-tab-bar-background: var(--foodflow-bg-primary);
+  
+  /* Border Radius */
+  --foodflow-border-radius-sm: 4px;
+  --foodflow-border-radius-md: 8px;
+  --foodflow-border-radius-lg: 12px;
+  --foodflow-border-radius-xl: 16px;
+  --foodflow-border-radius-2xl: 24px;
+  
+  /* Spacing */
+  --foodflow-spacing-xs: 4px;
+  --foodflow-spacing-sm: 8px;
+  --foodflow-spacing-md: 16px;
+  --foodflow-spacing-lg: 24px;
+  --foodflow-spacing-xl: 32px;
+  --foodflow-spacing-2xl: 48px;
+  
+  /* Typography */
+  --foodflow-font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --foodflow-font-size-xs: 12px;
+  --foodflow-font-size-sm: 14px;
+  --foodflow-font-size-md: 16px;
+  --foodflow-font-size-lg: 18px;
+  --foodflow-font-size-xl: 20px;
+  --foodflow-font-size-2xl: 24px;
+  --foodflow-font-size-3xl: 32px;
+  --foodflow-font-size-4xl: 40px;
+  
+  /* Font Weights */
+  --foodflow-font-weight-light: 300;
+  --foodflow-font-weight-normal: 400;
+  --foodflow-font-weight-medium: 500;
+  --foodflow-font-weight-semibold: 600;
+  --foodflow-font-weight-bold: 700;
+}
+
+/* Utility Classes */
+.foodflow-gradient {
+  background: var(--foodflow-gradient);
+}
+
+.foodflow-gradient-text {
+  background: var(--foodflow-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.foodflow-shadow-light {
+  box-shadow: 0 2px 8px var(--foodflow-shadow-light);
+}
+
+.foodflow-shadow-medium {
+  box-shadow: 0 4px 16px var(--foodflow-shadow-medium);
+}
+
+.foodflow-shadow-dark {
+  box-shadow: 0 8px 32px var(--foodflow-shadow-dark);
+}
+
+.foodflow-rounded-sm {
+  border-radius: var(--foodflow-border-radius-sm);
+}
+
+.foodflow-rounded-md {
+  border-radius: var(--foodflow-border-radius-md);
+}
+
+.foodflow-rounded-lg {
+  border-radius: var(--foodflow-border-radius-lg);
+}
+
+.foodflow-rounded-xl {
+  border-radius: var(--foodflow-border-radius-xl);
+}
+
+.foodflow-rounded-2xl {
+  border-radius: var(--foodflow-border-radius-2xl);
+}

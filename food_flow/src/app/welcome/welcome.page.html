@@ -1,0 +1,43 @@
+<ion-content class="welcome-content">
+  <div class="welcome-container">
+    <!-- Logo -->
+    <div class="logo-section">
+      <div class="logo-circle">
+        <div class="logo-icon">
+          <span>F</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Título do App -->
+    <h1 class="app-title">FoodFlow</h1>
+
+    <!-- Descrição/Slogan -->
+    <p class="app-description">
+      Peça sua comida favorita e receba em casa com rapidez e segurança
+    </p>
+
+    <!-- Botões de Ação -->
+    <div class="action-buttons">
+      <ion-button expand="block" fill="solid" color="primary" class="login-button" (click)="onLogin()">
+        Entrar
+      </ion-button>
+
+      <ion-button expand="block" fill="outline" color="primary" class="register-button" (click)="onRegister()">
+        Cadastrar
+      </ion-button>
+
+      <ion-button expand="block" fill="outline" color="primary" class="register-button" (click)="onGuestLogin()">
+        Entrar como convidado
+      </ion-button>
+    </div>
+
+    <!-- Termos de Uso -->
+    <div class="terms-section">
+      <p class="terms-text">
+        Ao continuar, você concorda com nossos
+        <a href="#" class="terms-link" (click)="onTermsClick($event)">Termos de Uso</a>
+      </p>
+    </div>
+  </div>
+</ion-content>
