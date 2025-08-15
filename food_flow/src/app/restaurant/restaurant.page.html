@@ -1,0 +1,25 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Restaurante</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div *ngIf="loading" class="loading-container">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p>Carregando restaurante...</p>
+  </div>
+
+  <div *ngIf="!loading && restaurant">
+    <h1>{{ restaurant?.name }}</h1>
+    <p>{{ restaurant?.description }}</p>
+  </div>
+
+  <div *ngIf="!loading && !restaurant" class="empty-state">
+    <ion-icon name="restaurant-outline" class="empty-icon"></ion-icon>
+    <p>Restaurante não encontrado</p>
+  </div>
+</ion-content>

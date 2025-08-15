@@ -1,0 +1,7 @@
+{
+  "name": "food_flow",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
