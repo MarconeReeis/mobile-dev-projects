@@ -1,45 +1,41 @@
-<ion-header [translucent]="true" class="ion-no-border">
-  <ion-toolbar>
-    <ion-content>
-      <!-- Header Principal -->
-      <div class="header-container">
-        <div class="header-top">
-          <div class="logo-section">
-            <div class="logo-icon">
-              <span>D</span>
-            </div>
-            <h1 class="logo-text">DeliveryApp</h1>
+<ion-content [fullscreen]="true" class="content-with-header">
+  <!-- Header como div dentro do conteúdo -->
+  <div class="sticky-header">
+    <div class="header-container">
+      <div class="header-top">
+        <div class="logo-section">
+          <div class="logo-icon">
+            <span>D</span>
           </div>
-          <ion-button fill="clear" (click)="onProfileClick()">
-            <ion-icon name="person-outline"></ion-icon>
-          </ion-button>
+          <h1 class="logo-text">DeliveryApp</h1>
         </div>
+        <ion-button fill="clear" (click)="onProfileClick()" class="profile-button">
+          <ion-icon name="person-outline"></ion-icon>
+        </ion-button>
+      </div>
 
-        <!-- Endereço de Entrega -->
-        <div class="delivery-address">
-          <ion-icon name="location-outline" class="location-icon"></ion-icon>
-          <div class="address-info">
-            <p class="address-label">Entregar em</p>
-            <p class="address-text">{{ userAddress }}</p>
-          </div>
-        </div>
-
-        <!-- Barra de Busca -->
-        <div class="search-container">
-          <ion-icon name="search-outline" class="search-icon"></ion-icon>
-          <ion-searchbar 
-            placeholder="Buscar restaurantes ou pratos..." 
-            [(ngModel)]="searchQuery"
-            (ionInput)="onSearchChange($event)"
-            class="custom-searchbar">
-          </ion-searchbar>
+      <!-- Endereço de Entrega -->
+      <div class="delivery-address">
+        <ion-icon name="location-outline" class="location-icon"></ion-icon>
+        <div class="address-info">
+          <p class="address-label">Entregar em</p>
+          <p class="address-text">{{ userAddress }}</p>
         </div>
       </div>
-    </ion-content>
-  </ion-toolbar>
-</ion-header>
 
-<ion-content [fullscreen]="true">
+      <!-- Barra de Busca -->
+      <div class="search-container">
+        <ion-icon name="search-outline" class="search-icon"></ion-icon>
+        <ion-searchbar 
+          placeholder="Buscar restaurantes ou pratos..." 
+          [(ngModel)]="searchQuery"
+          (ionInput)="onSearchChange($event)"
+          class="custom-searchbar">
+        </ion-searchbar>
+      </div>
+    </div>
+  </div>
+
   <!-- Loading State -->
   <div *ngIf="loading" class="loading-container">
     <ion-spinner name="crescent"></ion-spinner>
