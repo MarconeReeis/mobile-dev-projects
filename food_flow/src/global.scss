@@ -34,7 +34,7 @@
 
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
-@import "@ionic/angular/css/palettes/dark.system.css";
+/* @import "@ionic/angular/css/palettes/dark.system.css"; */
 
 /**
  * FoodFlow App Color Scheme
@@ -157,6 +157,31 @@
   --foodflow-font-weight-medium: 500;
   --foodflow-font-weight-semibold: 600;
   --foodflow-font-weight-bold: 700;
+}
+
+/* Force Light Theme */
+* {
+  color-scheme: light;
+}
+
+html, body {
+  color-scheme: light;
+}
+
+ion-app {
+  color-scheme: light;
+}
+
+/* Override any dark mode styles */
+[data-theme="dark"], .dark {
+  --ion-background-color: var(--foodflow-bg-primary) !important;
+  --ion-background-color-rgb: 255, 255, 255 !important;
+  --ion-text-color: var(--foodflow-text-primary) !important;
+  --ion-text-color-rgb: 33, 37, 41 !important;
+  --ion-card-background: var(--foodflow-bg-primary) !important;
+  --ion-item-background: var(--foodflow-bg-primary) !important;
+  --ion-toolbar-background: var(--foodflow-bg-primary) !important;
+  --ion-tab-bar-background: var(--foodflow-bg-primary) !important;
 }
 
 /* Utility Classes */

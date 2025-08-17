@@ -19,6 +19,7 @@ export class HomePage implements OnInit {
   searchQuery: string = '';
   userAddress: string = 'Rua das Flores, 123 - Centro';
   loading: boolean = true;
+  selectedCategoryIndex: number = 0;
 
   constructor(
     private router: Router,
@@ -35,7 +36,14 @@ export class HomePage implements OnInit {
       
       // Carregar categorias
       this.restaurantService.getCategories().subscribe(categories => {
-        this.categories = categories;
+        // Adicionar categoria "Favoritos" no início
+        const favoritosCategory: Category = {
+          id: 'favoritos',
+          name: 'Favoritos',
+          icon: 'heart',
+          color: 'gradient'
+        };
+        this.categories = [favoritosCategory, ...categories];
       });
 
       // Carregar restaurantes em destaque
@@ -64,11 +72,21 @@ export class HomePage implements OnInit {
     }
   }
 
-  onCategoryClick(category: Category) {
+  onCategoryClick(category: Category, index: number) {
     console.log('Categoria selecionada:', category);
-    this.restaurantService.getRestaurantsByCategory(category.id).subscribe(restaurants => {
-      this.featuredRestaurants = restaurants;
-    });
+    this.selectedCategoryIndex = index;
+    
+    if (category.id === 'favoritos') {
+      // Carregar produtos favoritos/mais pedidos
+      this.restaurantService.getFeaturedRestaurants().subscribe(restaurants => {
+        this.featuredRestaurants = restaurants;
+      });
+    } else {
+      // Carregar produtos da categoria selecionada
+      this.restaurantService.getRestaurantsByCategory(category.id).subscribe(restaurants => {
+        this.featuredRestaurants = restaurants;
+      });
+    }
   }
 
   onRestaurantClick(restaurant: Restaurant) {
@@ -76,7 +94,6 @@ export class HomePage implements OnInit {
   }
 
   onOrderNow() {
-    // Implementar ação do botão "Pedir Agora"
     console.log('Pedir agora clicado');
   }
 
@@ -86,6 +103,14 @@ export class HomePage implements OnInit {
 
   onCartClick() {
     this.router.navigate(['/cart']);
+  }
+
+  onAddToCart(product: Restaurant) {
+    console.log('Produto adicionado ao carrinho:', product);
+  }
+
+  formatPrice(price: number): string {
+    return `R$ ${price.toFixed(2).replace('.', ',')}`;
   }
 
   formatDeliveryFee(fee: number): string {

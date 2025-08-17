@@ -2,31 +2,27 @@
   <!-- Header como div dentro do conteúdo -->
   <div class="sticky-header">
     <div class="header-container">
-      <div class="header-top">
-        <div class="logo-section">
-          <div class="logo-icon">
-            <span>F</span>
-          </div>
-          <h1 class="logo-text">FoodFlow</h1>
+      <!-- Logo do App -->
+      <div class="logo-section">
+        <div class="logo-icon">
+          <span>F</span>
         </div>
-        <ion-button fill="clear" (click)="onProfileClick()" class="profile-button">
-          <ion-icon name="person-outline"></ion-icon>
-        </ion-button>
+        <h1 class="logo-text">FoodFlow</h1>
       </div>
 
       <!-- Endereço de Entrega -->
       <div class="delivery-address">
-        <ion-icon name="location-outline" class="location-icon"></ion-icon>
         <div class="address-info">
-          <p class="address-label">Entregar em</p>
+          <p class="address-label">Delivery:</p>
           <p class="address-text">{{ userAddress }}</p>
         </div>
+        <ion-icon name="chevron-down-outline" class="chevron-icon"></ion-icon>
       </div>
 
       <!-- Barra de Busca -->
       <div class="search-container">
         <ion-searchbar 
-          placeholder="Buscar restaurantes ou pratos..." 
+          placeholder="Bib'sfiha, Lanches, Sobremesas..." 
           [(ngModel)]="searchQuery"
           (ionInput)="onSearchChange($event)"
           class="custom-searchbar">
@@ -77,80 +73,77 @@
 
     <!-- Seção de Categorias -->
     <section class="categories-section">
-      <h2 class="section-title">Categorias</h2>
-      <div class="categories-grid">
+      <div class="titulo-cardapio">
+        <span>Categorias</span>
+      </div>
+      <div class="categories-scroll">
         <div 
-          class="category-card" 
-          *ngFor="let category of categories"
-          (click)="onCategoryClick(category)">
-          <div class="category-icon" [ngClass]="category.color">
-            <ion-icon [name]="category.icon"></ion-icon>
+          class="category-item" 
+          *ngFor="let category of categories; let i = index"
+          (click)="onCategoryClick(category, i)">
+          <div class="category-card" [class.selected]="selectedCategoryIndex === i">
+            <div class="category-icon">
+              <ion-icon [name]="category.icon"></ion-icon>
+            </div>
           </div>
           <span class="category-name">{{ category.name }}</span>
         </div>
       </div>
     </section>
 
-    <!-- Seção de Restaurantes -->
+    <!-- Seção de Produtos -->
     <section class="restaurants-section">
-      <h2 class="section-title">Restaurantes próximos</h2>
+      <div class="titulo-cardapio">
+        <span>Produtos em destaque</span>
+      </div>
       
       <!-- Empty State -->
       <div *ngIf="featuredRestaurants.length === 0" class="empty-state">
         <ion-icon name="restaurant-outline" class="empty-icon"></ion-icon>
-        <p>Nenhum restaurante encontrado</p>
+        <p>Nenhum produto encontrado</p>
         <ion-button fill="clear" (click)="loadData()">
           Tentar novamente
         </ion-button>
       </div>
 
-      <!-- Restaurants Grid -->
-      <div class="restaurants-grid" *ngIf="featuredRestaurants.length > 0">
+      <!-- Products Grid -->
+      <div class="products-grid" *ngIf="featuredRestaurants.length > 0">
         <div 
-          class="restaurant-card" 
-          *ngFor="let restaurant of featuredRestaurants"
-          (click)="onRestaurantClick(restaurant)">
+          class="single-product-area" 
+          *ngFor="let restaurant of featuredRestaurants">
           
-          <div class="restaurant-image">
-            <img [src]="restaurant.image" [alt]="restaurant.name">
-            
-            <!-- Badges -->
-            <div class="restaurant-badges">
-              <ion-badge 
-                *ngIf="restaurant.discount" 
-                color="danger" 
-                class="discount-badge">
-                {{ restaurant.discount.percentage }}% OFF
-              </ion-badge>
-              <ion-badge 
-                *ngIf="restaurant.isNew" 
-                color="success" 
-                class="new-badge">
-                Novo
-              </ion-badge>
-            </div>
+          <!-- Badges -->
+          <div class="product-badges">
+            <ion-badge 
+              *ngIf="restaurant.discount" 
+              class="discount-badge">
+              {{ restaurant.discount.percentage }}% OFF
+            </ion-badge>
+            <ion-badge 
+              *ngIf="restaurant.isNew" 
+              class="new-badge">
+              Novo
+            </ion-badge>
           </div>
 
-          <div class="restaurant-info">
-            <h3 class="restaurant-name">{{ restaurant.name }}</h3>
-            <p class="restaurant-cuisine">{{ restaurant.cuisine }}</p>
-            
-            <div class="restaurant-details">
-              <div class="rating">
-                <ion-icon name="star" class="star-icon"></ion-icon>
-                <span>{{ restaurant.rating }}</span>
-              </div>
-              
-              <div class="delivery-time">
-                <ion-icon name="time-outline"></ion-icon>
-                <span>{{ restaurant.deliveryTime }}</span>
-              </div>
-              
-              <div class="delivery-fee">
-                <ion-icon name="car-outline"></ion-icon>
-                <span>{{ formatDeliveryFee(restaurant.deliveryFee) }}</span>
-              </div>
-            </div>
+          <!-- Área da Imagem -->
+          <div class="product-image-area" (click)="onRestaurantClick(restaurant)">
+            <img [src]="restaurant.image" [alt]="restaurant.name">
+          </div>
+
+          <!-- Nome do Produto -->
+          <div class="item_cardapio_botoes">
+            <span class="item_nome posicao-fonte">{{ restaurant.name }}</span>
+          </div>
+
+          <!-- Área Inferior - Preço e Botão -->
+          <div class="product-botom-area">
+            <h3>{{ formatPrice(19.80) }}</h3>
+            <ion-button 
+              color="primary" 
+              (click)="onAddToCart(restaurant)">
+              <ion-icon slot="icon-only" name="add"></ion-icon>
+            </ion-button>
           </div>
         </div>
       </div>
