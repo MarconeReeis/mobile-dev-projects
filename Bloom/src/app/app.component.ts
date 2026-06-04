@@ -1,5 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
+import { FEATURE_FLAGS } from './core/constants/feature-flags';
 import { PushNotificationService } from './core/services/push-notification.service';
 import { ThemeService } from './core/services/theme.service';
 
@@ -14,6 +15,9 @@ export class AppComponent {
 
   constructor() {
     this.themeService.init();
-    void this.pushNotifications.init();
+
+    if (FEATURE_FLAGS.pushNotifications) {
+      void this.pushNotifications.init();
+    }
   }
 }

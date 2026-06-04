@@ -6,6 +6,7 @@ import {
   PushNotifications,
   Token,
 } from '@capacitor/push-notifications';
+import { FEATURE_FLAGS } from '../constants/feature-flags';
 import { STORAGE_KEYS } from '../constants/storage-keys';
 import { StorageService } from './storage.service';
 
@@ -22,6 +23,10 @@ export class PushNotificationService {
 
   /** Inicializa push apenas em plataformas nativas (Android/iOS). */
   async init(): Promise<void> {
+    if (!FEATURE_FLAGS.pushNotifications) {
+      return;
+    }
+
     if (!Capacitor.isNativePlatform()) {
       return;
     }
