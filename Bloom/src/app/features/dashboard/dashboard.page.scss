@@ -1,0 +1,131 @@
+.dashboard {
+  --padding-top: 0;
+  --padding-bottom: 0;
+}
+
+.dashboard__inner {
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 2rem 1rem 6rem;
+}
+
+.dashboard__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 1rem;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+}
+
+.brand__logo {
+  display: block;
+  height: 3.25rem;
+  width: auto;
+  object-fit: contain;
+}
+
+.hero {
+  text-align: center;
+  padding: 1.5rem 0 2.5rem;
+}
+
+.hero__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  color: var(--muted-foreground);
+  margin: 0 0 1.25rem;
+}
+
+.hero__title {
+  margin: 0;
+  font-size: clamp(2rem, 8vw, 3.75rem);
+  font-weight: 800;
+  line-height: 1.05;
+}
+
+.hero__subtitle {
+  margin: 1rem auto 0;
+  max-width: 36rem;
+  color: var(--muted-foreground);
+  line-height: 1.5;
+
+  strong {
+    color: var(--foreground);
+  }
+}
+
+.dashboard__main {
+  padding-bottom: 2rem;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+
+  h2 {
+    margin: 0;
+    font-size: 1.125rem;
+    font-weight: 600;
+  }
+}
+
+.empty-state {
+  border-radius: var(--radius-3xl);
+  padding: 3rem 1.5rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+
+  h3 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+  }
+
+  p {
+    margin: 0;
+    max-width: 28rem;
+    color: var(--muted-foreground);
+    line-height: 1.5;
+  }
+}
+
+.empty-state__emoji {
+  font-size: 3.75rem;
+  line-height: 1;
+}
+
+.habit-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+}
+
+@media (min-width: 768px) {
+  .dashboard__inner {
+    padding-inline: 1.5rem;
+  }
+
+  .habit-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .habit-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}

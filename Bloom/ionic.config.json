@@ -1,0 +1,7 @@
+{
+  "name": "Bloom",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}

@@ -1,0 +1,64 @@
+<ion-content [fullscreen]="true" class="dashboard bg-aurora">
+  <div class="dashboard__inner">
+    <header class="dashboard__header">
+      <div class="brand">
+        <img
+          class="brand__logo"
+          src="assets/icon/icon_bloomi.png"
+          alt="Bloomi"
+          width="190"
+          height="52"
+        />
+      </div>
+      <app-theme-toggle />
+    </header>
+
+    <section class="hero">
+      <p class="hero__badge glass">
+        <span class="pulse-dot"></span>
+        Sua jornada, dia após dia
+      </p>
+      <h1 class="hero__title font-display text-gradient">{{ quote }}</h1>
+      @if (!isEmpty()) {
+        <p class="hero__subtitle">
+          Você está há <strong>{{ topStreakDays() }} dias</strong> investindo na sua melhor versão. Continue.
+        </p>
+      }
+    </section>
+
+    <main class="dashboard__main">
+      <div class="section-header">
+        <h2 class="font-display">Seus hábitos</h2>
+        <ion-button class="btn-gradient" (click)="openCreateModal()">
+          <ion-icon slot="start" name="add-outline" />
+          Novo hábito
+        </ion-button>
+      </div>
+
+      @if (isEmpty()) {
+        <section class="empty-state glass">
+          <div class="empty-state__emoji">🌱</div>
+          <h3 class="font-display">Comece sua primeira jornada</h3>
+          <p>
+            Cadastre um vício ou hábito que você quer abandonar. Cada segundo conta — e você pode acompanhar tudo aqui.
+          </p>
+          <ion-button class="btn-gradient" size="large" (click)="openCreateModal()">
+            <ion-icon slot="start" name="add-outline" />
+            Adicionar hábito
+          </ion-button>
+        </section>
+      } @else {
+        <div class="habit-grid">
+          @for (habit of habits(); track habit.id) {
+            <app-habit-card
+              [habit]="habit"
+              (edit)="openEditModal($event)"
+              (relapse)="onRelapse($event)"
+              (delete)="onDelete($event)"
+            />
+          }
+        </div>
+      }
+    </main>
+  </div>
+</ion-content>

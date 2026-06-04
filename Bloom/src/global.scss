@@ -1,0 +1,56 @@
+/*
+ * App Global CSS
+ */
+
+@import "@ionic/angular/css/core.css";
+@import "@ionic/angular/css/normalize.css";
+@import "@ionic/angular/css/structure.css";
+@import "@ionic/angular/css/typography.css";
+@import "@ionic/angular/css/display.css";
+@import "@ionic/angular/css/padding.css";
+@import "@ionic/angular/css/float-elements.css";
+@import "@ionic/angular/css/text-alignment.css";
+@import "@ionic/angular/css/text-transformation.css";
+@import "@ionic/angular/css/flex-utils.css";
+
+@import "./theme/utilities.scss";
+
+html,
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+}
+
+ion-content {
+  --background: transparent;
+}
+
+ion-modal.habit-form-modal {
+  --width: auto;
+  --height: auto;
+  --max-height: 92vh;
+  --border-radius: var(--radius-2xl);
+  --box-shadow: none;
+  --backdrop-opacity: 0.8;
+}
+
+ion-modal.habit-form-modal::part(backdrop) {
+  backdrop-filter: blur(2px);
+}
+
+ion-modal.habit-form-modal::part(content) {
+  background: transparent;
+  box-shadow: none;
+  border-radius: var(--radius-2xl);
+  overflow: visible;
+}

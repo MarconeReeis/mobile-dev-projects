@@ -1,0 +1,79 @@
+<div class="habit-form-dialog glass">
+  <button type="button" class="dialog-close" (click)="cancel()" aria-label="Fechar">
+    <ion-icon name="close-outline" />
+  </button>
+
+  <header class="dialog-header">
+    <h2 class="dialog-title font-display">{{ isEdit ? 'Editar hábito' : 'Novo hábito' }}</h2>
+    <p class="dialog-description">
+      {{
+        isEdit
+          ? 'Atualize as informações do seu hábito.'
+          : 'Defina o que você quer abandonar e comece sua jornada.'
+      }}
+    </p>
+  </header>
+
+  <form [formGroup]="form" (ngSubmit)="submit()" class="dialog-form">
+    <div class="field">
+      <label class="field-label" for="habit-name">Nome do vício</label>
+      <input
+        id="habit-name"
+        class="field-input"
+        type="text"
+        formControlName="name"
+        placeholder="Ex: Cigarro"
+        autocomplete="off"
+      />
+    </div>
+
+    <div class="field">
+      <span class="field-label">Emoji</span>
+      <div class="emoji-grid">
+        @for (emoji of emojiPresets; track emoji) {
+          <button
+            type="button"
+            class="emoji-btn"
+            [class.emoji-btn--selected]="isEmojiSelected(emoji)"
+            (click)="selectEmoji(emoji)"
+          >
+            {{ emoji }}
+          </button>
+        }
+      </div>
+    </div>
+
+    <div class="field">
+      <span class="field-label">Cor do card</span>
+      <div class="color-row">
+        @for (color of colorPresets; track color) {
+          <button
+            type="button"
+            class="color-btn"
+            [class.color-btn--selected]="isColorSelected(color)"
+            [style.backgroundColor]="color"
+            [attr.aria-label]="color"
+            (click)="selectColor(color)"
+          ></button>
+        }
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label" for="habit-started-at">Data e hora da última ocorrência</label>
+      <input
+        id="habit-started-at"
+        class="field-input"
+        type="datetime-local"
+        formControlName="startedAt"
+      />
+    </div>
+
+    <footer class="dialog-footer">
+      <ion-button fill="clear" type="button" (click)="cancel()">Cancelar</ion-button>
+      <ion-button type="submit" class="btn-gradient submit-btn">
+        {{ isEdit ? 'Salvar' : 'Começar Jornada' }}
+      </ion-button>
+    </footer>
+  </form>
+</div>

@@ -1,0 +1,178 @@
+.habit-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-3xl);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  box-shadow: var(--shadow-card);
+}
+
+.habit-card.glass {
+  border-radius: var(--radius-3xl);
+}
+
+.habit-card__blob {
+  pointer-events: none;
+  position: absolute;
+  top: -5rem;
+  right: -5rem;
+  width: 14rem;
+  height: 14rem;
+  border-radius: 9999px;
+  opacity: 0.3;
+  filter: blur(48px);
+}
+
+.habit-card__header {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.habit-card__identity {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.habit-card__emoji {
+  width: 3.5rem;
+  height: 3.5rem;
+  flex-shrink: 0;
+  border-radius: var(--radius-2xl);
+  border: 1px solid;
+  display: grid;
+  place-items: center;
+  font-size: 1.75rem;
+  box-shadow: var(--shadow-soft);
+}
+
+.habit-card__meta {
+  min-width: 0;
+
+  h3 {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  p {
+    margin: 0.15rem 0 0;
+    font-size: 0.75rem;
+    color: var(--muted-foreground);
+  }
+}
+
+.habit-card__actions {
+  display: flex;
+  gap: 0.15rem;
+  opacity: 0.55;
+}
+
+.icon-btn {
+  --padding-start: 0;
+  --padding-end: 0;
+  --border-radius: var(--radius-full);
+  width: 2rem;
+  height: 2rem;
+  margin: 0;
+}
+
+.icon-btn::part(native) {
+  border-radius: var(--radius-full);
+}
+
+.icon-btn--danger {
+  --color: var(--destructive);
+}
+
+.habit-card__counter {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+.unit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-xl);
+  background: color-mix(in oklab, var(--foreground) 5%, transparent);
+  padding: 0.5rem 0.25rem;
+  min-width: 0;
+}
+
+:host-context(.dark) .unit {
+  background: color-mix(in oklab, white 5%, transparent);
+}
+
+.unit__value {
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.unit__label {
+  margin-top: 0.25rem;
+  font-size: 0.625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted-foreground);
+}
+
+.habit-card__stats {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  border-radius: var(--radius-xl);
+  background: color-mix(in oklab, var(--foreground) 5%, transparent);
+  padding: 0.5rem 0.25rem;
+  font-size: 0.75rem;
+
+  ion-icon {
+    color: var(--muted-foreground);
+    font-size: 0.875rem;
+  }
+}
+
+:host-context(.dark) .stat {
+  background: color-mix(in oklab, white 5%, transparent);
+}
+
+.stat__value {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.stat__label {
+  font-size: 0.625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted-foreground);
+}
+
+.relapse-btn {
+  position: relative;
+  margin: 0;
+  text-transform: none;
+  font-weight: 500;
+}

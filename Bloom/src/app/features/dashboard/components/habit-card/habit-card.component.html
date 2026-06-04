@@ -1,0 +1,82 @@
+<article
+  class="habit-card glass"
+  [style.boxShadow]="'0 12px 40px -16px ' + habit().color + '40'"
+>
+  <div
+    class="habit-card__blob"
+    aria-hidden="true"
+    [style.backgroundColor]="habit().color"
+  ></div>
+
+  <div class="habit-card__header">
+    <div class="habit-card__identity">
+      <div
+        class="habit-card__emoji"
+        [style.backgroundColor]="habit().color + '22'"
+        [style.borderColor]="habit().color + '55'"
+      >
+        {{ habit().emoji }}
+      </div>
+      <div class="habit-card__meta">
+        <h3 class="font-display">{{ habit().name }}</h3>
+        <p>Desde {{ startedAtLabel() }}</p>
+      </div>
+    </div>
+
+    <div class="habit-card__actions">
+      <ion-button fill="clear" size="small" class="icon-btn" (click)="onEdit()">
+        <ion-icon slot="icon-only" name="create-outline" />
+      </ion-button>
+      <ion-button fill="clear" size="small" class="icon-btn icon-btn--danger" (click)="onDelete()">
+        <ion-icon slot="icon-only" name="trash-outline" />
+      </ion-button>
+    </div>
+  </div>
+
+  <div class="habit-card__counter">
+    <div class="unit">
+      <span class="unit__value font-display">{{ pad(duration().days) }}</span>
+      <span class="unit__label">dias</span>
+    </div>
+    <div class="unit">
+      <span class="unit__value font-display">{{ pad(duration().hours) }}</span>
+      <span class="unit__label">horas</span>
+    </div>
+    <div class="unit">
+      <span class="unit__value font-display">{{ pad(duration().minutes) }}</span>
+      <span class="unit__label">min</span>
+    </div>
+    <div class="unit">
+      <span class="unit__value font-display">{{ pad(duration().seconds) }}</span>
+      <span class="unit__label">seg</span>
+    </div>
+  </div>
+
+  <div class="habit-card__stats">
+    <div class="stat">
+      <ion-icon name="flame-outline" />
+      <span class="stat__value">{{ duration().days }}d</span>
+      <span class="stat__label">Total</span>
+    </div>
+    <div class="stat">
+      <ion-icon name="refresh-outline" />
+      <span class="stat__value">{{ habit().relapses }}</span>
+      <span class="stat__label">Recaídas</span>
+    </div>
+    <div class="stat">
+      <ion-icon name="trending-up-outline" />
+      <span class="stat__value">{{ longestDays() }}d</span>
+      <span class="stat__label">Recorde</span>
+    </div>
+  </div>
+
+  <ion-button
+    expand="block"
+    fill="outline"
+    class="btn-destructive-outline relapse-btn"
+    (click)="onRelapse()"
+  >
+    <ion-icon slot="start" name="refresh-outline" />
+    Registrar recaída
+  </ion-button>
+</article>

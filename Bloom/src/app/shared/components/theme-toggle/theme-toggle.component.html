@@ -1,0 +1,10 @@
+<button
+  type="button"
+  class="theme-toggle glass"
+  (click)="themeService.toggle()"
+  [attr.aria-label]="themeService.theme() === 'dark' ? 'Modo claro' : 'Modo escuro'"
+>
+  <ion-icon
+    [name]="themeService.theme() === 'dark' ? 'sunny-outline' : 'moon-outline'"
+  />
+</button>
