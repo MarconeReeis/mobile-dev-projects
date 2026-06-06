@@ -31,6 +31,12 @@
   padding-bottom: 1rem;
 }
 
+.dashboard__header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
 .brand {
   display: flex;
   align-items: center;
@@ -63,7 +69,9 @@
   margin: 0;
   font-size: clamp(2rem, 8vw, 3.75rem);
   font-weight: 800;
-  line-height: 1.05;
+  line-height: 1.2;
+  /* Evita corte de descendentes (g, p, ç) com background-clip: text no WebKit */
+  padding-bottom: 0.08em;
 }
 
 .hero__subtitle {

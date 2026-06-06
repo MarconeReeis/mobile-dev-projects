@@ -8,11 +8,25 @@ const config: CapacitorConfig = {
   ios: {
     loggingBehavior: 'debug',
   },
+  experimental: {
+    ios: {
+      spm: {
+        packageOptions: {
+          '@capacitor-firebase/authentication': {
+            symlink: true,
+          },
+        },
+      },
+    },
+  },
   plugins: {
     SplashScreen: {
       launchAutoHide: false,
       showSpinner: false,
       backgroundColor: '#f7faf9',
+    },
+    FirebaseAuthentication: {
+      providers: ['google.com'],
     },
   },
 };

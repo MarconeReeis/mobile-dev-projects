@@ -9,6 +9,7 @@ import { addIcons } from 'ionicons';
 import { addOutline } from 'ionicons/icons';
 import { Habit, HabitFormValues } from '../../core/models/habit.model';
 import { NowService } from '../../core/services/now.service';
+import { AuthMenuComponent } from '../../shared/components/auth-menu/auth-menu.component';
 import { ThemeToggleComponent } from '../../shared/components/theme-toggle/theme-toggle.component';
 import { HabitFormModalComponent } from '../habits/components/habit-form-modal/habit-form-modal.component';
 import { HabitService } from '../habits/services/habit.service';
@@ -26,6 +27,7 @@ addIcons({ addOutline });
     IonButton,
     IonIcon,
     ThemeToggleComponent,
+    AuthMenuComponent,
     HabitCardComponent,
   ],
 })

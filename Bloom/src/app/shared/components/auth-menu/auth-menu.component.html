@@ -1,0 +1,69 @@
+@if (user()) {
+  <div class="auth-menu">
+    <button
+      type="button"
+      class="auth-menu__trigger"
+      aria-label="Menu da conta"
+      [attr.aria-expanded]="isMenuOpen()"
+      (click)="toggleMenu()"
+    >
+      @if (photoUrl()) {
+        <img class="auth-menu__avatar" [src]="photoUrl()" [alt]="displayName()" />
+      } @else {
+        <span class="auth-menu__initials">{{ initials() }}</span>
+      }
+    </button>
+
+    @if (isMenuOpen()) {
+      <button
+        type="button"
+        class="auth-menu__overlay"
+        aria-label="Fechar menu"
+        (click)="closeMenu()"
+      ></button>
+
+      <div class="auth-menu-popover" role="dialog" aria-label="Conta do usuário">
+        <div class="auth-menu-popover__profile">
+          @if (photoUrl()) {
+            <img
+              class="auth-menu-popover__avatar"
+              [src]="photoUrl()"
+              [alt]="displayName()"
+            />
+          } @else {
+            <span class="auth-menu-popover__initials">{{ initials() }}</span>
+          }
+
+          <div class="auth-menu-popover__meta">
+            <strong class="auth-menu-popover__name font-display">{{ displayName() }}</strong>
+            @if (email()) {
+              <p class="auth-menu-popover__email">{{ email() }}</p>
+            }
+            <p class="auth-menu-popover__sync">
+              <span class="auth-menu-popover__sync-dot"></span>
+              Sincronização ativa
+            </p>
+          </div>
+        </div>
+
+        <div class="auth-menu-popover__divider" aria-hidden="true"></div>
+
+        <div class="auth-menu-popover__actions">
+          <button
+            type="button"
+            class="auth-menu-popover__sign-out"
+            [disabled]="isSigningOut()"
+            (click)="signOut()"
+          >
+            <ion-icon name="log-out-outline" aria-hidden="true" />
+            {{ isSigningOut() ? 'Saindo...' : 'Sair' }}
+          </button>
+        </div>
+      </div>
+    }
+  </div>
+} @else {
+  <a routerLink="/login" class="auth-menu__login glass" aria-label="Entrar">
+    <ion-icon name="log-in-outline" />
+  </a>
+}

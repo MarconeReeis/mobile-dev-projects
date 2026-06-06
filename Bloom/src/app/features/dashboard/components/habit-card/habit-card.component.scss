@@ -1,16 +1,27 @@
 .habit-card {
   position: relative;
-  overflow: hidden;
   border-radius: var(--radius-3xl);
-  padding: 1.5rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
+  display: block;
   box-shadow: var(--shadow-card);
+  overflow: hidden;
 }
 
 .habit-card.glass {
   border-radius: var(--radius-3xl);
+}
+
+/* Recorta o blur do blob nos cantos (Safari/iOS ignora overflow no pai com filter). */
+.habit-card__clip {
+  position: relative;
+  overflow: hidden;
+  border-radius: inherit;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  isolation: isolate;
+  clip-path: inset(0 round var(--radius-3xl));
+  -webkit-clip-path: inset(0 round var(--radius-3xl));
 }
 
 .habit-card__blob {
@@ -20,9 +31,8 @@
   right: -5rem;
   width: 14rem;
   height: 14rem;
-  border-radius: 9999px;
-  opacity: 0.3;
-  filter: blur(48px);
+  opacity: 0.35;
+  background: radial-gradient(circle, var(--blob-color) 0%, transparent 68%);
 }
 
 .habit-card__header {

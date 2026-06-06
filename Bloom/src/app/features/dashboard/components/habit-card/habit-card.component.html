@@ -2,13 +2,14 @@
   class="habit-card glass"
   [style.boxShadow]="'0 12px 40px -16px ' + habit().color + '40'"
 >
-  <div
-    class="habit-card__blob"
-    aria-hidden="true"
-    [style.backgroundColor]="habit().color"
-  ></div>
+  <div class="habit-card__clip">
+    <div
+      class="habit-card__blob"
+      aria-hidden="true"
+      [style.--blob-color]="habit().color"
+    ></div>
 
-  <div class="habit-card__header">
+    <div class="habit-card__header">
     <div class="habit-card__identity">
       <div
         class="habit-card__emoji"
@@ -79,4 +80,5 @@
     <ion-icon slot="start" name="refresh-outline" />
     Registrar recaída
   </ion-button>
+  </div>
 </article>

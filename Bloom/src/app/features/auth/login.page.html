@@ -1,0 +1,66 @@
+<ion-content [fullscreen]="true" class="login bg-aurora">
+  <div class="login__inner">
+    <button type="button" class="login__back" (click)="goBack()">
+      <ion-icon name="arrow-back-outline" aria-hidden="true" />
+      Voltar
+    </button>
+
+    <section class="login__brand">
+      <img class="login__logo" src="assets/icon/icon_bloomi.png" alt="Bloomi" width="120" height="120" />
+      <h1 class="login__name font-display">Bloomi</h1>
+      <p class="login__tagline">Pequenas ações. Grandes mudanças.</p>
+    </section>
+
+    <section class="login__intro">
+      <h2 class="login__title font-display">Continue sua jornada</h2>
+      <p class="login__description">
+        Faça login para sincronizar seus hábitos, vícios e progresso em todos os seus dispositivos.
+      </p>
+    </section>
+
+    <div class="login__actions">
+      @if (errorMessage()) {
+      <p class="login__error" role="alert">{{ errorMessage() }}</p>
+      }
+      <button type="button" class="auth-btn auth-btn--google" [disabled]="isLoading()" (click)="signInWithGoogle()">
+        <ion-icon name="logo-google" aria-hidden="true" />
+        {{ isLoading() ? 'Entrando...' : 'Continuar com Google' }}
+      </button>
+      <button type="button" class="auth-btn auth-btn--apple" [disabled]="isLoading()" (click)="signInWithApple()">
+        <ion-icon name="logo-apple" aria-hidden="true" />
+        Continuar com Apple
+      </button>
+    </div>
+
+    <section class="login__offline">
+      <p>Prefere continuar sem conta?</p>
+      <button type="button" class="login__offline-link" (click)="useOffline()">
+        Usar offline
+      </button>
+    </section>
+
+    <section class="premium-card glass">
+      <span class="premium-card__badge">
+        <ion-icon name="sparkles-outline" aria-hidden="true" />
+        Em breve
+      </span>
+      <ul class="premium-card__list">
+        @for (feature of premiumFeatures; track feature.label) {
+        <li>
+          <span class="premium-card__icon">
+            <ion-icon [name]="feature.icon" aria-hidden="true" />
+          </span>
+          <span>{{ feature.label }}</span>
+        </li>
+        }
+      </ul>
+    </section>
+
+    <p class="login__terms">
+      Ao continuar, você concorda com nossos
+      <a href="#" (click)="$event.preventDefault()">Termos</a>
+      e
+      <a href="#" (click)="$event.preventDefault()">Política</a>
+    </p>
+  </div>
+</ion-content>
