@@ -54,6 +54,7 @@
 
   --ion-background-color: var(--background);
   --ion-text-color: var(--foreground);
+  --ion-overlay-background-color: var(--popover);
   --ion-color-primary: var(--primary);
   --ion-color-primary-contrast: var(--primary-foreground);
   --ion-color-danger: var(--destructive);
@@ -98,4 +99,5 @@
 
   --ion-background-color: var(--background);
   --ion-text-color: var(--foreground);
+  --ion-overlay-background-color: var(--popover);
 }

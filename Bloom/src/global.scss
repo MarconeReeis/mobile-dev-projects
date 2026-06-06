@@ -25,6 +25,12 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+ion-app,
+ion-router-outlet,
+.ion-page {
+  background: var(--background);
+}
+
 h1,
 h2,
 h3,
@@ -34,7 +40,12 @@ h4 {
 }
 
 ion-content {
-  --background: transparent;
+  --background: var(--background);
+}
+
+ion-alert {
+  --background: var(--popover);
+  --backdrop-opacity: 0.45;
 }
 
 ion-modal.habit-form-modal {

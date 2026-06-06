@@ -1,9 +1,9 @@
 <ion-content [fullscreen]="true" class="login bg-aurora">
-  <div class="login__inner">
-    <button type="button" class="login__back" (click)="goBack()">
-      <ion-icon name="arrow-back-outline" aria-hidden="true" />
-      Voltar
-    </button>
+  <div class="login__inner page-shell">
+  <a routerLink="/dashboard" routerDirection="back" class="login__back">
+    <ion-icon name="arrow-back-outline" aria-hidden="true" />
+    Voltar
+  </a>
 
     <section class="login__brand">
       <img class="login__logo" src="assets/icon/icon_bloomi.png" alt="Bloomi" width="120" height="120" />
@@ -26,17 +26,13 @@
         <ion-icon name="logo-google" aria-hidden="true" />
         {{ isLoading() ? 'Entrando...' : 'Continuar com Google' }}
       </button>
-      <button type="button" class="auth-btn auth-btn--apple" [disabled]="isLoading()" (click)="signInWithApple()">
-        <ion-icon name="logo-apple" aria-hidden="true" />
-        Continuar com Apple
-      </button>
     </div>
 
     <section class="login__offline">
       <p>Prefere continuar sem conta?</p>
-      <button type="button" class="login__offline-link" (click)="useOffline()">
+      <a routerLink="/dashboard" routerDirection="back" class="login__offline-link">
         Usar offline
-      </button>
+      </a>
     </section>
 
     <section class="premium-card glass">

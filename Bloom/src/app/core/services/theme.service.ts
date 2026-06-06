@@ -1,4 +1,6 @@
 import { Injectable, signal } from '@angular/core';
+import { Capacitor } from '@capacitor/core';
+import { StatusBar, Style } from '@capacitor/status-bar';
 
 export type AppTheme = 'light' | 'dark';
 
@@ -17,10 +19,20 @@ export class ThemeService {
     this.theme.set(theme);
     localStorage.setItem(STORAGE_KEY, theme);
     document.documentElement.classList.toggle('dark', theme === 'dark');
+    void this.syncStatusBar(theme);
   }
 
   init(): void {
     this.apply(this.theme());
+  }
+
+  private async syncStatusBar(theme: AppTheme): Promise<void> {
+    if (!Capacitor.isNativePlatform()) {
+      return;
+    }
+
+    await StatusBar.setOverlaysWebView({ overlay: true });
+    await StatusBar.setStyle({ style: theme === 'dark' ? Style.Dark : Style.Light });
   }
 
   private resolveInitialTheme(): AppTheme {

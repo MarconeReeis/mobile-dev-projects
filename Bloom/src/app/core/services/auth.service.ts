@@ -43,14 +43,18 @@ export class AuthService {
   }
 
   private async signInWithGoogleNative(): Promise<void> {
-    const result = await FirebaseAuthentication.signInWithGoogle();
+    const result = await FirebaseAuthentication.signInWithGoogle({
+      skipNativeAuth: true,
+    });
+
     const idToken = result.credential?.idToken;
+    const accessToken = result.credential?.accessToken;
 
     if (!idToken) {
       throw new Error('Não foi possível obter credenciais do Google.');
     }
 
-    const credential = GoogleAuthProvider.credential(idToken);
+    const credential = GoogleAuthProvider.credential(idToken, accessToken);
     await signInWithCredential(this.auth, credential);
   }
 }

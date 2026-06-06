@@ -1,29 +1,14 @@
-:host {
-  display: block;
-  animation: login-enter 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-@keyframes login-enter {
-  from {
-    opacity: 0;
-    transform: translateY(0.5rem);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 .login {
   --padding-top: 0;
   --padding-bottom: 0;
 }
 
 .login__inner {
+  --page-shell-top: 1rem;
+  --page-shell-inline: 1rem;
+  --page-shell-bottom: 3rem;
   max-width: 28rem;
   margin: 0 auto;
-  padding: 1.25rem 1rem 3rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -41,6 +26,7 @@
   color: var(--muted-foreground);
   font-size: 0.9375rem;
   font-weight: 500;
+  text-decoration: none;
   cursor: pointer;
   transition: color 0.15s ease;
 
@@ -186,6 +172,7 @@
 }
 
 .login__offline-link {
+  display: inline-block;
   margin-top: 0.35rem;
   padding: 0.25rem 0.5rem;
   border: none;
@@ -193,6 +180,7 @@
   color: var(--primary);
   font-size: 0.9375rem;
   font-weight: 700;
+  text-decoration: none;
   cursor: pointer;
   transition: opacity 0.15s ease;
 

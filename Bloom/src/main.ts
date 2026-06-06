@@ -10,7 +10,7 @@ import { provideBloomFirebase } from './app/core/firebase/firebase.providers';
 bootstrapApplication(AppComponent, {
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    provideIonicAngular(),
+    provideIonicAngular({ mode: 'ios' }),
     provideRouter(routes, withPreloading(PreloadAllModules)),
     provideBloomFirebase(environment),
   ],

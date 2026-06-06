@@ -1,13 +1,12 @@
 import { Component, effect, inject, signal } from '@angular/core';
-import { Router } from '@angular/router';
-import { IonContent, IonIcon } from '@ionic/angular/standalone';
+import { RouterLink } from '@angular/router';
+import { IonContent, IonIcon, NavController } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
   arrowBackOutline,
   barChartOutline,
   cloudOutline,
   layersOutline,
-  logoApple,
   logoGoogle,
   sparklesOutline,
   trophyOutline,
@@ -27,7 +26,6 @@ addIcons({
   barChartOutline,
   cloudOutline,
   layersOutline,
-  logoApple,
   logoGoogle,
   sparklesOutline,
   trophyOutline,
@@ -37,10 +35,10 @@ addIcons({
   selector: 'app-login',
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
-  imports: [IonContent, IonIcon],
+  imports: [IonContent, IonIcon, RouterLink],
 })
 export class LoginPage {
-  private readonly router = inject(Router);
+  private readonly navCtrl = inject(NavController);
   private readonly authService = inject(AuthService);
 
   readonly premiumFeatures = PREMIUM_FEATURES;
@@ -50,17 +48,9 @@ export class LoginPage {
   constructor() {
     effect(() => {
       if (this.authService.user()) {
-        void this.router.navigate(['/dashboard']);
+        void this.navCtrl.navigateRoot('/dashboard');
       }
     });
-  }
-
-  goBack(): void {
-    void this.router.navigate(['/dashboard']);
-  }
-
-  useOffline(): void {
-    void this.router.navigate(['/dashboard']);
   }
 
   async signInWithGoogle(): Promise<void> {
@@ -73,15 +63,11 @@ export class LoginPage {
 
     try {
       await this.authService.signInWithGoogle();
-      await this.router.navigate(['/dashboard']);
+      await this.navCtrl.navigateRoot('/dashboard');
     } catch (error) {
       this.errorMessage.set(this.authService.resolveAuthError(error));
     } finally {
       this.isLoading.set(false);
     }
-  }
-
-  signInWithApple(): void {
-    // Próxima etapa
   }
 }

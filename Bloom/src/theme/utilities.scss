@@ -6,6 +6,26 @@
     radial-gradient(ellipse 70% 50% at 50% 100%, color-mix(in oklab, var(--primary-glow) 20%, transparent), transparent 60%);
 }
 
+ion-content.bg-aurora {
+  --background: var(--background);
+}
+
+ion-content.bg-aurora::part(background) {
+  background-color: var(--background);
+  background-image:
+    radial-gradient(ellipse 80% 60% at 10% 0%, color-mix(in oklab, var(--primary) 25%, transparent), transparent 60%),
+    radial-gradient(ellipse 60% 50% at 90% 10%, color-mix(in oklab, var(--accent) 50%, transparent), transparent 60%),
+    radial-gradient(ellipse 70% 50% at 50% 100%, color-mix(in oklab, var(--primary-glow) 20%, transparent), transparent 60%);
+}
+
+.page-shell {
+  box-sizing: border-box;
+  padding-top: calc(env(safe-area-inset-top, 0px) + var(--page-shell-top, 1rem));
+  padding-right: calc(env(safe-area-inset-right, 0px) + var(--page-shell-inline, 1rem));
+  padding-left: calc(env(safe-area-inset-left, 0px) + var(--page-shell-inline, 1rem));
+  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + var(--page-shell-bottom, 2rem));
+}
+
 .glass {
   background-color: var(--glass);
   backdrop-filter: blur(20px) saturate(180%);

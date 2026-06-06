@@ -11,7 +11,7 @@ export function getAuthErrorMessage(error: unknown): string {
       case 'auth/account-exists-with-different-credential':
         return 'Já existe uma conta com este e-mail usando outro método de login.';
       default:
-        return 'Não foi possível entrar com Google. Tente novamente.';
+        return 'Não foi possível entrar. Tente novamente.';
     }
   }
 
@@ -25,5 +25,5 @@ export function getAuthErrorMessage(error: unknown): string {
     }
   }
 
-  return 'Não foi possível entrar com Google. Tente novamente.';
+  return 'Não foi possível entrar. Tente novamente.';
 }

@@ -1,27 +1,14 @@
-:host {
-  display: block;
-  animation: dashboard-enter 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-@keyframes dashboard-enter {
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: 1;
-  }
-}
-
 .dashboard {
   --padding-top: 0;
   --padding-bottom: 0;
 }
 
 .dashboard__inner {
+  --page-shell-top: 1.25rem;
+  --page-shell-inline: 1rem;
+  --page-shell-bottom: 6rem;
   max-width: 72rem;
   margin: 0 auto;
-  padding: 2rem 1rem 6rem;
 }
 
 .dashboard__header {
@@ -139,7 +126,7 @@
 
 @media (min-width: 768px) {
   .dashboard__inner {
-    padding-inline: 1.5rem;
+    --page-shell-inline: 1.5rem;
   }
 
   .habit-grid {
