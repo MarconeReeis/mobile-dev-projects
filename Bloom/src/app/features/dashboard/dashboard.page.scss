@@ -72,6 +72,118 @@
   }
 }
 
+.financial-evolution {
+  margin-bottom: 2.5rem;
+}
+
+.financial-evolution__header {
+  margin-bottom: 1.25rem;
+
+  h2 {
+    margin: 0;
+    font-size: 1.125rem;
+    font-weight: 600;
+  }
+
+  p {
+    margin: 0.35rem 0 0;
+    font-size: 0.875rem;
+    color: var(--muted-foreground);
+  }
+}
+
+.financial-evolution__stats {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.financial-evolution__secondary {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.financial-stat {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 1rem;
+  border-radius: var(--radius-2xl);
+
+  ion-icon {
+    flex-shrink: 0;
+    margin-top: 0.125rem;
+    font-size: 1.125rem;
+    color: var(--primary);
+  }
+}
+
+.financial-stat--primary {
+  border: 1px solid color-mix(in oklab, var(--primary) 35%, transparent);
+  background: color-mix(in oklab, var(--primary) 8%, var(--glass));
+}
+
+.financial-stat__content {
+  min-width: 0;
+}
+
+.financial-stat__label {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--muted-foreground);
+}
+
+.financial-stat__value {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 1.375rem;
+  font-weight: 700;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+
+.financial-stat__value--primary {
+  font-size: 1.75rem;
+  color: var(--primary);
+}
+
+.financial-evolution__curiosities {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+  margin-top: 0.875rem;
+}
+
+.curiosity-card {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.875rem 1rem;
+  border-radius: var(--radius-xl);
+}
+
+.curiosity-card__icon {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  flex-shrink: 0;
+  border-radius: var(--radius-full);
+  background: color-mix(in oklab, var(--primary) 12%, transparent);
+  color: var(--primary);
+
+  ion-icon {
+    font-size: 1rem;
+  }
+}
+
+.curiosity-card p {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.45;
+}
+
 .dashboard__main {
   padding-bottom: 2rem;
 }

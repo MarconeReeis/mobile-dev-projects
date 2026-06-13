@@ -53,6 +53,31 @@
     </div>
   </div>
 
+  @if (hasSavings()) {
+    <section class="economy-panel">
+      <div class="economy-panel__header">
+        <div class="economy-panel__title">
+          <ion-icon name="sparkles-outline" aria-hidden="true" />
+          <span>Economia acumulada</span>
+        </div>
+        <span class="economy-panel__badge">{{ spendBadge() }}</span>
+      </div>
+
+      <p class="economy-panel__total font-display">{{ totalSavings() }}</p>
+
+      <div class="economy-panel__breakdown">
+        <div class="economy-panel__mini-stat">
+          <span class="economy-panel__mini-label">Hoje</span>
+          <span class="economy-panel__mini-value">{{ todaySavings() }}</span>
+        </div>
+        <div class="economy-panel__mini-stat">
+          <span class="economy-panel__mini-label">Este mês</span>
+          <span class="economy-panel__mini-value">{{ monthSavings() }}</span>
+        </div>
+      </div>
+    </section>
+  }
+
   <div class="habit-card__stats">
     <div class="stat">
       <ion-icon name="flame-outline" />

@@ -9,6 +9,7 @@ import {
   createOutline,
   flameOutline,
   refreshOutline,
+  sparklesOutline,
   trashOutline,
   trendingUpOutline,
 } from 'ionicons/icons';
@@ -16,7 +17,12 @@ import { Habit } from '../../../../core/models/habit.model';
 import { NowService } from '../../../../core/services/now.service';
 import {
   calcDuration,
+  calcMonthSavings,
+  calcTodaySavings,
+  calcTotalSavings,
+  formatCurrency,
   formatDateTime,
+  formatSpendBadge,
   getLongestStreakDays,
 } from '../../../habits/utils/habit.utils';
 
@@ -24,6 +30,7 @@ addIcons({
   createOutline,
   flameOutline,
   refreshOutline,
+  sparklesOutline,
   trashOutline,
   trendingUpOutline,
 });
@@ -52,6 +59,35 @@ export class HabitCardComponent {
   );
 
   readonly startedAtLabel = computed(() => formatDateTime(this.habit().startedAt));
+
+  readonly hasSavings = computed(() => {
+    const habit = this.habit();
+    return habit.spendAmount != null && habit.spendAmount > 0 && Boolean(habit.spendFrequency);
+  });
+
+  readonly totalSavings = computed(() => {
+    const savings = calcTotalSavings(this.habit(), this.duration().totalMs);
+    return savings != null ? formatCurrency(savings) : null;
+  });
+
+  readonly todaySavings = computed(() => {
+    const savings = calcTodaySavings(this.habit(), this.nowService.now());
+    return savings != null ? formatCurrency(savings) : null;
+  });
+
+  readonly monthSavings = computed(() => {
+    const savings = calcMonthSavings(this.habit(), this.nowService.now());
+    return savings != null ? formatCurrency(savings) : null;
+  });
+
+  readonly spendBadge = computed(() => {
+    const habit = this.habit();
+    if (!this.hasSavings() || habit.spendAmount == null || !habit.spendFrequency) {
+      return null;
+    }
+
+    return formatSpendBadge(habit.spendAmount, habit.spendFrequency);
+  });
 
   pad(value: number): string {
     return String(value).padStart(2, '0');

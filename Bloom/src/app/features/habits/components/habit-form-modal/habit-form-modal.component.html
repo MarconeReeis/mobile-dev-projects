@@ -69,9 +69,51 @@
       />
     </div>
 
-    <footer class="dialog-footer">
-      <ion-button fill="clear" type="button" (click)="cancel()">Cancelar</ion-button>
-      <ion-button type="submit" class="btn-gradient submit-btn">
+    <section class="spend-card">
+      <div class="spend-card__header">
+        <span class="spend-card__emoji" aria-hidden="true">💰</span>
+        <div>
+          <h3 class="spend-card__title">Quanto você gastava?</h3>
+          <p class="spend-card__description">
+            Vamos calcular quanto dinheiro você está economizando ao longo da sua jornada.
+          </p>
+        </div>
+      </div>
+
+      <div class="spend-card__amount">
+        <span class="spend-card__currency">R$</span>
+        <input
+          class="spend-card__input"
+          type="text"
+          inputmode="decimal"
+          formControlName="spendAmount"
+          placeholder="0,00"
+          autocomplete="off"
+          aria-label="Valor gasto"
+        />
+      </div>
+
+      <div class="spend-card__frequency" role="group" aria-label="Frequência do gasto">
+        @for (option of spendFrequencyOptions; track option.value) {
+          <button
+            type="button"
+            class="frequency-btn"
+            [class.frequency-btn--selected]="isSpendFrequencySelected(option.value)"
+            (click)="selectSpendFrequency(option.value)"
+          >
+            {{ option.label }}
+          </button>
+        }
+      </div>
+
+      <p class="spend-card__hint">Opcional. Você pode preencher depois.</p>
+    </section>
+
+    <footer class="dialog-footer" [class.dialog-footer--create]="!isEdit">
+      @if (isEdit) {
+        <ion-button fill="clear" type="button" (click)="cancel()">Cancelar</ion-button>
+      }
+      <ion-button type="submit" class="btn-gradient submit-btn" [expand]="isEdit ? undefined : 'block'">
         {{ isEdit ? 'Salvar' : 'Começar Jornada' }}
       </ion-button>
     </footer>

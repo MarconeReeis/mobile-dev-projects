@@ -29,6 +29,58 @@
       }
     </section>
 
+    @if (hasFinancialData()) {
+      <section class="financial-evolution">
+        <header class="financial-evolution__header">
+          <h2 class="font-display">Sua evolução financeira</h2>
+          <p>Cada dia livre vira economia real.</p>
+        </header>
+
+        <div class="financial-evolution__stats">
+          <article class="financial-stat financial-stat--primary glass">
+            <ion-icon name="wallet-outline" aria-hidden="true" />
+            <div class="financial-stat__content">
+              <span class="financial-stat__label">Total economizado</span>
+              <span class="financial-stat__value financial-stat__value--primary font-display">
+                {{ totalSavedLabel() }}
+              </span>
+            </div>
+          </article>
+
+          <div class="financial-evolution__secondary">
+            <article class="financial-stat glass">
+              <ion-icon name="trophy-outline" aria-hidden="true" />
+              <div class="financial-stat__content">
+                <span class="financial-stat__label">Maior economia individual</span>
+                <span class="financial-stat__value font-display">{{ topIndividualSavedLabel() }}</span>
+              </div>
+            </article>
+
+            <article class="financial-stat glass">
+              <ion-icon name="trending-up-outline" aria-hidden="true" />
+              <div class="financial-stat__content">
+                <span class="financial-stat__label">Média mensal</span>
+                <span class="financial-stat__value font-display">{{ monthlyAverageLabel() }}</span>
+              </div>
+            </article>
+          </div>
+        </div>
+
+        @if (curiosityPhrases().length) {
+          <div class="financial-evolution__curiosities">
+            @for (phrase of curiosityPhrases(); track phrase) {
+              <article class="curiosity-card glass">
+                <span class="curiosity-card__icon" aria-hidden="true">
+                  <ion-icon name="sparkles-outline" />
+                </span>
+                <p>{{ phrase }}</p>
+              </article>
+            }
+          </div>
+        }
+      </section>
+    }
+
     <main class="dashboard__main">
       <div class="section-header">
         <h2 class="font-display">Seus hábitos</h2>

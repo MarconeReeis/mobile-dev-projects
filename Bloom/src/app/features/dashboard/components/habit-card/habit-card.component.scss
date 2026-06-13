@@ -141,6 +141,91 @@
   color: var(--muted-foreground);
 }
 
+.economy-panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+  padding: 1rem;
+  border-radius: var(--radius-2xl);
+  border: 1px solid color-mix(in oklab, var(--primary) 22%, transparent);
+  background: color-mix(in oklab, var(--primary) 10%, color-mix(in oklab, var(--background) 88%, black));
+}
+
+.economy-panel__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.economy-panel__title {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  min-width: 0;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--primary);
+
+  ion-icon {
+    flex-shrink: 0;
+    font-size: 0.875rem;
+  }
+}
+
+.economy-panel__badge {
+  flex-shrink: 0;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+}
+
+.economy-panel__total {
+  margin: 0;
+  text-align: center;
+  font-size: clamp(1.75rem, 6vw, 2.25rem);
+  font-weight: 700;
+  line-height: 1;
+  color: var(--primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.economy-panel__breakdown {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+.economy-panel__mini-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.625rem 0.5rem;
+  border-radius: var(--radius-xl);
+  background: color-mix(in oklab, var(--foreground) 5%, transparent);
+}
+
+:host-context(.dark) .economy-panel__mini-stat {
+  background: color-mix(in oklab, white 5%, transparent);
+}
+
+.economy-panel__mini-label {
+  font-size: 0.625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted-foreground);
+}
+
+.economy-panel__mini-value {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
 .habit-card__stats {
   position: relative;
   display: grid;

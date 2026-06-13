@@ -15,6 +15,7 @@ export class HabitService {
   readonly isEmpty = computed(() => this.habitsState().length === 0);
 
   addHabit(values: HabitFormValues): Habit {
+    const spendFields = this.resolveSpendFields(values);
     const habit: Habit = {
       id: createHabitId(),
       name: values.name.trim(),
@@ -26,17 +27,32 @@ export class HabitService {
       longestStreakMs: 0,
     };
 
+    if (spendFields.spendAmount != null && spendFields.spendAmount > 0) {
+      habit.spendAmount = spendFields.spendAmount;
+      habit.spendFrequency = spendFields.spendFrequency ?? 'day';
+    }
+
     this.persist([habit, ...this.habitsState()]);
     return habit;
   }
 
   updateHabit(id: string, values: HabitFormValues): Habit | null {
-    return this.patchHabit(id, {
+    const patch: Partial<Habit> = {
       name: values.name.trim(),
       emoji: values.emoji,
       color: values.color,
       startedAt: values.startedAt,
-    });
+    };
+
+    if (values.spendAmount != null && values.spendAmount > 0) {
+      patch.spendAmount = values.spendAmount;
+      patch.spendFrequency = values.spendFrequency ?? 'day';
+    } else {
+      patch.spendAmount = undefined;
+      patch.spendFrequency = undefined;
+    }
+
+    return this.patchHabit(id, patch);
   }
 
   recordRelapse(id: string): Habit | null {
@@ -79,7 +95,7 @@ export class HabitService {
       if (habit.id !== id) {
         return habit;
       }
-      updated = { ...habit, ...patch };
+      updated = this.mergeHabitPatch(habit, patch);
       return updated;
     });
 
@@ -139,6 +155,44 @@ export class HabitService {
       relapses: typeof record['relapses'] === 'number' ? record['relapses'] : 0,
       longestStreakMs:
         typeof record['longestStreakMs'] === 'number' ? record['longestStreakMs'] : 0,
+      ...this.normalizeSpendFields(record),
     };
+  }
+
+  private mergeHabitPatch(habit: Habit, patch: Partial<Habit>): Habit {
+    const next = { ...habit, ...patch };
+
+    if ('spendAmount' in patch && patch.spendAmount == null) {
+      delete next.spendAmount;
+      delete next.spendFrequency;
+    }
+
+    return next;
+  }
+
+  private resolveSpendFields(values: HabitFormValues): Pick<Habit, 'spendAmount' | 'spendFrequency'> | Record<string, never> {
+    if (values.spendAmount == null || values.spendAmount <= 0) {
+      return {};
+    }
+
+    return {
+      spendAmount: values.spendAmount,
+      spendFrequency: values.spendFrequency ?? 'day',
+    };
+  }
+
+  private normalizeSpendFields(record: Record<string, unknown>): Pick<Habit, 'spendAmount' | 'spendFrequency'> {
+    const amount = record['spendAmount'];
+    const frequency = record['spendFrequency'];
+
+    if (typeof amount !== 'number' || amount <= 0) {
+      return {};
+    }
+
+    if (frequency !== 'day' && frequency !== 'week' && frequency !== 'month') {
+      return { spendAmount: amount, spendFrequency: 'day' };
+    }
+
+    return { spendAmount: amount, spendFrequency: frequency };
   }
 }
