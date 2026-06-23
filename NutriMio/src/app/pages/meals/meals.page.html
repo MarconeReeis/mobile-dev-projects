@@ -1,0 +1,52 @@
+<ion-content [fullscreen]="true" class="meals-content">
+  <div class="meals-page">
+    <header class="page-header">
+      <p class="eyebrow">Hoje</p>
+      <h1>Refeições</h1>
+    </header>
+
+    <div class="top-actions">
+      <button type="button" class="primary-action" (click)="onAddMeal()">
+        <ion-icon name="add-outline" aria-hidden="true"></ion-icon>
+        Nova refeição
+      </button>
+
+      <button type="button" class="secondary-action" (click)="onOpenTemplates()">
+        <ion-icon name="bookmark-outline" aria-hidden="true"></ion-icon>
+        Modelos
+      </button>
+    </div>
+
+    <div class="meals-list">
+      @if (mealSlots$ | async; as slots) {
+        @if (hasMealsToday$ | async) {
+          @for (slot of slots; track slot.type) {
+            <button
+              type="button"
+              class="meal-slot-button"
+              (click)="onEditMeal(slot.type)"
+            >
+              <app-meal-day-card [slot]="slot"></app-meal-day-card>
+            </button>
+          }
+        } @else {
+          <app-empty-state
+            icon="restaurant-outline"
+            title="Nenhuma refeição registrada"
+            message="Comece registrando sua primeira refeição do dia. Você pode cadastrar alimentos e montar cada refeição por categoria."
+            actionLabel="Nova refeição"
+            (action)="onAddMeal()"
+          ></app-empty-state>
+        }
+      }
+    </div>
+  </div>
+</ion-content>
+
+<ion-toast
+  [isOpen]="showTemplatesToast"
+  message="Modelos de refeição estarão disponíveis em breve."
+  duration="2500"
+  position="bottom"
+  (didDismiss)="showTemplatesToast = false"
+></ion-toast>

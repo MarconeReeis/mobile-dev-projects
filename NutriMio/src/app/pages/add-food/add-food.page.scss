@@ -1,0 +1,134 @@
+.add-food-content {
+  --background: var(--nutrimio-background);
+}
+
+.add-food {
+  padding: calc(env(safe-area-inset-top) + 12px) 20px 120px;
+}
+
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 24px;
+
+  h1 {
+    margin: 0 0 4px;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--nutrimio-text-primary);
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.875rem;
+    color: var(--nutrimio-text-secondary);
+  }
+}
+
+.back-button {
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 50%;
+  background: var(--nutrimio-surface);
+  box-shadow: var(--nutrimio-shadow-card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+
+  ion-icon {
+    font-size: 1.25rem;
+  }
+}
+
+.form-card {
+  background: var(--nutrimio-surface);
+  border-radius: var(--nutrimio-radius-lg);
+  padding: 20px;
+  box-shadow: var(--nutrimio-shadow-card);
+}
+
+.field-label {
+  display: block;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--nutrimio-text-muted);
+  margin-bottom: 8px;
+}
+
+.field-input,
+.field-select {
+  --background: var(--nutrimio-background);
+  --padding-start: 14px;
+  --padding-end: 14px;
+  border: 1px solid var(--nutrimio-border);
+  border-radius: var(--nutrimio-radius-sm);
+  margin-bottom: 16px;
+  min-height: 44px;
+}
+
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.field-group {
+  min-width: 0;
+}
+
+.macros-title {
+  margin-top: 8px;
+}
+
+.macros-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.macro-label {
+  display: block;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+
+  &.protein { color: var(--nutrimio-macro-protein); }
+  &.carbs { color: var(--nutrimio-macro-carbs); }
+  &.fat { color: var(--nutrimio-macro-fat-pill); }
+  &.sugar { color: var(--nutrimio-macro-sugar); }
+}
+
+.action-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: calc(56px + env(safe-area-inset-bottom));
+  padding: 12px 20px;
+  background: linear-gradient(to top, var(--nutrimio-background) 70%, transparent);
+}
+
+.save-button {
+  width: 100%;
+  height: 52px;
+  border: none;
+  border-radius: 999px;
+  background: var(--ion-color-primary);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  box-shadow: var(--nutrimio-shadow-fab);
+
+  &:disabled {
+    opacity: 0.6;
+  }
+}

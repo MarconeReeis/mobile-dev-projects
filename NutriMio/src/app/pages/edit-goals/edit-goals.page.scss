@@ -1,0 +1,267 @@
+.edit-goals-content {
+  --background: var(--nutrimio-background);
+}
+
+.edit-goals {
+  padding: calc(env(safe-area-inset-top) + 12px) 20px 140px;
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+
+  h1 {
+    margin: 0;
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--nutrimio-text-primary);
+  }
+}
+
+.back-button {
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 50%;
+  background: var(--nutrimio-surface);
+  box-shadow: var(--nutrimio-shadow-card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  ion-icon {
+    font-size: 1.25rem;
+  }
+}
+
+.weight-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.field-block {
+  min-width: 0;
+}
+
+.field-label,
+.section-label,
+.summary-label {
+  display: block;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--nutrimio-text-muted);
+  margin-bottom: 8px;
+}
+
+.field-input,
+.goal-input {
+  --background: var(--nutrimio-surface);
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --padding-top: 14px;
+  --padding-bottom: 14px;
+  border: 1px solid var(--nutrimio-border);
+  border-radius: var(--nutrimio-radius-md);
+  min-height: 52px;
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+.objective-section {
+  margin-bottom: 24px;
+}
+
+.objective-chips {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.objective-chip {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 72px;
+  padding: 10px 8px;
+  border: 1px solid var(--nutrimio-border);
+  border-radius: var(--nutrimio-radius-md);
+  background: var(--nutrimio-surface);
+  color: var(--nutrimio-text-secondary);
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+
+  ion-icon {
+    font-size: 1.25rem;
+  }
+
+  &.selected {
+    border-color: var(--ion-color-primary);
+    background: var(--nutrimio-primary-soft);
+    color: var(--ion-color-primary);
+  }
+}
+
+.daily-goals-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.goal-field {
+  background: var(--nutrimio-surface);
+  border: 1px solid var(--nutrimio-border);
+  border-radius: var(--nutrimio-radius-md);
+  padding: 14px 16px;
+}
+
+.goal-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--nutrimio-text-muted);
+  margin-bottom: 8px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+
+  &.calories { background: var(--ion-color-primary); }
+  &.protein { background: var(--nutrimio-macro-protein); }
+  &.carbs { background: var(--nutrimio-macro-carbs); }
+  &.fat { background: var(--nutrimio-macro-fat); }
+  &.sugar { background: var(--nutrimio-macro-sugar); }
+  &.water { background: var(--nutrimio-macro-water); }
+}
+
+.goal-input {
+  border: none;
+  --padding-start: 0;
+  --padding-end: 0;
+  min-height: 36px;
+}
+
+.calories-input-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.calories-field .goal-input {
+  flex: 1;
+}
+
+.stepper {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+
+  button {
+    width: 28px;
+    height: 22px;
+    border: 1px solid var(--nutrimio-border);
+    border-radius: 6px;
+    background: var(--nutrimio-background);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 0;
+
+    ion-icon {
+      font-size: 0.875rem;
+      color: var(--nutrimio-text-secondary);
+    }
+  }
+}
+
+.summary-card {
+  background: var(--nutrimio-primary-soft);
+  border-radius: var(--nutrimio-radius-lg);
+  padding: 20px;
+}
+
+.summary-text {
+  margin: 0 0 16px;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: var(--nutrimio-text-secondary);
+
+  strong {
+    color: var(--nutrimio-text-primary);
+    font-weight: 700;
+  }
+}
+
+.summary-badges {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.badge {
+  background: var(--nutrimio-surface);
+  border-radius: var(--nutrimio-radius-sm);
+  padding: 10px 6px;
+  text-align: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+
+  &.protein { color: var(--nutrimio-macro-protein); }
+  &.carbs { color: var(--nutrimio-macro-carbs); }
+  &.fat { color: var(--nutrimio-macro-fat); }
+  &.sugar { color: var(--nutrimio-macro-sugar); }
+}
+
+.action-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: calc(56px + env(safe-area-inset-bottom));
+  padding: 12px 20px;
+  background: linear-gradient(to top, var(--nutrimio-background) 70%, transparent);
+  z-index: 10;
+}
+
+.save-button {
+  width: 100%;
+  height: 52px;
+  border: none;
+  border-radius: 999px;
+  background: var(--ion-color-primary);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  box-shadow: var(--nutrimio-shadow-fab);
+
+  &:disabled {
+    opacity: 0.6;
+  }
+}

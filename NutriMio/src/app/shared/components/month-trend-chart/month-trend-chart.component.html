@@ -1,0 +1,16 @@
+<div class="trend-chart">
+  @if (points.length) {
+    <svg viewBox="0 0 280 90" preserveAspectRatio="none" aria-hidden="true">
+      <defs>
+        <linearGradient id="trendGradient" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="var(--ion-color-primary)" stop-opacity="0.35" />
+          <stop offset="100%" stop-color="var(--ion-color-primary)" stop-opacity="0.02" />
+        </linearGradient>
+      </defs>
+      <path class="area" [attr.d]="areaPath" fill="url(#trendGradient)" />
+      <path class="line" [attr.d]="linePath" />
+    </svg>
+  } @else {
+    <div class="empty">Sem dados para exibir</div>
+  }
+</div>

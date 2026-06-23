@@ -1,0 +1,13 @@
+<button type="button" class="food-select-item" [class.selected]="selected" (click)="onToggle()">
+  <ion-icon
+    [name]="selected ? 'checkmark-circle' : 'ellipse-outline'"
+    aria-hidden="true"
+  ></ion-icon>
+
+  <div class="info">
+    <span class="name">{{ food.name }}</span>
+    <span class="meta">
+      {{ food.quantity }} {{ food.unit }} · {{ food.calories }} kcal
+    </span>
+  </div>
+</button>

@@ -1,0 +1,53 @@
+.summary-card {
+  background: var(--nutrimio-primary-soft);
+  border-radius: var(--nutrimio-radius-lg);
+  padding: 20px;
+}
+
+.eyebrow {
+  display: block;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--nutrimio-text-muted);
+  margin-bottom: 8px;
+}
+
+.calories {
+  margin: 0 0 16px;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--nutrimio-text-primary);
+  line-height: 1.1;
+}
+
+.macro-totals {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px 16px;
+}
+
+.macro {
+  font-size: 0.8125rem;
+  color: var(--nutrimio-text-secondary);
+
+  strong {
+    font-weight: 700;
+  }
+
+  &.protein strong {
+    color: var(--nutrimio-macro-protein);
+  }
+
+  &.carbs strong {
+    color: var(--nutrimio-macro-carbs);
+  }
+
+  &.fat strong {
+    color: var(--nutrimio-macro-fat-pill);
+  }
+
+  &.sugar strong {
+    color: var(--nutrimio-macro-sugar);
+  }
+}

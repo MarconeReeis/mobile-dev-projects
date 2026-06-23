@@ -1,0 +1,15 @@
+<div class="week-chart">
+  <div class="bars">
+    @for (bar of bars; track bar.dateKey) {
+      <div class="bar-column" [class.selected]="bar.isSelected">
+        <div class="bar-track">
+          <div
+            class="bar-fill"
+            [style.height.%]="barHeight(bar.calories)"
+          ></div>
+        </div>
+        <span class="label">{{ bar.label }}</span>
+      </div>
+    }
+  </div>
+</div>

@@ -1,0 +1,85 @@
+<ion-content [fullscreen]="true" class="add-meal-content">
+  <div class="add-meal">
+    <header class="page-header">
+      <button type="button" class="back-button" aria-label="Voltar" (click)="goBack()">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+      </button>
+      <h1>Nova refeição</h1>
+    </header>
+
+    <section class="form-section">
+      <span class="field-label">CATEGORIA</span>
+
+      <div class="type-chips" role="listbox" aria-label="Categoria da refeição">
+        @for (type of mealTypeOptions; track type) {
+          <button
+            type="button"
+            class="type-chip"
+            [class.selected]="selectedType() === type"
+            (click)="selectMealType(type)"
+          >
+            {{ mealTypeLabels[type] }}
+          </button>
+        }
+      </div>
+    </section>
+
+    <section class="foods-section">
+      <div class="section-header">
+        <div>
+          <h2>Selecione os alimentos</h2>
+          <p class="hint">Toque para marcar um ou mais itens do seu catálogo</p>
+        </div>
+        <ion-button fill="clear" size="small" (click)="onRegisterFood()">
+          <ion-icon slot="start" name="add-outline"></ion-icon>
+          Cadastrar
+        </ion-button>
+      </div>
+
+      @if (catalogFoods().length) {
+        <div class="foods-list">
+          @for (food of catalogFoods(); track food.id) {
+            <app-food-select-item
+              [food]="food"
+              [selected]="isSelected(food.id)"
+              (toggled)="toggleFood($event)"
+            ></app-food-select-item>
+          }
+        </div>
+      } @else {
+        <div class="empty-catalog">
+          <p>Nenhum alimento cadastrado ainda.</p>
+          <ion-button fill="outline" (click)="onRegisterFood()">
+            Cadastrar primeiro alimento
+          </ion-button>
+        </div>
+      }
+
+      <button type="button" class="catalog-link" (click)="onOpenCatalog()">
+        <ion-icon name="library-outline" aria-hidden="true"></ion-icon>
+        Ver todos os alimentos cadastrados
+      </button>
+    </section>
+
+    @if (selectedFoods().length) {
+      <section class="summary-section">
+        <p class="selected-count">
+          {{ selectedFoods().length }} alimento(s) selecionado(s)
+        </p>
+        <app-meal-summary-card [summary]="summary()"></app-meal-summary-card>
+      </section>
+    }
+  </div>
+
+  <footer class="action-bar">
+    <button
+      type="button"
+      class="save-button"
+      [disabled]="isSaving || !selectedFoods().length"
+      (click)="onSave()"
+    >
+      <ion-icon name="save-outline" aria-hidden="true"></ion-icon>
+      Salvar refeição
+    </button>
+  </footer>
+</ion-content>

@@ -1,0 +1,111 @@
+<ion-content [fullscreen]="true" class="profile-content">
+  <div class="profile-page">
+    <header class="page-header">
+      <p class="eyebrow">Minha conta</p>
+      <h1>Perfil</h1>
+    </header>
+
+    <section class="card user-card">
+      <div class="avatar">{{ user.initials }}</div>
+      <div class="user-info">
+        <h2>{{ user.fullName }}</h2>
+        <p class="email">{{ user.email }}</p>
+        <span class="premium-badge">{{ premiumLabel }}</span>
+      </div>
+    </section>
+
+    <div class="weight-row">
+      <div class="stat-card">
+        <strong>{{ user.weight.current }} kg</strong>
+        <span>ATUAL</span>
+      </div>
+      <div class="stat-card">
+        <strong>{{ user.weight.initial }} kg</strong>
+        <span>INICIAL</span>
+      </div>
+      <div class="stat-card">
+        <strong>{{ user.weight.goal }} kg</strong>
+        <span>META</span>
+      </div>
+    </div>
+
+    <div class="usage-row">
+      <div class="usage-card">
+        <div class="usage-icon">
+          <ion-icon name="flame-outline" aria-hidden="true"></ion-icon>
+        </div>
+        <div>
+          <strong>{{ streakDays }}</strong>
+          <span>DIAS SEGUIDOS</span>
+        </div>
+      </div>
+
+      <div class="usage-card">
+        <div class="usage-icon">
+          <ion-icon name="book-outline" aria-hidden="true"></ion-icon>
+        </div>
+        <div>
+          <strong>{{ totalMeals }}</strong>
+          <span>REFEIÇÕES</span>
+        </div>
+      </div>
+    </div>
+
+    <p class="section-label">CONFIGURAÇÕES</p>
+
+    <section class="card settings-card">
+      <button type="button" class="settings-item" (click)="onEditGoals()">
+        <div class="settings-left">
+          <ion-icon name="flag-outline" aria-hidden="true"></ion-icon>
+          <span>Metas diárias</span>
+        </div>
+        <span class="edit-link">Editar</span>
+      </button>
+
+      <div class="settings-item">
+        <div class="settings-left">
+          <ion-icon name="moon-outline" aria-hidden="true"></ion-icon>
+          <span>Tema escuro</span>
+        </div>
+        <ion-toggle
+          [checked]="user.settings.darkTheme"
+          (ionChange)="onDarkThemeChange($event.detail.checked)"
+        ></ion-toggle>
+      </div>
+
+      <div class="settings-item">
+        <div class="settings-left">
+          <ion-icon name="notifications-outline" aria-hidden="true"></ion-icon>
+          <span>Notificações</span>
+        </div>
+        <ion-toggle
+          [checked]="user.settings.notifications"
+          (ionChange)="onNotificationsChange($event.detail.checked)"
+        ></ion-toggle>
+      </div>
+
+      <div class="settings-item last">
+        <div class="settings-left">
+          <ion-icon name="resize-outline" aria-hidden="true"></ion-icon>
+          <span>Unidades métricas</span>
+        </div>
+        <ion-toggle
+          [checked]="user.settings.metricUnits"
+          (ionChange)="onMetricUnitsChange($event.detail.checked)"
+        ></ion-toggle>
+      </div>
+    </section>
+
+    <button type="button" class="logout-button" (click)="onLogout()">
+      Sair da conta
+    </button>
+  </div>
+</ion-content>
+
+<ion-toast
+  [isOpen]="showLogoutToast"
+  message="Autenticação estará disponível em breve."
+  duration="2500"
+  position="bottom"
+  (didDismiss)="showLogoutToast = false"
+></ion-toast>

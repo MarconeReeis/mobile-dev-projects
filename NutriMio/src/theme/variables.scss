@@ -1,0 +1,41 @@
+:root {
+  --ion-color-primary: #00a35c;
+  --ion-color-primary-rgb: 0, 163, 92;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary-shade: #008f51;
+  --ion-color-primary-tint: #1aad6c;
+
+  --nutrimio-background: #fbfcf9;
+  --nutrimio-surface: #ffffff;
+  --nutrimio-border: #e8ecea;
+  --nutrimio-text-primary: #1a1f1c;
+  --nutrimio-text-secondary: #5f6b64;
+  --nutrimio-text-muted: #8a968f;
+  --nutrimio-primary-soft: #e6f6ee;
+  --nutrimio-progress-track: #e8ecea;
+  --nutrimio-macro-protein: #e57373;
+  --nutrimio-macro-carbs: #ffb74d;
+  --nutrimio-macro-fat: #9575cd;
+  --nutrimio-macro-fat-pill: #64b5f6;
+  --nutrimio-macro-sugar: #f06292;
+  --nutrimio-macro-water: #42a5f5;
+  --nutrimio-radius-sm: 12px;
+  --nutrimio-radius-md: 16px;
+  --nutrimio-radius-lg: 20px;
+  --nutrimio-shadow-card: 0 2px 12px rgba(26, 31, 28, 0.06);
+  --nutrimio-shadow-fab: 0 4px 16px rgba(0, 163, 92, 0.35);
+  --nutrimio-status-goal: #00a35c;
+  --nutrimio-status-near: #ffb74d;
+  --nutrimio-status-off: #e57373;
+}
+
+ion-content {
+  --background: var(--nutrimio-background);
+}
+
+ion-toolbar {
+  --background: var(--nutrimio-surface);
+  --color: var(--nutrimio-text-primary);
+  --border-color: var(--nutrimio-border);
+}

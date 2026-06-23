@@ -1,0 +1,31 @@
+<article class="food-card">
+  <div class="food-header">
+    <div class="food-info">
+      <h3>{{ food.name }}</h3>
+      <p>{{ food.quantity }} {{ food.unit }} · {{ food.calories }} kcal</p>
+    </div>
+
+    <button type="button" class="remove-button" aria-label="Remover alimento" (click)="onRemove()">
+      <ion-icon name="trash-outline"></ion-icon>
+    </button>
+  </div>
+
+  <div class="macro-pills">
+    <div class="pill">
+      <span class="letter protein">P</span>
+      <span class="value">{{ food.macros.protein }}g</span>
+    </div>
+    <div class="pill">
+      <span class="letter carbs">C</span>
+      <span class="value">{{ food.macros.carbs }}g</span>
+    </div>
+    <div class="pill">
+      <span class="letter fat">G</span>
+      <span class="value">{{ food.macros.fat }}g</span>
+    </div>
+    <div class="pill">
+      <span class="letter sugar">A</span>
+      <span class="value">{{ food.macros.sugar }}g</span>
+    </div>
+  </div>
+</article>

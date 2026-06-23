@@ -1,0 +1,105 @@
+<ion-content [fullscreen]="true" class="history-content">
+  <div class="history-page">
+    <header class="page-header">
+      <p class="eyebrow">Acompanhamento</p>
+      <h1>Histórico</h1>
+    </header>
+
+    <section class="card calendar-card">
+      <div class="calendar-nav">
+        <button type="button" class="nav-button" aria-label="Mês anterior" (click)="previousMonth()">
+          <ion-icon name="chevron-back-outline"></ion-icon>
+        </button>
+        <span class="month-label">{{ monthLabel() }}</span>
+        <button type="button" class="nav-button" aria-label="Próximo mês" (click)="nextMonth()">
+          <ion-icon name="chevron-forward-outline"></ion-icon>
+        </button>
+      </div>
+
+      <div class="calendar-grid headers">
+        @for (header of calendarHeaders; track header) {
+          <span class="calendar-header">{{ header }}</span>
+        }
+      </div>
+
+      <div class="calendar-grid days">
+        @for (day of calendarDays(); track day.dateKey) {
+          <button
+            type="button"
+            class="day-cell"
+            [class.outside]="!day.isCurrentMonth"
+            [class.today]="day.isToday"
+            [class.selected]="isSelected(day)"
+            (click)="selectDay(day)"
+          >
+            <span class="day-number">{{ day.dayNumber }}</span>
+            @if (day.isCurrentMonth && day.status !== 'none') {
+              <span class="status-dot" [class]="statusClass(day.status)"></span>
+            }
+          </button>
+        }
+      </div>
+
+      <div class="legend">
+        <span class="legend-item"><span class="status-dot status-goal"></span> Meta</span>
+        <span class="legend-item"><span class="status-dot status-near"></span> Próximo</span>
+        <span class="legend-item"><span class="status-dot status-off"></span> Fora</span>
+      </div>
+    </section>
+
+    <section class="card day-card">
+      <div class="day-card-header">
+        <span class="day-label">Dia {{ selectedDay().dayNumber }}</span>
+        <ion-icon name="flag-outline" class="goal-icon" aria-hidden="true"></ion-icon>
+      </div>
+
+      <p class="day-calories">{{ selectedDay().calories | number }} kcal</p>
+
+      <div class="macro-row">
+        <div class="macro-pill">
+          <span class="macro-label protein">Proteínas</span>
+          <strong>{{ selectedDay().macros.protein }}g</strong>
+        </div>
+        <div class="macro-pill">
+          <span class="macro-label carbs">Carbos</span>
+          <strong>{{ selectedDay().macros.carbs }}g</strong>
+        </div>
+        <div class="macro-pill">
+          <span class="macro-label fat">Gorduras</span>
+          <strong>{{ selectedDay().macros.fat }}g</strong>
+        </div>
+      </div>
+    </section>
+
+    <section class="card week-card">
+      <div class="card-title-row">
+        <h2>Semana</h2>
+        <span class="goal-hint">Meta {{ calorieGoal() | number }} kcal</span>
+      </div>
+      @if (hasAnyLogs()) {
+        <app-week-chart [bars]="weekBars()" [goal]="calorieGoal()"></app-week-chart>
+      } @else {
+        <p class="inline-empty">Registre refeições para ver o progresso semanal.</p>
+      }
+    </section>
+
+    <section class="card trend-card">
+      <h2>Tendência mensal</h2>
+      @if (monthTrend().length) {
+        <app-month-trend-chart [points]="monthTrend()"></app-month-trend-chart>
+      } @else {
+        <app-empty-state
+          icon="stats-chart-outline"
+          title="Sem histórico ainda"
+          message="Seu gráfico mensal aparecerá aqui conforme você registrar suas refeições."
+          actionLabel="Registrar refeição"
+          (action)="onAddMeal()"
+        ></app-empty-state>
+      }
+    </section>
+
+    <button type="button" class="adjust-goals-button" (click)="onAdjustGoals()">
+      Ajustar metas
+    </button>
+  </div>
+</ion-content>

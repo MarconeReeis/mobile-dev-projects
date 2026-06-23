@@ -1,0 +1,259 @@
+.history-content {
+  --background: var(--nutrimio-background);
+}
+
+.history-page {
+  padding: calc(env(safe-area-inset-top) + 16px) 20px 32px;
+}
+
+.page-header {
+  margin-bottom: 20px;
+
+  .eyebrow {
+    margin: 0 0 4px;
+    font-size: 0.8125rem;
+    color: var(--nutrimio-text-secondary);
+  }
+
+  h1 {
+    margin: 0;
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--nutrimio-text-primary);
+  }
+}
+
+.card {
+  background: var(--nutrimio-surface);
+  border-radius: var(--nutrimio-radius-lg);
+  padding: 20px;
+  box-shadow: var(--nutrimio-shadow-card);
+  margin-bottom: 16px;
+}
+
+.calendar-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.nav-button {
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 50%;
+  background: var(--nutrimio-background);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  ion-icon {
+    font-size: 1.125rem;
+    color: var(--nutrimio-text-secondary);
+  }
+}
+
+.month-label {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--nutrimio-text-primary);
+  text-transform: capitalize;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 4px;
+}
+
+.calendar-header {
+  text-align: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--nutrimio-text-muted);
+  padding-bottom: 8px;
+}
+
+.day-cell {
+  aspect-ratio: 1;
+  border: none;
+  background: transparent;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  cursor: pointer;
+  padding: 0;
+
+  &.outside {
+    opacity: 0.3;
+    pointer-events: none;
+  }
+
+  &.selected {
+    background: var(--ion-color-primary);
+
+    .day-number {
+      color: #fff;
+      font-weight: 700;
+    }
+
+    .status-dot {
+      background: #fff !important;
+    }
+  }
+}
+
+.day-number {
+  font-size: 0.875rem;
+  color: var(--nutrimio-text-primary);
+}
+
+.status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+
+  &.status-goal {
+    background: var(--nutrimio-status-goal);
+  }
+
+  &.status-near {
+    background: var(--nutrimio-status-near);
+  }
+
+  &.status-off {
+    background: var(--nutrimio-status-off);
+  }
+}
+
+.legend {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--nutrimio-border);
+}
+
+.legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  color: var(--nutrimio-text-secondary);
+}
+
+.day-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.day-label {
+  font-size: 0.8125rem;
+  color: var(--nutrimio-text-secondary);
+}
+
+.goal-icon {
+  font-size: 1.125rem;
+  color: var(--nutrimio-macro-carbs);
+}
+
+.day-calories {
+  margin: 0 0 16px;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--nutrimio-text-primary);
+  line-height: 1.1;
+}
+
+.macro-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.macro-pill {
+  background: var(--nutrimio-background);
+  border-radius: var(--nutrimio-radius-sm);
+  padding: 12px 10px;
+  text-align: center;
+
+  strong {
+    display: block;
+    font-size: 1rem;
+    margin-top: 4px;
+  }
+}
+
+.macro-label {
+  font-size: 0.6875rem;
+  font-weight: 600;
+
+  &.protein {
+    color: var(--nutrimio-macro-protein);
+  }
+
+  &.carbs {
+    color: var(--nutrimio-macro-carbs);
+  }
+
+  &.fat {
+    color: var(--nutrimio-macro-fat-pill);
+  }
+}
+
+.macro-pill strong {
+  color: var(--nutrimio-text-primary);
+}
+
+.card-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+
+  h2 {
+    margin: 0;
+    font-size: 1.0625rem;
+    font-weight: 700;
+  }
+}
+
+.goal-hint {
+  font-size: 0.75rem;
+  color: var(--nutrimio-text-muted);
+}
+
+.trend-card h2 {
+  margin: 0 0 12px;
+  font-size: 1.0625rem;
+  font-weight: 700;
+}
+
+.inline-empty {
+  margin: 12px 0 4px;
+  font-size: 0.875rem;
+  color: var(--nutrimio-text-secondary);
+  text-align: center;
+  padding: 24px 12px;
+}
+
+.adjust-goals-button {
+  width: 100%;
+  height: 52px;
+  border: 1px solid var(--nutrimio-border);
+  border-radius: 999px;
+  background: var(--nutrimio-surface);
+  color: var(--ion-color-primary);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 8px;
+}

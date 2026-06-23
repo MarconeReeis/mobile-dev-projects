@@ -1,0 +1,21 @@
+<article class="macro-card">
+  <div class="macro-header">
+    <span class="dot" [style.background]="macro.color"></span>
+    <span class="label">{{ macro.label }}</span>
+  </div>
+
+  <p class="values">
+    <strong>{{ macro.current }}</strong>
+    <span>/ {{ macro.goal }}{{ macro.unit }}</span>
+  </p>
+
+  <div class="progress-track">
+    <div
+      class="progress-fill"
+      [style.width.%]="macro.progress"
+      [style.background]="macro.color"
+    ></div>
+  </div>
+
+  <span class="progress-label">{{ macro.progress }}% DA META</span>
+</article>

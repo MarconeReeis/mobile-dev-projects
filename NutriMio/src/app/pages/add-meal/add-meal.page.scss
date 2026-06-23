@@ -1,0 +1,202 @@
+.add-meal-content {
+  --background: var(--nutrimio-background);
+}
+
+.add-meal {
+  padding: calc(env(safe-area-inset-top) + 12px) 20px 120px;
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 28px;
+
+  h1 {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--nutrimio-text-primary);
+  }
+}
+
+.back-button {
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 50%;
+  background: var(--nutrimio-surface);
+  box-shadow: var(--nutrimio-shadow-card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  ion-icon {
+    font-size: 1.25rem;
+    color: var(--nutrimio-text-primary);
+  }
+}
+
+.form-section {
+  margin-bottom: 28px;
+}
+
+.field-label {
+  display: block;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--nutrimio-text-muted);
+  margin-bottom: 12px;
+}
+
+.type-chips {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.type-chip {
+  flex-shrink: 0;
+  height: 36px;
+  padding: 0 14px;
+  border: 1px solid var(--nutrimio-border);
+  border-radius: 999px;
+  background: var(--nutrimio-surface);
+  color: var(--nutrimio-text-secondary);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+
+  &.selected {
+    border-color: var(--ion-color-primary);
+    color: var(--ion-color-primary);
+    font-weight: 600;
+  }
+}
+
+.foods-section {
+  margin-bottom: 24px;
+}
+
+.section-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+
+  h2 {
+    margin: 0 0 4px;
+    font-size: 1.0625rem;
+    font-weight: 700;
+    color: var(--nutrimio-text-primary);
+  }
+
+  .hint {
+    margin: 0;
+    font-size: 0.8125rem;
+    color: var(--nutrimio-text-secondary);
+  }
+
+  ion-button {
+    --color: var(--ion-color-primary);
+    text-transform: none;
+    font-weight: 600;
+    margin: 0;
+    flex-shrink: 0;
+  }
+}
+
+.foods-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.empty-catalog {
+  padding: 24px 16px;
+  text-align: center;
+  background: var(--nutrimio-surface);
+  border-radius: var(--nutrimio-radius-md);
+  margin-bottom: 16px;
+
+  p {
+    margin: 0 0 16px;
+    color: var(--nutrimio-text-secondary);
+    font-size: 0.9375rem;
+  }
+
+  ion-button {
+    text-transform: none;
+    font-weight: 600;
+  }
+}
+
+.catalog-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: none;
+  background: transparent;
+  color: var(--ion-color-primary);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+
+  ion-icon {
+    font-size: 1.125rem;
+  }
+}
+
+.summary-section {
+  margin-bottom: 8px;
+}
+
+.selected-count {
+  margin: 0 0 12px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--nutrimio-text-secondary);
+}
+
+.action-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: calc(56px + env(safe-area-inset-bottom));
+  padding: 12px 20px;
+  background: linear-gradient(to top, var(--nutrimio-background) 70%, transparent);
+  z-index: 10;
+}
+
+.save-button {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 52px;
+  border: none;
+  border-radius: 999px;
+  background: var(--ion-color-primary);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: var(--nutrimio-shadow-fab);
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}

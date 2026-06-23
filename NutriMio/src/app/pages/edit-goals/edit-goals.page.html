@@ -1,0 +1,149 @@
+<ion-content [fullscreen]="true" class="edit-goals-content">
+  <div class="edit-goals">
+    <header class="page-header">
+      <button type="button" class="back-button" aria-label="Voltar" (click)="goBack()">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+      </button>
+      <h1>Definição de metas</h1>
+    </header>
+
+    <section class="weight-row">
+      <div class="field-block">
+        <label class="field-label" for="current-weight">PESO ATUAL (KG)</label>
+        <ion-input
+          id="current-weight"
+          class="field-input"
+          type="number"
+          [(ngModel)]="currentWeight"
+          (ionInput)="onWeightChange()"
+        ></ion-input>
+      </div>
+      <div class="field-block">
+        <label class="field-label" for="target-weight">PESO DESEJADO (KG)</label>
+        <ion-input
+          id="target-weight"
+          class="field-input"
+          type="number"
+          [(ngModel)]="targetWeight"
+        ></ion-input>
+      </div>
+    </section>
+
+    <section class="objective-section">
+      <span class="section-label">OBJETIVO</span>
+      <div class="objective-chips">
+        @for (option of objectiveOptions; track option) {
+          <button
+            type="button"
+            class="objective-chip"
+            [class.selected]="objective === option"
+            (click)="selectObjective(option)"
+          >
+            @switch (option) {
+              @case ('lose') {
+                <ion-icon name="trending-down-outline" aria-hidden="true"></ion-icon>
+              }
+              @case ('maintain') {
+                <ion-icon name="remove-outline" aria-hidden="true"></ion-icon>
+              }
+              @case ('gain') {
+                <ion-icon name="trending-up-outline" aria-hidden="true"></ion-icon>
+              }
+            }
+            {{ objectiveLabels[option] }}
+          </button>
+        }
+      </div>
+    </section>
+
+    <section class="daily-goals-section">
+      <span class="section-label">METAS DIÁRIAS</span>
+
+      <div class="goal-field calories-field">
+        <label class="goal-label" for="goal-calories">
+          <span class="dot calories"></span>
+          CALORIAS (KCAL)
+        </label>
+        <div class="calories-input-row">
+          <ion-input
+            id="goal-calories"
+            class="goal-input"
+            type="number"
+            [(ngModel)]="goals.calories"
+            (ionInput)="onCaloriesChange()"
+          ></ion-input>
+          <div class="stepper">
+            <button type="button" aria-label="Aumentar calorias" (click)="adjustCalories(50)">
+              <ion-icon name="caret-up-outline"></ion-icon>
+            </button>
+            <button type="button" aria-label="Diminuir calorias" (click)="adjustCalories(-50)">
+              <ion-icon name="caret-down-outline"></ion-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="goal-field">
+        <label class="goal-label" for="goal-protein">
+          <span class="dot protein"></span>
+          PROTEÍNAS (G)
+        </label>
+        <ion-input id="goal-protein" class="goal-input" type="number" [(ngModel)]="goals.protein"></ion-input>
+      </div>
+
+      <div class="goal-field">
+        <label class="goal-label" for="goal-carbs">
+          <span class="dot carbs"></span>
+          CARBOIDRATOS (G)
+        </label>
+        <ion-input id="goal-carbs" class="goal-input" type="number" [(ngModel)]="goals.carbs"></ion-input>
+      </div>
+
+      <div class="goal-field">
+        <label class="goal-label" for="goal-fat">
+          <span class="dot fat"></span>
+          GORDURAS (G)
+        </label>
+        <ion-input id="goal-fat" class="goal-input" type="number" [(ngModel)]="goals.fat"></ion-input>
+      </div>
+
+      <div class="goal-field">
+        <label class="goal-label" for="goal-sugar">
+          <span class="dot sugar"></span>
+          AÇÚCARES (G)
+        </label>
+        <ion-input id="goal-sugar" class="goal-input" type="number" [(ngModel)]="goals.sugar"></ion-input>
+      </div>
+
+      <div class="goal-field">
+        <label class="goal-label" for="goal-water">
+          <span class="dot water"></span>
+          ÁGUA (ML)
+        </label>
+        <ion-input id="goal-water" class="goal-input" type="number" [(ngModel)]="goals.waterMl"></ion-input>
+      </div>
+    </section>
+
+    <section class="summary-card">
+      <span class="summary-label">RESUMO</span>
+      <p class="summary-text">
+        Para <strong>{{ objectiveSummary }}</strong>, você consumirá
+        <strong>{{ goals.calories | number }} kcal</strong> por dia, com foco em
+        <strong>{{ goals.protein }}g de proteína</strong>.
+      </p>
+      <div class="summary-badges">
+        <span class="badge protein">{{ goals.protein }}g P</span>
+        <span class="badge carbs">{{ goals.carbs }}g C</span>
+        <span class="badge fat">{{ goals.fat }}g G</span>
+        <span class="badge sugar">{{ goals.sugar }}g A</span>
+      </div>
+    </section>
+  </div>
+
+  <footer class="action-bar">
+    <button type="button" class="save-button" [disabled]="isSaving" (click)="onSave()">
+      <ion-icon name="save-outline" aria-hidden="true"></ion-icon>
+      Salvar metas
+    </button>
+  </footer>
+</ion-content>

@@ -1,0 +1,53 @@
+<ion-content [fullscreen]="true" class="foods-content">
+  <div class="foods-page">
+    <header class="page-header">
+      <button type="button" class="back-button" aria-label="Voltar" (click)="goBack()">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+      </button>
+      <div>
+        <h1>Meus alimentos</h1>
+        <p>Catálogo para montar suas refeições</p>
+      </div>
+    </header>
+
+    @if (foods$ | async; as foods) {
+      @if (foods.length) {
+        <ion-button class="add-button" expand="block" (click)="onAddFood()">
+          <ion-icon slot="start" name="add-outline"></ion-icon>
+          Cadastrar alimento
+        </ion-button>
+
+        <div class="foods-list">
+          @for (food of foods; track food.id) {
+            <article class="food-item">
+              <div class="info">
+                <h3>{{ food.name }}</h3>
+                <p>{{ food.quantity }} {{ food.unit }} · {{ food.calories }} kcal</p>
+                <span class="macros">
+                  P {{ food.macros.protein }}g · C {{ food.macros.carbs }}g ·
+                  G {{ food.macros.fat }}g · A {{ food.macros.sugar }}g
+                </span>
+              </div>
+              <button
+                type="button"
+                class="delete-button"
+                aria-label="Excluir alimento"
+                (click)="onDeleteFood(food.id)"
+              >
+                <ion-icon name="trash-outline"></ion-icon>
+              </button>
+            </article>
+          }
+        </div>
+      } @else {
+        <app-empty-state
+          icon="nutrition-outline"
+          title="Nenhum alimento cadastrado"
+          message="Cadastre os alimentos que você consome usando a tabela nutricional da embalagem."
+          actionLabel="Cadastrar alimento"
+          (action)="onAddFood()"
+        ></app-empty-state>
+      }
+    }
+  </div>
+</ion-content>

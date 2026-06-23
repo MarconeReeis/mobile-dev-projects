@@ -1,0 +1,33 @@
+<article class="meal-day-card" [class.empty]="!slot.meal">
+  <div class="main-row">
+    <div class="icon-wrap">
+      <ion-icon [name]="icon" aria-hidden="true"></ion-icon>
+    </div>
+
+    <div class="details">
+      <span class="name">{{ slot.label }}</span>
+      @if (slot.meal) {
+        <span class="meta">
+          {{ slot.meal.foodCount }} alimentos · {{ slot.meal.calories }} kcal
+        </span>
+      } @else {
+        <span class="meta empty-text">Sem registros</span>
+      }
+    </div>
+
+    <div class="trailing">
+      <span class="time">{{ slot.meal?.time ?? '—' }}</span>
+      @if (slot.meal) {
+        <ion-icon name="chevron-forward-outline" aria-hidden="true"></ion-icon>
+      }
+    </div>
+  </div>
+
+  @if (slot.meal?.foodTags?.length) {
+    <div class="tags">
+      @for (tag of slot.meal!.foodTags; track tag) {
+        <span class="tag">{{ tag }}</span>
+      }
+    </div>
+  }
+</article>

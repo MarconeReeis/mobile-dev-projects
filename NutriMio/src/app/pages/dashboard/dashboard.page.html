@@ -1,0 +1,75 @@
+<ion-content [fullscreen]="true" class="dashboard-content">
+  @if (summary$ | async; as summary) {
+    <div class="dashboard">
+      <header class="dashboard-header">
+        <div class="greeting-block">
+          <p class="date">{{ headerDate }}</p>
+          <h1>Olá, {{ user.name }} 👋</h1>
+        </div>
+
+        <div class="header-actions">
+          <button type="button" class="icon-button" aria-label="Notificações">
+            <ion-icon name="notifications-outline"></ion-icon>
+          </button>
+          <div class="avatar" aria-hidden="true">{{ user.initials }}</div>
+        </div>
+      </header>
+
+      <section class="calorie-card">
+        <div class="calorie-info">
+          <span class="eyebrow">CALORIAS HOJE</span>
+          <p class="calorie-value">
+            {{ summary.calories | number }} / {{ summary.calorieGoal | number }} kcal
+          </p>
+          <p class="calorie-remaining">
+            Restam <strong>{{ summary.caloriesRemaining | number }} kcal</strong> para a meta
+          </p>
+        </div>
+
+        <app-circular-progress
+          [progress]="summary.calorieProgress"
+          label="META"
+        ></app-circular-progress>
+      </section>
+
+      <section class="section">
+        <h2>Macronutrientes</h2>
+        <div class="macro-grid">
+          @for (macro of summary.macros; track macro.key) {
+            <app-macro-card [macro]="macro"></app-macro-card>
+          }
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-header">
+          <h2>Refeições do dia</h2>
+          <ion-button fill="clear" size="small" (click)="onViewAllMeals()">
+            Ver tudo
+          </ion-button>
+        </div>
+
+        <div class="meals-list">
+          @if (summary.meals.length) {
+            @for (meal of summary.meals; track meal.id) {
+              <app-meal-item [meal]="meal"></app-meal-item>
+            }
+          } @else {
+            <app-empty-state
+              icon="restaurant-outline"
+              title="Nenhuma refeição hoje"
+              message="Registre o que você comeu para acompanhar calorias e macronutrientes."
+              actionLabel="Adicionar refeição"
+              (action)="onAddMeal()"
+            ></app-empty-state>
+          }
+        </div>
+      </section>
+    </div>
+  }
+
+  <button type="button" class="add-meal-button" (click)="onAddMeal()">
+    <ion-icon name="add-outline" aria-hidden="true"></ion-icon>
+    Adicionar refeição
+  </button>
+</ion-content>

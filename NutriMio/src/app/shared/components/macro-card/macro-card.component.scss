@@ -1,0 +1,59 @@
+.macro-card {
+  background: var(--nutrimio-surface);
+  border-radius: var(--nutrimio-radius-md);
+  padding: 14px;
+  box-shadow: var(--nutrimio-shadow-card);
+}
+
+.macro-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--nutrimio-text-primary);
+}
+
+.values {
+  margin: 0 0 10px;
+  font-size: 0.875rem;
+  color: var(--nutrimio-text-secondary);
+
+  strong {
+    color: var(--nutrimio-text-primary);
+    font-size: 1rem;
+    font-weight: 700;
+  }
+}
+
+.progress-track {
+  height: 6px;
+  border-radius: 999px;
+  background: var(--nutrimio-progress-track);
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.4s ease;
+}
+
+.progress-label {
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  color: var(--nutrimio-text-muted);
+}

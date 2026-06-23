@@ -1,0 +1,15 @@
+<button type="button" class="meal-item">
+  <div class="icon-wrap">
+    <ion-icon [name]="icon" aria-hidden="true"></ion-icon>
+  </div>
+
+  <div class="details">
+    <span class="name">{{ meal.name }}</span>
+    <span class="meta">{{ meal.foodCount }} alimentos • {{ meal.calories }} kcal</span>
+  </div>
+
+  <div class="trailing">
+    <span class="time">{{ meal.time }}</span>
+    <ion-icon name="chevron-forward-outline" aria-hidden="true"></ion-icon>
+  </div>
+</button>

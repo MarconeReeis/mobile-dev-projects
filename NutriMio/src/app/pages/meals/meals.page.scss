@@ -1,0 +1,74 @@
+.meals-content {
+  --background: var(--nutrimio-background);
+}
+
+.meals-page {
+  padding: calc(env(safe-area-inset-top) + 16px) 20px 24px;
+}
+
+.page-header {
+  margin-bottom: 20px;
+
+  .eyebrow {
+    margin: 0 0 4px;
+    font-size: 0.8125rem;
+    color: var(--nutrimio-text-secondary);
+  }
+
+  h1 {
+    margin: 0;
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--nutrimio-text-primary);
+  }
+}
+
+.top-actions {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.primary-action,
+.secondary-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 44px;
+  border-radius: 999px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.primary-action {
+  flex: 1;
+  border: none;
+  background: var(--ion-color-primary);
+  color: #fff;
+  box-shadow: var(--nutrimio-shadow-fab);
+}
+
+.secondary-action {
+  padding: 0 16px;
+  border: 1px solid var(--nutrimio-border);
+  background: var(--nutrimio-surface);
+  color: var(--nutrimio-text-primary);
+  white-space: nowrap;
+}
+
+.meals-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.meal-slot-button {
+  border: none;
+  background: transparent;
+  padding: 0;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+}

@@ -1,0 +1,80 @@
+<ion-content [fullscreen]="true" class="add-food-content">
+  <div class="add-food">
+    <header class="page-header">
+      <button type="button" class="back-button" aria-label="Voltar" (click)="goBack()">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+      </button>
+      <div>
+        <h1>Cadastrar alimento</h1>
+        <p>Informe os dados da tabela nutricional</p>
+      </div>
+    </header>
+
+    <section class="form-card">
+      <label class="field-label" for="food-name">NOME</label>
+      <ion-input
+        id="food-name"
+        class="field-input"
+        [(ngModel)]="name"
+        placeholder="Ex: Biscoito recheado"
+      ></ion-input>
+
+      <div class="field-row">
+        <div class="field-group">
+          <label class="field-label" for="food-quantity">QUANTIDADE</label>
+          <ion-input
+            id="food-quantity"
+            class="field-input"
+            type="number"
+            [(ngModel)]="quantity"
+          ></ion-input>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label" for="food-unit">UNIDADE</label>
+          <ion-select id="food-unit" class="field-select" [(ngModel)]="unit" interface="popover">
+            @for (item of units; track item) {
+              <ion-select-option [value]="item">{{ item }}</ion-select-option>
+            }
+          </ion-select>
+        </div>
+      </div>
+
+      <label class="field-label" for="food-calories">CALORIAS (kcal)</label>
+      <ion-input
+        id="food-calories"
+        class="field-input"
+        type="number"
+        [(ngModel)]="calories"
+      ></ion-input>
+
+      <span class="field-label macros-title">MACRONUTRIENTES (g)</span>
+
+      <div class="macros-grid">
+        <div class="field-group">
+          <label class="macro-label protein" for="food-protein">Proteínas</label>
+          <ion-input id="food-protein" class="field-input" type="number" [(ngModel)]="protein"></ion-input>
+        </div>
+        <div class="field-group">
+          <label class="macro-label carbs" for="food-carbs">Carboidratos</label>
+          <ion-input id="food-carbs" class="field-input" type="number" [(ngModel)]="carbs"></ion-input>
+        </div>
+        <div class="field-group">
+          <label class="macro-label fat" for="food-fat">Gorduras</label>
+          <ion-input id="food-fat" class="field-input" type="number" [(ngModel)]="fat"></ion-input>
+        </div>
+        <div class="field-group">
+          <label class="macro-label sugar" for="food-sugar">Açúcares</label>
+          <ion-input id="food-sugar" class="field-input" type="number" [(ngModel)]="sugar"></ion-input>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <footer class="action-bar">
+    <button type="button" class="save-button" [disabled]="isSaving || !name.trim()" (click)="onSave()">
+      <ion-icon name="save-outline" aria-hidden="true"></ion-icon>
+      Salvar alimento
+    </button>
+  </footer>
+</ion-content>

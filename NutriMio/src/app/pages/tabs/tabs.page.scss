@@ -1,0 +1,13 @@
+.nutrimio-tab-bar {
+  --background: var(--nutrimio-surface);
+  border-top: 1px solid var(--nutrimio-border);
+  padding-bottom: env(safe-area-inset-bottom);
+  height: calc(56px + env(safe-area-inset-bottom));
+}
+
+ion-tab-button {
+  --color: var(--nutrimio-text-muted);
+  --color-selected: var(--ion-color-primary);
+  font-size: 0.6875rem;
+  font-weight: 500;
+}
