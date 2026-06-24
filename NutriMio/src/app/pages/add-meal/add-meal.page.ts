@@ -9,7 +9,11 @@ import {
   libraryOutline,
   saveOutline,
 } from 'ionicons/icons';
-import { buildMealSummary } from '../../core/utils/meal.utils';
+import {
+  buildMealSummary,
+  getReferenceQuantity,
+  scaleFoodToQuantity,
+} from '../../core/utils/meal.utils';
 import {
   Food,
   MEAL_TYPE_LABELS,
@@ -45,13 +49,17 @@ export class AddMealPage implements OnInit {
 
   readonly catalogFoods = signal<Food[]>([]);
   readonly selectedType = signal<MealType>('breakfast');
-  readonly selectedFoodIds = signal<Set<string>>(new Set());
+  readonly selectedItems = signal<Map<string, number>>(new Map());
 
-  readonly selectedFoods = computed(() =>
-    this.catalogFoods().filter((food) => this.selectedFoodIds().has(food.id)),
-  );
+  readonly selectedMealFoods = computed(() => {
+    const items = this.selectedItems();
 
-  readonly summary = computed(() => buildMealSummary(this.selectedFoods()));
+    return this.catalogFoods()
+      .filter((food) => items.has(food.id))
+      .map((food) => scaleFoodToQuantity(food, items.get(food.id)!));
+  });
+
+  readonly summary = computed(() => buildMealSummary(this.selectedMealFoods()));
 
   isSaving = false;
 
@@ -77,7 +85,7 @@ export class AddMealPage implements OnInit {
 
       const selectFood = params.get('selectFood');
       if (selectFood) {
-        this.selectedFoodIds.update((ids) => new Set([...ids, selectFood]));
+        this.selectFoodWithDefaultQuantity(selectFood);
       }
     });
   }
@@ -88,11 +96,29 @@ export class AddMealPage implements OnInit {
       .find((slot) => slot.type === type)?.meal;
 
     if (meal) {
-      this.selectedFoodIds.set(new Set(meal.foods.map((food) => food.id)));
+      const items = new Map<string, number>();
+      meal.foods.forEach((savedFood) => {
+        items.set(savedFood.id, savedFood.quantity);
+      });
+      this.selectedItems.set(items);
       return;
     }
 
-    this.selectedFoodIds.set(new Set());
+    this.selectedItems.set(new Map());
+  }
+
+  private selectFoodWithDefaultQuantity(foodId: string): void {
+    const food = this.catalogFoods().find((item) => item.id === foodId);
+
+    if (!food) {
+      return;
+    }
+
+    this.selectedItems.update((items) => {
+      const next = new Map(items);
+      next.set(foodId, getReferenceQuantity(food));
+      return next;
+    });
   }
 
   goBack(): void {
@@ -105,17 +131,45 @@ export class AddMealPage implements OnInit {
   }
 
   isSelected(foodId: string): boolean {
-    return this.selectedFoodIds().has(foodId);
+    return this.selectedItems().has(foodId);
+  }
+
+  getConsumedQuantity(foodId: string): number | null {
+    return this.selectedItems().get(foodId) ?? null;
   }
 
   toggleFood(foodId: string): void {
-    this.selectedFoodIds.update((ids) => {
-      const next = new Set(ids);
+    const food = this.catalogFoods().find((item) => item.id === foodId);
+
+    if (!food) {
+      return;
+    }
+
+    this.selectedItems.update((items) => {
+      const next = new Map(items);
+
       if (next.has(foodId)) {
         next.delete(foodId);
       } else {
-        next.add(foodId);
+        next.set(foodId, getReferenceQuantity(food));
       }
+
+      return next;
+    });
+  }
+
+  updateConsumedQuantity(foodId: string, consumedQuantity: number): void {
+    if (consumedQuantity <= 0) {
+      return;
+    }
+
+    this.selectedItems.update((items) => {
+      if (!items.has(foodId)) {
+        return items;
+      }
+
+      const next = new Map(items);
+      next.set(foodId, consumedQuantity);
       return next;
     });
   }
@@ -131,7 +185,7 @@ export class AddMealPage implements OnInit {
   }
 
   async onSave(): Promise<void> {
-    const foods = this.selectedFoods();
+    const foods = this.selectedMealFoods();
 
     if (this.isSaving || !foods.length) {
       return;

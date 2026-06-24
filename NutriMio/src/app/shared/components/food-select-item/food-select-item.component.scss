@@ -1,6 +1,6 @@
 .food-select-item {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 12px;
   width: 100%;
   padding: 14px 16px;
@@ -16,13 +16,14 @@
     background: var(--nutrimio-primary-soft);
   }
 
-  ion-icon {
+  > ion-icon {
     font-size: 1.375rem;
     color: var(--nutrimio-text-muted);
     flex-shrink: 0;
+    margin-top: 2px;
   }
 
-  &.selected ion-icon {
+  &.selected > ion-icon {
     color: var(--ion-color-primary);
   }
 }
@@ -30,8 +31,9 @@
 .info {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 6px;
   min-width: 0;
+  flex: 1;
 }
 
 .name {
@@ -43,4 +45,128 @@
 .meta {
   font-size: 0.8125rem;
   color: var(--nutrimio-text-secondary);
+}
+
+.quantity-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  label {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--nutrimio-text-muted);
+  }
+}
+
+.stepper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.stepper-button {
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--nutrimio-border);
+  border-radius: 50%;
+  background: var(--nutrimio-surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: border-color 0.2s ease, background 0.2s ease;
+
+  ion-icon {
+    font-size: 1.125rem;
+    color: var(--ion-color-primary);
+  }
+
+  &:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+
+  &:not(:disabled):active {
+    background: var(--nutrimio-primary-soft);
+    border-color: var(--ion-color-primary);
+  }
+}
+
+.stepper-value {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  text-align: center;
+}
+
+.count {
+  font-size: 1.375rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--nutrimio-text-primary);
+}
+
+.unit-label {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--nutrimio-text-secondary);
+}
+
+.manual-input {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  label {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--nutrimio-text-muted);
+  }
+}
+
+.manual-input-field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  input {
+    flex: 1;
+    min-width: 0;
+    height: 36px;
+    padding: 0 10px;
+    border: 1px solid var(--nutrimio-border);
+    border-radius: 10px;
+    background: var(--nutrimio-surface);
+    color: var(--nutrimio-text-primary);
+    font-size: 0.9375rem;
+    font-weight: 600;
+  }
+
+  .unit {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--nutrimio-text-secondary);
+    flex-shrink: 0;
+  }
+}
+
+.equivalent {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--nutrimio-text-secondary);
+}
+
+.scaled-meta {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--ion-color-primary);
 }

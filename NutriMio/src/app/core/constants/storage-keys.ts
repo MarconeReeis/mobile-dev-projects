@@ -8,4 +8,5 @@ export const STORAGE_KEYS = {
 } as const;
 
 /** v4: remove dados mockados e passa a usar apenas storage real */
-export const CURRENT_DATA_MIGRATION_VERSION = 4;
+/** v5: adiciona referenceQuantity nos alimentos salvos em refeições */
+export const CURRENT_DATA_MIGRATION_VERSION = 5;

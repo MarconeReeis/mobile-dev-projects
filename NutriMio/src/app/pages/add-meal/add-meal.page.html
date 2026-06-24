@@ -28,7 +28,7 @@
       <div class="section-header">
         <div>
           <h2>Selecione os alimentos</h2>
-          <p class="hint">Toque para marcar um ou mais itens do seu catálogo</p>
+          <p class="hint">Use +/− para porções ou informe a quantidade exata consumida</p>
         </div>
         <ion-button fill="clear" size="small" (click)="onRegisterFood()">
           <ion-icon slot="start" name="add-outline"></ion-icon>
@@ -42,7 +42,9 @@
             <app-food-select-item
               [food]="food"
               [selected]="isSelected(food.id)"
+              [consumedQuantity]="getConsumedQuantity(food.id)"
               (toggled)="toggleFood($event)"
+              (consumedQuantityChanged)="updateConsumedQuantity(food.id, $event)"
             ></app-food-select-item>
           }
         </div>
@@ -61,10 +63,10 @@
       </button>
     </section>
 
-    @if (selectedFoods().length) {
+    @if (selectedMealFoods().length) {
       <section class="summary-section">
         <p class="selected-count">
-          {{ selectedFoods().length }} alimento(s) selecionado(s)
+          {{ selectedMealFoods().length }} alimento(s) selecionado(s)
         </p>
         <app-meal-summary-card [summary]="summary()"></app-meal-summary-card>
       </section>
@@ -75,7 +77,7 @@
     <button
       type="button"
       class="save-button"
-      [disabled]="isSaving || !selectedFoods().length"
+      [disabled]="isSaving || !selectedMealFoods().length"
       (click)="onSave()"
     >
       <ion-icon name="save-outline" aria-hidden="true"></ion-icon>

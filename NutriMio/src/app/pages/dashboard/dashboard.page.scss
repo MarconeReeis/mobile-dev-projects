@@ -3,7 +3,7 @@
 }
 
 .dashboard {
-  padding: calc(env(safe-area-inset-top) + 16px) 20px 120px;
+  padding: calc(env(safe-area-inset-top) + 16px) 20px 80px;
 }
 
 .dashboard-header {
@@ -156,7 +156,7 @@
 .add-meal-button {
   position: fixed;
   left: 50%;
-  bottom: calc(72px + env(safe-area-inset-bottom));
+  bottom: 12px;
   transform: translateX(-50%);
   z-index: 10;
   display: inline-flex;

@@ -6,8 +6,64 @@
 
   <div class="info">
     <span class="name">{{ food.name }}</span>
-    <span class="meta">
-      {{ food.quantity }} {{ food.unit }} · {{ food.calories }} kcal
-    </span>
+
+    @if (selected && consumedQuantity !== null) {
+      <div class="quantity-row" (click)="$event.stopPropagation()">
+        <label>Porções ({{ food.quantity }} {{ food.unit }} cada)</label>
+
+        <div class="stepper">
+          <button
+            type="button"
+            class="stepper-button"
+            aria-label="Diminuir uma porção"
+            [disabled]="!canDecrement"
+            (click)="decrement()"
+          >
+            <ion-icon name="remove-outline" aria-hidden="true"></ion-icon>
+          </button>
+
+          <div class="stepper-value">
+            <span class="count">{{ displayPortionCount }}</span>
+            <span class="unit-label">{{ portionLabel }}</span>
+          </div>
+
+          <button
+            type="button"
+            class="stepper-button"
+            aria-label="Aumentar uma porção"
+            (click)="increment()"
+          >
+            <ion-icon name="add-outline" aria-hidden="true"></ion-icon>
+          </button>
+        </div>
+
+        <div class="manual-input">
+          <label [for]="'qty-' + food.id">Ou informe a quantidade</label>
+          <div class="manual-input-field">
+            <input
+              [id]="'qty-' + food.id"
+              type="number"
+              inputmode="decimal"
+              min="0.1"
+              step="any"
+              [value]="consumedQuantity"
+              (input)="onManualInput($event)"
+            />
+            <span class="unit">{{ food.unit }}</span>
+          </div>
+        </div>
+
+        @if (scaledFood; as scaled) {
+          <span class="scaled-meta">
+            {{ scaled.calories }} kcal · P {{ scaled.macros.protein }}g · C
+            {{ scaled.macros.carbs }}g · G {{ scaled.macros.fat }}g
+          </span>
+        }
+      </div>
+    } @else {
+      <span class="meta">
+        Porção cadastrada: {{ food.quantity }} {{ food.unit }} · {{ food.calories }} kcal
+      </span>
+    }
   </div>
 </button>
