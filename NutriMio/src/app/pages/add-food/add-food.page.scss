@@ -10,19 +10,25 @@
   display: flex;
   align-items: flex-start;
   gap: 12px;
-  margin-bottom: 24px;
+  margin-bottom: 28px;
+}
+
+.header-text {
+  min-width: 0;
 
   h1 {
-    margin: 0 0 4px;
+    margin: 0;
     font-size: 1.25rem;
     font-weight: 700;
     color: var(--nutrimio-text-primary);
+    line-height: 1.25;
   }
 
-  p {
-    margin: 0;
+  .subtitle {
+    margin: 4px 0 0;
     font-size: 0.875rem;
     color: var(--nutrimio-text-secondary);
+    line-height: 1.35;
   }
 }
 
@@ -41,66 +47,264 @@
 
   ion-icon {
     font-size: 1.25rem;
+    color: var(--nutrimio-text-primary);
   }
 }
 
-.form-card {
-  background: var(--nutrimio-surface);
-  border-radius: var(--nutrimio-radius-lg);
-  padding: 20px;
-  box-shadow: var(--nutrimio-shadow-card);
+.form-section {
+  margin-bottom: 28px;
 }
 
-.field-label {
+.section-label {
   display: block;
   font-size: 0.6875rem;
   font-weight: 600;
   letter-spacing: 0.06em;
   color: var(--nutrimio-text-muted);
+  margin-bottom: 14px;
+}
+
+.section-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+
+  .section-label {
+    margin-bottom: 0;
+  }
+}
+
+.reference-hint {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--nutrimio-text-muted);
+  white-space: nowrap;
+}
+
+.field-label {
+  display: block;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--nutrimio-text-primary);
   margin-bottom: 8px;
 }
 
-.field-input,
-.field-select {
-  --background: var(--nutrimio-background);
-  --padding-start: 14px;
-  --padding-end: 14px;
+.field-input {
+  width: 100%;
+  height: 48px;
+  padding: 0 14px;
   border: 1px solid var(--nutrimio-border);
   border-radius: var(--nutrimio-radius-sm);
+  background: var(--nutrimio-surface);
+  color: var(--nutrimio-text-primary);
+  font-size: 0.9375rem;
+  outline: none;
   margin-bottom: 16px;
-  min-height: 44px;
+
+  &::placeholder {
+    color: var(--nutrimio-text-muted);
+  }
+
+  &:focus {
+    border-color: var(--ion-color-primary);
+  }
 }
 
-.field-row {
+.quantity-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12px;
+  align-items: end;
 }
 
-.field-group {
-  min-width: 0;
+.quantity-field .field-input {
+  margin-bottom: 0;
 }
 
-.macros-title {
-  margin-top: 8px;
+.unit-field .field-label {
+  margin-bottom: 8px;
 }
 
-.macros-grid {
+.unit-pills {
+  display: flex;
+  height: 48px;
+  padding: 4px;
+  border-radius: var(--nutrimio-radius-sm);
+  background: #eef1ef;
+  gap: 4px;
+}
+
+.unit-pill {
+  flex: 1;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--nutrimio-text-secondary);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+
+  &.selected {
+    background: var(--nutrimio-surface);
+    color: var(--nutrimio-text-primary);
+    box-shadow: 0 1px 4px rgba(26, 31, 28, 0.08);
+  }
+}
+
+.nutrition-grid,
+.micronutrients-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
 }
 
-.macro-label {
-  display: block;
-  font-size: 0.8125rem;
-  font-weight: 600;
-  margin-bottom: 8px;
+.field-group {
+  min-width: 0;
 
-  &.protein { color: var(--nutrimio-macro-protein); }
-  &.carbs { color: var(--nutrimio-macro-carbs); }
-  &.fat { color: var(--nutrimio-macro-fat-pill); }
-  &.sugar { color: var(--nutrimio-macro-sugar); }
+  &.full-width {
+    grid-column: 1 / -1;
+  }
+}
+
+.macro-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  &.protein .dot {
+    background: var(--nutrimio-macro-protein);
+  }
+
+  &.carbs .dot {
+    background: var(--nutrimio-macro-carbs);
+  }
+
+  &.fat .dot {
+    background: var(--nutrimio-macro-fat);
+  }
+
+  &.sugar .dot {
+    background: var(--nutrimio-macro-sugar);
+  }
+}
+
+.input-with-unit {
+  display: flex;
+  align-items: center;
+  height: 48px;
+  padding: 0 14px;
+  border: 1px solid var(--nutrimio-border);
+  border-radius: var(--nutrimio-radius-sm);
+  background: var(--nutrimio-surface);
+
+  input {
+    flex: 1;
+    min-width: 0;
+    border: none;
+    background: transparent;
+    color: var(--nutrimio-text-primary);
+    font-size: 0.9375rem;
+    font-weight: 500;
+    outline: none;
+  }
+
+  .unit {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--nutrimio-text-muted);
+    flex-shrink: 0;
+    margin-left: 8px;
+  }
+
+  &:focus-within {
+    border-color: var(--ion-color-primary);
+  }
+}
+
+.micronutrients-card {
+  margin-bottom: 20px;
+  border: 1px solid var(--nutrimio-border);
+  border-radius: var(--nutrimio-radius-md);
+  background: var(--nutrimio-surface);
+  overflow: hidden;
+}
+
+.accordion-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  padding: 16px;
+  border: none;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+
+  h2 {
+    margin: 0 0 4px;
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: var(--nutrimio-text-primary);
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.8125rem;
+    color: var(--nutrimio-text-secondary);
+  }
+
+  ion-icon {
+    font-size: 1.125rem;
+    color: var(--nutrimio-text-muted);
+    flex-shrink: 0;
+  }
+}
+
+.micronutrients-grid {
+  padding: 0 16px 16px;
+}
+
+.coming-soon-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px;
+  border: 1.5px dashed rgba(0, 163, 92, 0.45);
+  border-radius: var(--nutrimio-radius-md);
+  background: var(--nutrimio-primary-soft);
+
+  ion-icon {
+    font-size: 1.25rem;
+    color: var(--ion-color-primary);
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  strong {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: var(--ion-color-primary);
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.8125rem;
+    line-height: 1.45;
+    color: var(--nutrimio-text-secondary);
+  }
 }
 
 .action-bar {
@@ -110,6 +314,7 @@
   bottom: calc(56px + env(safe-area-inset-bottom));
   padding: 12px 20px;
   background: linear-gradient(to top, var(--nutrimio-background) 70%, transparent);
+  z-index: 10;
 }
 
 .save-button {
@@ -121,14 +326,11 @@
   color: #fff;
   font-size: 1rem;
   font-weight: 600;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
   cursor: pointer;
   box-shadow: var(--nutrimio-shadow-fab);
 
   &:disabled {
     opacity: 0.6;
+    cursor: not-allowed;
   }
 }

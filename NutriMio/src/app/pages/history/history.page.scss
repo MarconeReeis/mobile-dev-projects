@@ -182,13 +182,17 @@
 .macro-pill {
   background: var(--nutrimio-background);
   border-radius: var(--nutrimio-radius-sm);
-  padding: 12px 10px;
+  padding: 12px 8px;
   text-align: center;
+  min-width: 0;
 
   strong {
     display: block;
-    font-size: 1rem;
+    font-size: 0.9375rem;
     margin-top: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }
 

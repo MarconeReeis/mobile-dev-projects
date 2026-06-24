@@ -53,20 +53,20 @@
         <ion-icon name="flag-outline" class="goal-icon" aria-hidden="true"></ion-icon>
       </div>
 
-      <p class="day-calories">{{ selectedDay().calories | number }} kcal</p>
+      <p class="day-calories">{{ selectedDay().calories | number:'1.0-1' }} kcal</p>
 
       <div class="macro-row">
         <div class="macro-pill">
           <span class="macro-label protein">Proteínas</span>
-          <strong>{{ selectedDay().macros.protein }}g</strong>
+          <strong>{{ selectedDay().macros.protein | nutrition }}g</strong>
         </div>
         <div class="macro-pill">
           <span class="macro-label carbs">Carbos</span>
-          <strong>{{ selectedDay().macros.carbs }}g</strong>
+          <strong>{{ selectedDay().macros.carbs | nutrition }}g</strong>
         </div>
         <div class="macro-pill">
           <span class="macro-label fat">Gorduras</span>
-          <strong>{{ selectedDay().macros.fat }}g</strong>
+          <strong>{{ selectedDay().macros.fat | nutrition }}g</strong>
         </div>
       </div>
     </section>

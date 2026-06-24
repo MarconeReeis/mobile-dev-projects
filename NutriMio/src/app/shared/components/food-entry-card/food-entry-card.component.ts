@@ -4,11 +4,13 @@ import { addIcons } from 'ionicons';
 import { trashOutline } from 'ionicons/icons';
 import { FoodEntry } from '../../../models';
 
+import { FormatNutritionPipe } from '../../pipes/format-nutrition.pipe';
+
 @Component({
   selector: 'app-food-entry-card',
   templateUrl: './food-entry-card.component.html',
   styleUrls: ['./food-entry-card.component.scss'],
-  imports: [IonIcon],
+  imports: [IonIcon, FormatNutritionPipe],
 })
 export class FoodEntryCardComponent {
   @Input({ required: true }) food!: FoodEntry;

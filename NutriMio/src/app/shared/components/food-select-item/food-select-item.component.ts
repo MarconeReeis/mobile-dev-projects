@@ -6,21 +6,20 @@ import {
   checkmarkCircle,
   ellipseOutline,
   removeOutline,
+  trashOutline,
 } from 'ionicons/icons';
 import {
-  formatPortionCount,
-  getPortionCountFromConsumed,
-  getPortionStepLabel,
   getReferenceQuantity,
   scaleFoodToQuantity,
 } from '../../../core/utils/meal.utils';
-import { Food } from '../../../models';
+import { Food, MacroNutrients } from '../../../models';
+import { FormatNutritionPipe } from '../../pipes/format-nutrition.pipe';
 
 @Component({
   selector: 'app-food-select-item',
   templateUrl: './food-select-item.component.html',
   styleUrls: ['./food-select-item.component.scss'],
-  imports: [IonIcon],
+  imports: [IonIcon, FormatNutritionPipe],
 })
 export class FoodSelectItemComponent {
   @Input({ required: true }) food!: Food;
@@ -28,9 +27,16 @@ export class FoodSelectItemComponent {
   @Input() consumedQuantity: number | null = null;
   @Output() toggled = new EventEmitter<string>();
   @Output() consumedQuantityChanged = new EventEmitter<number>();
+  @Output() removed = new EventEmitter<string>();
 
   constructor() {
-    addIcons({ checkmarkCircle, ellipseOutline, removeOutline, addOutline });
+    addIcons({
+      checkmarkCircle,
+      ellipseOutline,
+      removeOutline,
+      addOutline,
+      trashOutline,
+    });
   }
 
   get referenceQuantity(): number {
@@ -45,29 +51,24 @@ export class FoodSelectItemComponent {
     return scaleFoodToQuantity(this.food, this.consumedQuantity);
   }
 
-  get displayPortionCount(): string {
-    if (this.consumedQuantity == null) {
-      return '';
-    }
-
-    return formatPortionCount(getPortionCountFromConsumed(this.food, this.consumedQuantity));
-  }
-
-  get portionLabel(): string {
-    if (this.consumedQuantity == null) {
-      return '';
-    }
-
-    const count = getPortionCountFromConsumed(this.food, this.consumedQuantity);
-    return getPortionStepLabel(this.food.unit, count);
+  get displayMacros(): MacroNutrients {
+    return this.scaledFood?.macros ?? this.food.macros;
   }
 
   get canDecrement(): boolean {
     return this.consumedQuantity != null && this.consumedQuantity > this.referenceQuantity;
   }
 
+  formatQuantity(value: number): string {
+    return Number.isInteger(value) ? String(value) : value.toFixed(1);
+  }
+
   onToggle(): void {
     this.toggled.emit(this.food.id);
+  }
+
+  onRemove(): void {
+    this.removed.emit(this.food.id);
   }
 
   decrement(): void {
@@ -84,15 +85,5 @@ export class FoodSelectItemComponent {
     }
 
     this.consumedQuantityChanged.emit(this.consumedQuantity + this.referenceQuantity);
-  }
-
-  onManualInput(event: Event): void {
-    const value = Number((event.target as HTMLInputElement).value);
-
-    if (!Number.isFinite(value) || value <= 0) {
-      return;
-    }
-
-    this.consumedQuantityChanged.emit(value);
   }
 }

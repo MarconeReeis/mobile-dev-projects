@@ -1,16 +1,16 @@
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
-import { IonButton, IonContent, IonIcon } from '@ionic/angular/standalone';
+import { IonContent, IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
   addOutline,
   arrowBackOutline,
   libraryOutline,
   saveOutline,
+  searchOutline,
 } from 'ionicons/icons';
 import {
-  buildMealSummary,
   getReferenceQuantity,
   scaleFoodToQuantity,
 } from '../../core/utils/meal.utils';
@@ -23,19 +23,12 @@ import {
 import { FoodCatalogService } from '../../services/food-catalog.service';
 import { NutritionService } from '../../services/nutrition.service';
 import { FoodSelectItemComponent } from '../../shared/components/food-select-item/food-select-item.component';
-import { MealSummaryCardComponent } from '../../shared/components/meal-summary-card/meal-summary-card.component';
 
 @Component({
   selector: 'app-add-meal',
   templateUrl: './add-meal.page.html',
   styleUrls: ['./add-meal.page.scss'],
-  imports: [
-    IonContent,
-    IonButton,
-    IonIcon,
-    FoodSelectItemComponent,
-    MealSummaryCardComponent,
-  ],
+  imports: [IonContent, IonIcon, FoodSelectItemComponent],
 })
 export class AddMealPage implements OnInit {
   private readonly router = inject(Router);
@@ -48,8 +41,21 @@ export class AddMealPage implements OnInit {
   readonly mealTypeLabels = MEAL_TYPE_LABELS;
 
   readonly catalogFoods = signal<Food[]>([]);
+  readonly searchQuery = signal('');
   readonly selectedType = signal<MealType>('breakfast');
   readonly selectedItems = signal<Map<string, number>>(new Map());
+
+  readonly filteredFoods = computed(() => {
+    const query = this.searchQuery().trim().toLowerCase();
+
+    if (!query) {
+      return this.catalogFoods();
+    }
+
+    return this.catalogFoods().filter((food) =>
+      food.name.toLowerCase().includes(query),
+    );
+  });
 
   readonly selectedMealFoods = computed(() => {
     const items = this.selectedItems();
@@ -59,8 +65,6 @@ export class AddMealPage implements OnInit {
       .map((food) => scaleFoodToQuantity(food, items.get(food.id)!));
   });
 
-  readonly summary = computed(() => buildMealSummary(this.selectedMealFoods()));
-
   isSaving = false;
 
   constructor() {
@@ -68,6 +72,7 @@ export class AddMealPage implements OnInit {
       arrowBackOutline,
       addOutline,
       saveOutline,
+      searchOutline,
       libraryOutline,
     });
   }
@@ -130,6 +135,10 @@ export class AddMealPage implements OnInit {
     this.loadSelectionForType(type);
   }
 
+  onSearchInput(event: Event): void {
+    this.searchQuery.set((event.target as HTMLInputElement).value);
+  }
+
   isSelected(foodId: string): boolean {
     return this.selectedItems().has(foodId);
   }
@@ -154,6 +163,14 @@ export class AddMealPage implements OnInit {
         next.set(foodId, getReferenceQuantity(food));
       }
 
+      return next;
+    });
+  }
+
+  removeFood(foodId: string): void {
+    this.selectedItems.update((items) => {
+      const next = new Map(items);
+      next.delete(foodId);
       return next;
     });
   }

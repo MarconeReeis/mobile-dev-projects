@@ -14,6 +14,7 @@ import { toDateKey } from '../../core/utils/date.utils';
 import { CalendarDay, DayHistoryDetail, DayStatus } from '../../models';
 import { NutritionService } from '../../services/nutrition.service';
 import { EmptyStateComponent } from '../../shared/components/empty-state/empty-state.component';
+import { FormatNutritionPipe } from '../../shared/pipes/format-nutrition.pipe';
 import { MonthTrendChartComponent } from '../../shared/components/month-trend-chart/month-trend-chart.component';
 import { WeekChartComponent } from '../../shared/components/week-chart/week-chart.component';
 
@@ -21,7 +22,7 @@ import { WeekChartComponent } from '../../shared/components/week-chart/week-char
   selector: 'app-history',
   templateUrl: './history.page.html',
   styleUrls: ['./history.page.scss'],
-  imports: [DecimalPipe, IonContent, IonIcon, WeekChartComponent, MonthTrendChartComponent, EmptyStateComponent],
+  imports: [DecimalPipe, FormatNutritionPipe, IonContent, IonIcon, WeekChartComponent, MonthTrendChartComponent, EmptyStateComponent],
 })
 export class HistoryPage {
   private readonly router = inject(Router);

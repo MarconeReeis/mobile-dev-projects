@@ -4,77 +4,158 @@
       <button type="button" class="back-button" aria-label="Voltar" (click)="goBack()">
         <ion-icon name="arrow-back-outline"></ion-icon>
       </button>
-      <div>
-        <h1>Cadastrar alimento</h1>
-        <p>Informe os dados da tabela nutricional</p>
+      <div class="header-text">
+        <h1>{{ pageTitle }}</h1>
+        <p class="subtitle">{{ pageSubtitle }}</p>
       </div>
     </header>
 
-    <section class="form-card">
-      <label class="field-label" for="food-name">NOME</label>
-      <ion-input
+    <section class="form-section">
+      <span class="section-label">IDENTIFICAÇÃO</span>
+
+      <label class="field-label" for="food-name">Nome do alimento</label>
+      <input
         id="food-name"
         class="field-input"
+        type="text"
         [(ngModel)]="name"
-        placeholder="Ex: Biscoito recheado"
-      ></ion-input>
+        placeholder="Ex: Iogurte natural"
+      />
 
-      <div class="field-row">
-        <div class="field-group">
-          <label class="field-label" for="food-quantity">QUANTIDADE</label>
-          <ion-input
+      <div class="quantity-row">
+        <div class="quantity-field">
+          <label class="field-label" for="food-quantity">Quantidade de referência</label>
+          <input
             id="food-quantity"
             class="field-input"
             type="number"
+            inputmode="decimal"
+            min="0.1"
+            step="any"
             [(ngModel)]="quantity"
-          ></ion-input>
+          />
         </div>
 
-        <div class="field-group">
-          <label class="field-label" for="food-unit">UNIDADE</label>
-          <ion-select id="food-unit" class="field-select" [(ngModel)]="unit" interface="popover">
-            @for (item of units; track item) {
-              <ion-select-option [value]="item">{{ item }}</ion-select-option>
+        <div class="unit-field">
+          <span class="field-label">Unidade</span>
+          <div class="unit-pills" role="group" aria-label="Unidade de medida">
+            @for (item of availableUnits; track item) {
+              <button
+                type="button"
+                class="unit-pill"
+                [class.selected]="unit === item"
+                (click)="selectUnit(item)"
+              >
+                {{ item }}
+              </button>
             }
-          </ion-select>
-        </div>
-      </div>
-
-      <label class="field-label" for="food-calories">CALORIAS (kcal)</label>
-      <ion-input
-        id="food-calories"
-        class="field-input"
-        type="number"
-        [(ngModel)]="calories"
-      ></ion-input>
-
-      <span class="field-label macros-title">MACRONUTRIENTES (g)</span>
-
-      <div class="macros-grid">
-        <div class="field-group">
-          <label class="macro-label protein" for="food-protein">Proteínas</label>
-          <ion-input id="food-protein" class="field-input" type="number" [(ngModel)]="protein"></ion-input>
-        </div>
-        <div class="field-group">
-          <label class="macro-label carbs" for="food-carbs">Carboidratos</label>
-          <ion-input id="food-carbs" class="field-input" type="number" [(ngModel)]="carbs"></ion-input>
-        </div>
-        <div class="field-group">
-          <label class="macro-label fat" for="food-fat">Gorduras</label>
-          <ion-input id="food-fat" class="field-input" type="number" [(ngModel)]="fat"></ion-input>
-        </div>
-        <div class="field-group">
-          <label class="macro-label sugar" for="food-sugar">Açúcares</label>
-          <ion-input id="food-sugar" class="field-input" type="number" [(ngModel)]="sugar"></ion-input>
+          </div>
         </div>
       </div>
     </section>
+
+    <section class="form-section">
+      <div class="section-header-row">
+        <span class="section-label">INFORMAÇÕES NUTRICIONAIS</span>
+        <span class="reference-hint">{{ referenceLabel }}</span>
+      </div>
+
+      <div class="nutrition-grid">
+        <div class="field-group">
+          <label class="field-label" for="food-calories">Calorias</label>
+          <div class="input-with-unit">
+            <input id="food-calories" type="number" inputmode="decimal" min="0" [(ngModel)]="calories" />
+            <span class="unit">kcal</span>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label macro-label protein" for="food-protein">
+            <span class="dot"></span>Proteínas
+          </label>
+          <div class="input-with-unit">
+            <input id="food-protein" type="number" inputmode="decimal" min="0" [(ngModel)]="protein" />
+            <span class="unit">g</span>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label macro-label carbs" for="food-carbs">
+            <span class="dot"></span>Carboidratos
+          </label>
+          <div class="input-with-unit">
+            <input id="food-carbs" type="number" inputmode="decimal" min="0" [(ngModel)]="carbs" />
+            <span class="unit">g</span>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label macro-label fat" for="food-fat">
+            <span class="dot"></span>Gorduras
+          </label>
+          <div class="input-with-unit">
+            <input id="food-fat" type="number" inputmode="decimal" min="0" [(ngModel)]="fat" />
+            <span class="unit">g</span>
+          </div>
+        </div>
+
+        <div class="field-group full-width">
+          <label class="field-label macro-label sugar" for="food-sugar">
+            <span class="dot"></span>Açúcares
+          </label>
+          <div class="input-with-unit">
+            <input id="food-sugar" type="number" inputmode="decimal" min="0" [(ngModel)]="sugar" />
+            <span class="unit">g</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="micronutrients-card">
+      <button type="button" class="accordion-header" (click)="toggleMicronutrients()">
+        <div class="accordion-text">
+          <h2>Micronutrientes</h2>
+          <p>Opcional · vitaminas e minerais</p>
+        </div>
+        <ion-icon
+          [name]="micronutrientsOpen ? 'chevron-up-outline' : 'chevron-down-outline'"
+          aria-hidden="true"
+        ></ion-icon>
+      </button>
+
+      @if (micronutrientsOpen) {
+        <div class="micronutrients-grid">
+          @for (field of micronutrientFields; track field.key) {
+            <div class="field-group">
+              <label class="field-label" [for]="'micro-' + field.key">{{ field.label }}</label>
+              <div class="input-with-unit">
+                <input
+                  [id]="'micro-' + field.key"
+                  type="number"
+                  inputmode="decimal"
+                  min="0"
+                  [(ngModel)]="micronutrients[field.key]"
+                />
+                <span class="unit">{{ field.unit }}</span>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </section>
+
+    <aside class="coming-soon-banner">
+      <ion-icon name="sparkles-outline" aria-hidden="true"></ion-icon>
+      <div>
+        <strong>Em breve</strong>
+        <p>Leitor de código de barras, busca automática e scanner por foto com IA.</p>
+      </div>
+    </aside>
   </div>
 
   <footer class="action-bar">
     <button type="button" class="save-button" [disabled]="isSaving || !name.trim()" (click)="onSave()">
-      <ion-icon name="save-outline" aria-hidden="true"></ion-icon>
-      Salvar alimento
+      {{ saveLabel }}
     </button>
   </footer>
 </ion-content>

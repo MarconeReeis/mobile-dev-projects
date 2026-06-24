@@ -47,6 +47,21 @@ export class FoodCatalogService {
     return newFood;
   }
 
+  async updateFood(id: string, food: Omit<Food, 'id'>): Promise<Food | undefined> {
+    const foods = [...this.foodsSubject.value];
+    const index = foods.findIndex((item) => item.id === id);
+
+    if (index === -1) {
+      return undefined;
+    }
+
+    const updated: Food = { ...food, id };
+    foods[index] = updated;
+    await this.persist(foods);
+    this.foodsSubject.next(foods);
+    return updated;
+  }
+
   async deleteFood(id: string): Promise<void> {
     const foods = this.foodsSubject.value.filter((food) => food.id !== id);
     await this.persist(foods);

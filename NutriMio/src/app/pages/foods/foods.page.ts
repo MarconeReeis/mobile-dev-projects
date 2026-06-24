@@ -4,7 +4,7 @@ import { Location } from '@angular/common';
 import { AsyncPipe } from '@angular/common';
 import { IonButton, IonContent, IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { addOutline, arrowBackOutline, nutritionOutline, trashOutline } from 'ionicons/icons';
+import { addOutline, arrowBackOutline, createOutline, nutritionOutline, trashOutline } from 'ionicons/icons';
 import { Observable } from 'rxjs';
 import { Food } from '../../models';
 import { FoodCatalogService } from '../../services/food-catalog.service';
@@ -24,7 +24,7 @@ export class FoodsPage {
   readonly foods$: Observable<Food[]> = this.foodCatalog.foods$;
 
   constructor() {
-    addIcons({ arrowBackOutline, addOutline, trashOutline, nutritionOutline });
+    addIcons({ arrowBackOutline, addOutline, createOutline, trashOutline, nutritionOutline });
   }
 
   goBack(): void {
@@ -33,6 +33,12 @@ export class FoodsPage {
 
   onAddFood(): void {
     void this.router.navigate(['/tabs/meals/foods/add']);
+  }
+
+  onEditFood(foodId: string): void {
+    void this.router.navigate(['/tabs/meals/foods/add'], {
+      queryParams: { foodId },
+    });
   }
 
   async onDeleteFood(foodId: string): Promise<void> {

@@ -7,20 +7,44 @@ const EMPTY_MACROS: MacroNutrients = {
   sugar: 0,
 };
 
+function roundNutritionValue(value: number): number {
+  return Math.round(value * 10) / 10;
+}
+
+export function roundNutrition(value: number): number {
+  return roundNutritionValue(value);
+}
+
+export function roundMacros(macros: MacroNutrients): MacroNutrients {
+  return {
+    protein: roundNutritionValue(macros.protein),
+    carbs: roundNutritionValue(macros.carbs),
+    fat: roundNutritionValue(macros.fat),
+    sugar: roundNutritionValue(macros.sugar),
+  };
+}
+
+export function formatNutritionValue(value: number): string {
+  const rounded = roundNutritionValue(value);
+  return Number.isInteger(rounded) ? String(rounded) : rounded.toFixed(1);
+}
+
 export function sumMacros(foods: FoodEntry[]): MacroNutrients {
-  return foods.reduce(
-    (total, food) => ({
-      protein: total.protein + food.macros.protein,
-      carbs: total.carbs + food.macros.carbs,
-      fat: total.fat + food.macros.fat,
-      sugar: total.sugar + food.macros.sugar,
-    }),
-    { ...EMPTY_MACROS },
+  return roundMacros(
+    foods.reduce(
+      (total, food) => ({
+        protein: total.protein + food.macros.protein,
+        carbs: total.carbs + food.macros.carbs,
+        fat: total.fat + food.macros.fat,
+        sugar: total.sugar + food.macros.sugar,
+      }),
+      { ...EMPTY_MACROS },
+    ),
   );
 }
 
 export function sumCalories(foods: FoodEntry[]): number {
-  return foods.reduce((total, food) => total + food.calories, 0);
+  return roundNutritionValue(foods.reduce((total, food) => total + food.calories, 0));
 }
 
 export function buildMealSummary(foods: FoodEntry[]): MealSummary {
@@ -34,12 +58,7 @@ export function getReferenceQuantity(food: FoodEntry): number {
   return food.referenceQuantity ?? food.quantity;
 }
 
-function roundNutrition(value: number): number {
-  return Math.round(value * 10) / 10;
-}
-
-export function scaleFoodToQuantity(
-  catalogFood: FoodEntry,
+export function scaleFoodToQuantity(  catalogFood: FoodEntry,
   consumedQuantity: number,
 ): FoodEntry {
   const referenceQuantity = getReferenceQuantity(catalogFood);
@@ -56,13 +75,13 @@ export function scaleFoodToQuantity(
     quantity: consumedQuantity,
     unit: catalogFood.unit,
     referenceQuantity,
-    calories: roundNutrition(catalogFood.calories * ratio),
-    macros: {
-      protein: roundNutrition(catalogFood.macros.protein * ratio),
-      carbs: roundNutrition(catalogFood.macros.carbs * ratio),
-      fat: roundNutrition(catalogFood.macros.fat * ratio),
-      sugar: roundNutrition(catalogFood.macros.sugar * ratio),
-    },
+    calories: roundNutritionValue(catalogFood.calories * ratio),
+    macros: roundMacros({
+      protein: catalogFood.macros.protein * ratio,
+      carbs: catalogFood.macros.carbs * ratio,
+      fat: catalogFood.macros.fat * ratio,
+      sugar: catalogFood.macros.sugar * ratio,
+    }),
   };
 }
 

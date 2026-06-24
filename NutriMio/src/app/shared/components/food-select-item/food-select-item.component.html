@@ -1,69 +1,75 @@
-<button type="button" class="food-select-item" [class.selected]="selected" (click)="onToggle()">
-  <ion-icon
-    [name]="selected ? 'checkmark-circle' : 'ellipse-outline'"
-    aria-hidden="true"
-  ></ion-icon>
+<article class="food-card" [class.selected]="selected">
+  <button type="button" class="card-main" (click)="onToggle()">
+    <ion-icon
+      class="check-icon"
+      [name]="selected ? 'checkmark-circle' : 'ellipse-outline'"
+      aria-hidden="true"
+    ></ion-icon>
 
-  <div class="info">
-    <span class="name">{{ food.name }}</span>
-
-    @if (selected && consumedQuantity !== null) {
-      <div class="quantity-row" (click)="$event.stopPropagation()">
-        <label>Porções ({{ food.quantity }} {{ food.unit }} cada)</label>
-
-        <div class="stepper">
-          <button
-            type="button"
-            class="stepper-button"
-            aria-label="Diminuir uma porção"
-            [disabled]="!canDecrement"
-            (click)="decrement()"
-          >
-            <ion-icon name="remove-outline" aria-hidden="true"></ion-icon>
-          </button>
-
-          <div class="stepper-value">
-            <span class="count">{{ displayPortionCount }}</span>
-            <span class="unit-label">{{ portionLabel }}</span>
-          </div>
-
-          <button
-            type="button"
-            class="stepper-button"
-            aria-label="Aumentar uma porção"
-            (click)="increment()"
-          >
-            <ion-icon name="add-outline" aria-hidden="true"></ion-icon>
-          </button>
-        </div>
-
-        <div class="manual-input">
-          <label [for]="'qty-' + food.id">Ou informe a quantidade</label>
-          <div class="manual-input-field">
-            <input
-              [id]="'qty-' + food.id"
-              type="number"
-              inputmode="decimal"
-              min="0.1"
-              step="any"
-              [value]="consumedQuantity"
-              (input)="onManualInput($event)"
-            />
-            <span class="unit">{{ food.unit }}</span>
-          </div>
-        </div>
-
-        @if (scaledFood; as scaled) {
-          <span class="scaled-meta">
-            {{ scaled.calories }} kcal · P {{ scaled.macros.protein }}g · C
-            {{ scaled.macros.carbs }}g · G {{ scaled.macros.fat }}g
-          </span>
-        }
-      </div>
-    } @else {
-      <span class="meta">
-        Porção cadastrada: {{ food.quantity }} {{ food.unit }} · {{ food.calories }} kcal
+    <div class="info">
+      <span class="name">{{ food.name }}</span>
+      <span class="portion-meta">
+        Porção {{ food.quantity }}{{ food.unit }} · {{ food.calories }} kcal
       </span>
-    }
-  </div>
-</button>
+
+      <div class="macro-tags">
+        <span class="macro-tag protein">
+          <span class="dot"></span>P {{ displayMacros.protein | nutrition }}g
+        </span>
+        <span class="macro-tag carbs">
+          <span class="dot"></span>C {{ displayMacros.carbs | nutrition }}g
+        </span>
+        <span class="macro-tag fat">
+          <span class="dot"></span>G {{ displayMacros.fat | nutrition }}g
+        </span>
+      </div>
+    </div>
+  </button>
+
+  @if (selected && consumedQuantity !== null) {
+    <div class="selected-row" (click)="$event.stopPropagation()">
+      <div class="quantity-stepper">
+        <button
+          type="button"
+          class="step-btn"
+          aria-label="Diminuir quantidade"
+          [disabled]="!canDecrement"
+          (click)="decrement()"
+        >
+          <ion-icon name="remove-outline" aria-hidden="true"></ion-icon>
+        </button>
+
+        <span class="qty-value">{{ formatQuantity(consumedQuantity) }}</span>
+        <span class="qty-unit">{{ food.unit }}</span>
+
+        <button
+          type="button"
+          class="step-btn"
+          aria-label="Aumentar quantidade"
+          (click)="increment()"
+        >
+          <ion-icon name="add-outline" aria-hidden="true"></ion-icon>
+        </button>
+      </div>
+
+      @if (scaledFood; as scaled) {
+        <div class="totals">
+          <span class="kcal">{{ scaled.calories | nutrition }} kcal</span>
+          <span class="macro-summary">
+            P {{ scaled.macros.protein | nutrition }} · C {{ scaled.macros.carbs | nutrition }} · G
+            {{ scaled.macros.fat | nutrition }}
+          </span>
+        </div>
+      }
+
+      <button
+        type="button"
+        class="remove-btn"
+        aria-label="Remover alimento"
+        (click)="onRemove()"
+      >
+        <ion-icon name="trash-outline" aria-hidden="true"></ion-icon>
+      </button>
+    </div>
+  }
+</article>

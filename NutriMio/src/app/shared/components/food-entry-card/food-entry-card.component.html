@@ -2,7 +2,7 @@
   <div class="food-header">
     <div class="food-info">
       <h3>{{ food.name }}</h3>
-      <p>{{ food.quantity }} {{ food.unit }} · {{ food.calories }} kcal</p>
+      <p>{{ food.quantity }} {{ food.unit }} · {{ food.calories | nutrition }} kcal</p>
     </div>
 
     <button type="button" class="remove-button" aria-label="Remover alimento" (click)="onRemove()">
@@ -13,19 +13,19 @@
   <div class="macro-pills">
     <div class="pill">
       <span class="letter protein">P</span>
-      <span class="value">{{ food.macros.protein }}g</span>
+      <span class="value">{{ food.macros.protein | nutrition }}g</span>
     </div>
     <div class="pill">
       <span class="letter carbs">C</span>
-      <span class="value">{{ food.macros.carbs }}g</span>
+      <span class="value">{{ food.macros.carbs | nutrition }}g</span>
     </div>
     <div class="pill">
       <span class="letter fat">G</span>
-      <span class="value">{{ food.macros.fat }}g</span>
+      <span class="value">{{ food.macros.fat | nutrition }}g</span>
     </div>
     <div class="pill">
       <span class="letter sugar">A</span>
-      <span class="value">{{ food.macros.sugar }}g</span>
+      <span class="value">{{ food.macros.sugar | nutrition }}g</span>
     </div>
   </div>
 </article>

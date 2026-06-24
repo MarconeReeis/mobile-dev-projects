@@ -3,7 +3,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { STORAGE_KEYS } from '../core/constants/storage-keys';
 import { toDateKey } from '../core/utils/date.utils';
 import { addDays, getWeekStart, parseDateKey, toDateKeyFromParts } from '../core/utils/calendar.utils';
-import { createId, toFoodTag } from '../core/utils/meal.utils';
+import { createId, roundMacros, roundNutrition, toFoodTag } from '../core/utils/meal.utils';
 import {
   DailyLog,
   DailySummary,
@@ -54,7 +54,9 @@ export class NutritionService {
 
   async load(): Promise<void> {
     const stored = await this.storage.get<Record<string, DailyLog>>(STORAGE_KEYS.DAILY_LOGS);
-    this.logs = new Map(Object.entries(stored ?? {}));
+    this.logs = new Map(
+      Object.entries(stored ?? {}).map(([key, log]) => [key, this.normalizeDailyLog(log)]),
+    );
     this.refreshToday();
   }
 
@@ -122,7 +124,7 @@ export class NutritionService {
   getDayDetail(dateKey: string): DayHistoryDetail {
     const log = this.logs.get(dateKey);
     const goal = this.userService.getUser().goals.calories;
-    const calories = log?.calories ?? 0;
+    const calories = roundNutrition(log?.calories ?? 0);
     const [, , day] = dateKey.split('-').map(Number);
 
     return {
@@ -131,7 +133,7 @@ export class NutritionService {
       calories,
       calorieGoal: goal,
       status: this.getDayStatus(calories, goal),
-      macros: log?.macros ?? { protein: 0, carbs: 0, fat: 0, sugar: 0 },
+      macros: roundMacros(log?.macros ?? { protein: 0, carbs: 0, fat: 0, sugar: 0 }),
     };
   }
 
@@ -239,7 +241,7 @@ export class NutritionService {
   }
 
   private createMealEntry(type: MealType, foods: Food[]): MealLogEntry {
-    const calories = foods.reduce((total, food) => total + food.calories, 0);
+    const calories = roundNutrition(foods.reduce((total, food) => total + food.calories, 0));
 
     return {
       id: createId(),
@@ -249,13 +251,17 @@ export class NutritionService {
       foodCount: foods.length,
       calories,
       foodTags: foods.map((food) => toFoodTag(food.name)),
-      foods: foods.map((food) => ({ ...food })),
+      foods: foods.map((food) => ({
+        ...food,
+        calories: roundNutrition(food.calories),
+        macros: roundMacros(food.macros),
+      })),
     };
   }
 
   private addMealToLog(log: DailyLog, meal: MealLogEntry): void {
     log.meals.push(meal);
-    log.calories += meal.calories;
+    log.calories = roundNutrition(log.calories + meal.calories);
 
     meal.foods.forEach((food) => {
       log.macros.protein += food.macros.protein;
@@ -263,10 +269,12 @@ export class NutritionService {
       log.macros.fat += food.macros.fat;
       log.macros.sugar += food.macros.sugar;
     });
+
+    log.macros = roundMacros(log.macros);
   }
 
   private subtractMealFromLog(log: DailyLog, meal: MealLogEntry): void {
-    log.calories -= meal.calories;
+    log.calories = roundNutrition(log.calories - meal.calories);
 
     meal.foods.forEach((food) => {
       log.macros.protein -= food.macros.protein;
@@ -274,6 +282,40 @@ export class NutritionService {
       log.macros.fat -= food.macros.fat;
       log.macros.sugar -= food.macros.sugar;
     });
+
+    log.macros = roundMacros(log.macros);
+  }
+
+  private normalizeDailyLog(log: DailyLog): DailyLog {
+    const meals = log.meals.map((meal) => ({
+      ...meal,
+      calories: roundNutrition(meal.calories),
+      foods: meal.foods.map((food) => ({
+        ...food,
+        calories: roundNutrition(food.calories),
+        macros: roundMacros(food.macros),
+      })),
+    }));
+
+    let calories = 0;
+    const macros: MacroNutrients = { protein: 0, carbs: 0, fat: 0, sugar: 0 };
+
+    meals.forEach((meal) => {
+      calories += meal.calories;
+      meal.foods.forEach((food) => {
+        macros.protein += food.macros.protein;
+        macros.carbs += food.macros.carbs;
+        macros.fat += food.macros.fat;
+        macros.sugar += food.macros.sugar;
+      });
+    });
+
+    return {
+      ...log,
+      calories: roundNutrition(calories),
+      macros: roundMacros(macros),
+      meals,
+    };
   }
 
   private buildMealSlots(dateKey: string): MealCategorySlot[] {
@@ -323,8 +365,10 @@ export class NutritionService {
   }
 
   private buildMacroSummaries(macros: MacroNutrients, goals: MacroGoals): MacroSummary[] {
+    const roundedMacros = roundMacros(macros);
+
     return MACRO_CONFIG.map((config) => {
-      const current = macros[config.key];
+      const current = roundedMacros[config.key];
       const goal = goals[config.key];
 
       return {

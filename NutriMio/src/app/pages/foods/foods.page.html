@@ -20,22 +20,35 @@
         <div class="foods-list">
           @for (food of foods; track food.id) {
             <article class="food-item">
-              <div class="info">
-                <h3>{{ food.name }}</h3>
-                <p>{{ food.quantity }} {{ food.unit }} · {{ food.calories }} kcal</p>
-                <span class="macros">
-                  P {{ food.macros.protein }}g · C {{ food.macros.carbs }}g ·
-                  G {{ food.macros.fat }}g · A {{ food.macros.sugar }}g
-                </span>
-              </div>
-              <button
-                type="button"
-                class="delete-button"
-                aria-label="Excluir alimento"
-                (click)="onDeleteFood(food.id)"
-              >
-                <ion-icon name="trash-outline"></ion-icon>
+              <button type="button" class="food-main" (click)="onEditFood(food.id)">
+                <div class="info">
+                  <h3>{{ food.name }}</h3>
+                  <p>{{ food.quantity }} {{ food.unit }} · {{ food.calories }} kcal</p>
+                  <span class="macros">
+                    P {{ food.macros.protein }}g · C {{ food.macros.carbs }}g ·
+                    G {{ food.macros.fat }}g · A {{ food.macros.sugar }}g
+                  </span>
+                </div>
               </button>
+
+              <div class="item-actions">
+                <button
+                  type="button"
+                  class="action-button edit-button"
+                  aria-label="Editar alimento"
+                  (click)="onEditFood(food.id)"
+                >
+                  <ion-icon name="create-outline"></ion-icon>
+                </button>
+                <button
+                  type="button"
+                  class="action-button delete-button"
+                  aria-label="Excluir alimento"
+                  (click)="onDeleteFood(food.id)"
+                >
+                  <ion-icon name="trash-outline"></ion-icon>
+                </button>
+              </div>
             </article>
           }
         </div>

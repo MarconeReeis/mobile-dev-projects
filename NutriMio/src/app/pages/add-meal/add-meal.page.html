@@ -4,7 +4,10 @@
       <button type="button" class="back-button" aria-label="Voltar" (click)="goBack()">
         <ion-icon name="arrow-back-outline"></ion-icon>
       </button>
-      <h1>Nova refeição</h1>
+      <div class="header-text">
+        <h1>Nova refeição</h1>
+        <p class="subtitle">Selecione alimentos para montar</p>
+      </div>
     </header>
 
     <section class="form-section">
@@ -24,53 +27,62 @@
       </div>
     </section>
 
+    <div class="search-bar">
+      <ion-icon name="search-outline" aria-hidden="true"></ion-icon>
+      <input
+        type="search"
+        placeholder="Buscar alimento..."
+        [value]="searchQuery()"
+        (input)="onSearchInput($event)"
+        aria-label="Buscar alimento"
+      />
+    </div>
+
+    <button type="button" class="new-food-button" (click)="onRegisterFood()">
+      <ion-icon name="add-outline" aria-hidden="true"></ion-icon>
+      Novo alimento
+    </button>
+
     <section class="foods-section">
-      <div class="section-header">
-        <div>
-          <h2>Selecione os alimentos</h2>
-          <p class="hint">Use +/− para porções ou informe a quantidade exata consumida</p>
-        </div>
-        <ion-button fill="clear" size="small" (click)="onRegisterFood()">
-          <ion-icon slot="start" name="add-outline"></ion-icon>
-          Cadastrar
-        </ion-button>
+      <div class="foods-section-header">
+        <span class="section-label">ALIMENTOS</span>
+        <span class="available-count">{{ filteredFoods().length }} disponíveis</span>
       </div>
 
       @if (catalogFoods().length) {
-        <div class="foods-list">
-          @for (food of catalogFoods(); track food.id) {
-            <app-food-select-item
-              [food]="food"
-              [selected]="isSelected(food.id)"
-              [consumedQuantity]="getConsumedQuantity(food.id)"
-              (toggled)="toggleFood($event)"
-              (consumedQuantityChanged)="updateConsumedQuantity(food.id, $event)"
-            ></app-food-select-item>
-          }
-        </div>
+        @if (filteredFoods().length) {
+          <div class="foods-list">
+            @for (food of filteredFoods(); track food.id) {
+              <app-food-select-item
+                [food]="food"
+                [selected]="isSelected(food.id)"
+                [consumedQuantity]="getConsumedQuantity(food.id)"
+                (toggled)="toggleFood($event)"
+                (consumedQuantityChanged)="updateConsumedQuantity(food.id, $event)"
+                (removed)="removeFood($event)"
+              ></app-food-select-item>
+            }
+          </div>
+        } @else {
+          <div class="search-empty">
+            <p>Nenhum alimento encontrado para "{{ searchQuery() }}".</p>
+          </div>
+        }
+
+        <button type="button" class="catalog-link" (click)="onOpenCatalog()">
+          <ion-icon name="library-outline" aria-hidden="true"></ion-icon>
+          Ver todos os alimentos cadastrados
+        </button>
       } @else {
         <div class="empty-catalog">
           <p>Nenhum alimento cadastrado ainda.</p>
-          <ion-button fill="outline" (click)="onRegisterFood()">
+          <button type="button" class="new-food-button inline" (click)="onRegisterFood()">
+            <ion-icon name="add-outline" aria-hidden="true"></ion-icon>
             Cadastrar primeiro alimento
-          </ion-button>
+          </button>
         </div>
       }
-
-      <button type="button" class="catalog-link" (click)="onOpenCatalog()">
-        <ion-icon name="library-outline" aria-hidden="true"></ion-icon>
-        Ver todos os alimentos cadastrados
-      </button>
     </section>
-
-    @if (selectedMealFoods().length) {
-      <section class="summary-section">
-        <p class="selected-count">
-          {{ selectedMealFoods().length }} alimento(s) selecionado(s)
-        </p>
-        <app-meal-summary-card [summary]="summary()"></app-meal-summary-card>
-      </section>
-    }
   </div>
 
   <footer class="action-bar">
