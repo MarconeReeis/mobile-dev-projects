@@ -10,6 +10,7 @@ import {
 } from 'ionicons/icons';
 import {
   getReferenceQuantity,
+  roundNutrition,
   scaleFoodToQuantity,
 } from '../../../core/utils/meal.utils';
 import { Food, MacroNutrients } from '../../../models';
@@ -56,11 +57,51 @@ export class FoodSelectItemComponent {
   }
 
   get canDecrement(): boolean {
-    return this.consumedQuantity != null && this.consumedQuantity > this.referenceQuantity;
+    return this.consumedQuantity != null && this.consumedQuantity > this.minQuantity;
+  }
+
+  get quantityStep(): number {
+    if (this.food.unit === 'g' || this.food.unit === 'ml') {
+      return 1;
+    }
+
+    return this.referenceQuantity;
+  }
+
+  get minQuantity(): number {
+    if (this.food.unit === 'g' || this.food.unit === 'ml') {
+      return 0.1;
+    }
+
+    return this.referenceQuantity;
   }
 
   formatQuantity(value: number): string {
     return Number.isInteger(value) ? String(value) : value.toFixed(1);
+  }
+
+  onQuantityInput(event: Event): void {
+    const value = Number((event.target as HTMLInputElement).value);
+
+    if (!Number.isFinite(value) || value <= 0) {
+      return;
+    }
+
+    this.consumedQuantityChanged.emit(roundNutrition(value));
+  }
+
+  onQuantityBlur(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const value = Number(input.value);
+
+    if (!Number.isFinite(value) || value <= 0) {
+      input.value = this.formatQuantity(this.consumedQuantity ?? this.referenceQuantity);
+      return;
+    }
+
+    const normalized = roundNutrition(value);
+    input.value = this.formatQuantity(normalized);
+    this.consumedQuantityChanged.emit(normalized);
   }
 
   onToggle(): void {
@@ -76,7 +117,8 @@ export class FoodSelectItemComponent {
       return;
     }
 
-    this.consumedQuantityChanged.emit(this.consumedQuantity - this.referenceQuantity);
+    const next = roundNutrition(this.consumedQuantity - this.quantityStep);
+    this.consumedQuantityChanged.emit(Math.max(this.minQuantity, next));
   }
 
   increment(): void {
@@ -84,6 +126,8 @@ export class FoodSelectItemComponent {
       return;
     }
 
-    this.consumedQuantityChanged.emit(this.consumedQuantity + this.referenceQuantity);
+    this.consumedQuantityChanged.emit(
+      roundNutrition(this.consumedQuantity + this.quantityStep),
+    );
   }
 }

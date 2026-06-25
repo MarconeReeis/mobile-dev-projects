@@ -39,7 +39,21 @@
           <ion-icon name="remove-outline" aria-hidden="true"></ion-icon>
         </button>
 
-        <span class="qty-value">{{ formatQuantity(consumedQuantity) }}</span>
+        <label class="qty-input-wrap">
+          <span class="sr-only">Quantidade consumida</span>
+          <input
+            class="qty-input"
+            type="number"
+            inputmode="decimal"
+            min="0.1"
+            step="any"
+            [value]="formatQuantity(consumedQuantity)"
+            [attr.aria-label]="'Quantidade em ' + food.unit"
+            (click)="$event.stopPropagation()"
+            (input)="onQuantityInput($event)"
+            (blur)="onQuantityBlur($event)"
+          />
+        </label>
         <span class="qty-unit">{{ food.unit }}</span>
 
         <button
