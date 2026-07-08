@@ -1,0 +1,127 @@
+.water-card {
+  display: block;
+  width: 100%;
+  text-align: left;
+  border: none;
+  cursor: pointer;
+  background: var(--nutrimio-surface);
+  border-radius: var(--nutrimio-radius-lg);
+  padding: 18px;
+  box-shadow: var(--nutrimio-shadow-card);
+  transition: transform 0.15s ease;
+
+  &:active {
+    transform: scale(0.99);
+  }
+}
+
+.water-top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.water-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(66, 165, 245, 0.14);
+
+  ion-icon {
+    font-size: 1.375rem;
+    color: var(--nutrimio-macro-water);
+  }
+}
+
+.water-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+
+  .title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--nutrimio-text-primary);
+  }
+
+  .goal {
+    font-size: 0.8125rem;
+    color: var(--nutrimio-text-secondary);
+  }
+}
+
+.water-value {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+
+  .current {
+    font-size: 1.375rem;
+    font-weight: 700;
+    color: var(--nutrimio-macro-water);
+    line-height: 1.1;
+
+    small {
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-left: 2px;
+    }
+  }
+
+  .percent {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--nutrimio-text-muted);
+  }
+}
+
+.progress-track {
+  height: 8px;
+  border-radius: 999px;
+  background: var(--nutrimio-progress-track);
+  overflow: hidden;
+  margin-bottom: 14px;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--nutrimio-macro-water);
+  transition: width 0.4s ease;
+}
+
+.water-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.hint {
+  font-size: 0.8125rem;
+  color: var(--nutrimio-text-secondary);
+}
+
+.register-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: var(--nutrimio-primary-soft);
+  color: var(--ion-color-primary);
+  font-size: 0.8125rem;
+  font-weight: 600;
+
+  ion-icon {
+    font-size: 1rem;
+  }
+}

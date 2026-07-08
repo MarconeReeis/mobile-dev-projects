@@ -5,6 +5,7 @@ export type FitnessObjective = 'lose' | 'maintain' | 'gain';
 export interface GoalsCalculationInput {
   currentWeight: number;
   objective: FitnessObjective;
+  age?: number;
 }
 
 export const FITNESS_OBJECTIVE_OPTIONS: FitnessObjective[] = ['lose', 'maintain', 'gain'];
@@ -37,17 +38,38 @@ const FAT_MULTIPLIER = 0.8;
 const KCAL_PER_PROTEIN = 4;
 const KCAL_PER_CARB = 4;
 const KCAL_PER_FAT = 9;
-const WATER_ML_PER_KG = 35;
+export function getWaterMlPerKg(age: number): number {
+  const normalizedAge = Math.max(Math.round(age), 1);
+
+  if (normalizedAge <= 17) {
+    return 40;
+  }
+
+  if (normalizedAge <= 55) {
+    return 35;
+  }
+
+  if (normalizedAge <= 65) {
+    return 30;
+  }
+
+  return 25;
+}
+
+export function calculateSuggestedWaterGoal(weight: number, age: number): number {
+  return Math.round(Math.max(weight, 1) * getWaterMlPerKg(age));
+}
 
 export function calculateSuggestedGoals(input: GoalsCalculationInput): MacroGoals {
   const weight = Math.max(input.currentWeight, 1);
+  const age = input.age ?? 30;
   const calories = Math.round(weight * CALORIE_MULTIPLIER[input.objective]);
   const protein = Math.round(weight * PROTEIN_MULTIPLIER[input.objective]);
   const fat = Math.round(weight * FAT_MULTIPLIER);
   const remainingKcal = Math.max(0, calories - protein * KCAL_PER_PROTEIN - fat * KCAL_PER_FAT);
   const carbs = Math.round(remainingKcal / KCAL_PER_CARB);
   const sugar = Math.round(Math.min(50, Math.max(25, carbs * 0.2)));
-  const waterMl = Math.round(weight * WATER_ML_PER_KG);
+  const waterMl = calculateSuggestedWaterGoal(weight, age);
 
   return {
     calories,

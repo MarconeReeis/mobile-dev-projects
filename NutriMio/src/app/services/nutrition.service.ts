@@ -20,6 +20,9 @@ import {
   MealCategorySlot,
   MealLogEntry,
   MealType,
+  WaterEntry,
+  WaterSummary,
+  WaterDayHistory,
   WeekBar,
 } from '../models';
 import { StorageService } from './storage.service';
@@ -62,6 +65,16 @@ export class NutritionService {
 
   hasAnyLogs(): boolean {
     return this.logs.size > 0;
+  }
+
+  hasAnyWaterLogs(): boolean {
+    for (const log of this.logs.values()) {
+      if ((log.waterMl ?? 0) > 0) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   hasMealsToday(): boolean {
@@ -150,7 +163,28 @@ export class NutritionService {
       bars.push({
         label: labels[i],
         dateKey,
-        calories: log?.calories ?? 0,
+        value: log?.calories ?? 0,
+        isSelected: dateKey === selectedDateKey,
+      });
+    }
+
+    return bars;
+  }
+
+  getWaterWeekBars(selectedDateKey: string): WeekBar[] {
+    const labels = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'];
+    const weekStart = getWeekStart(parseDateKey(selectedDateKey));
+    const bars: WeekBar[] = [];
+
+    for (let i = 0; i < 7; i++) {
+      const date = addDays(weekStart, i);
+      const dateKey = toDateKeyFromParts(date.getFullYear(), date.getMonth(), date.getDate());
+      const log = this.logs.get(dateKey);
+
+      bars.push({
+        label: labels[i],
+        dateKey,
+        value: log?.waterMl ?? 0,
         isSelected: dateKey === selectedDateKey,
       });
     }
@@ -189,6 +223,23 @@ export class NutritionService {
 
   getCalorieGoal(): number {
     return this.userService.getUser().goals.calories;
+  }
+
+  getWaterGoal(): number {
+    return this.userService.getUser().goals.waterMl;
+  }
+
+  getWaterDayDetail(dateKey: string): WaterDayHistory {
+    const log = this.logs.get(dateKey);
+    const goal = this.getWaterGoal();
+    const consumed = Math.max(0, Math.round(log?.waterMl ?? 0));
+
+    return {
+      dateKey,
+      consumed,
+      goal,
+      progress: this.calculateProgress(consumed, goal),
+    };
   }
 
   getTotalMealsLogged(): number {
@@ -234,6 +285,52 @@ export class NutritionService {
 
     const meal = this.createMealEntry(type, foods);
     this.addMealToLog(log, meal);
+    this.logs.set(dateKey, log);
+
+    await this.persistLogs();
+    await this.refreshToday();
+  }
+
+  async addWater(amountMl: number): Promise<void> {
+    const amount = Math.round(amountMl);
+
+    if (!Number.isFinite(amount) || amount <= 0) {
+      return;
+    }
+
+    const dateKey = toDateKey();
+    const log = this.logs.get(dateKey) ?? this.createEmptyLog(dateKey);
+
+    const entry: WaterEntry = {
+      id: createId(),
+      amountMl: amount,
+      time: new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
+    };
+
+    log.waterEntries = [...log.waterEntries, entry];
+    log.waterMl = Math.max(0, log.waterMl + amount);
+    this.logs.set(dateKey, log);
+
+    await this.persistLogs();
+    await this.refreshToday();
+  }
+
+  async removeWaterEntry(entryId: string): Promise<void> {
+    const dateKey = toDateKey();
+    const log = this.logs.get(dateKey);
+
+    if (!log) {
+      return;
+    }
+
+    const entry = log.waterEntries.find((item) => item.id === entryId);
+
+    if (!entry) {
+      return;
+    }
+
+    log.waterEntries = log.waterEntries.filter((item) => item.id !== entryId);
+    log.waterMl = Math.max(0, log.waterMl - entry.amountMl);
     this.logs.set(dateKey, log);
 
     await this.persistLogs();
@@ -310,11 +407,22 @@ export class NutritionService {
       });
     });
 
+    const waterEntries = (log.waterEntries ?? []).map((entry) => ({
+      ...entry,
+      amountMl: Math.round(entry.amountMl),
+    }));
+    const waterMl = Math.max(
+      0,
+      Math.round(log.waterMl ?? waterEntries.reduce((total, entry) => total + entry.amountMl, 0)),
+    );
+
     return {
       ...log,
       calories: roundNutrition(calories),
       macros: roundMacros(macros),
       meals,
+      waterMl,
+      waterEntries,
     };
   }
 
@@ -335,6 +443,8 @@ export class NutritionService {
       calories: 0,
       macros: { protein: 0, carbs: 0, fat: 0, sugar: 0 },
       meals: [],
+      waterMl: 0,
+      waterEntries: [],
     };
   }
 
@@ -361,6 +471,21 @@ export class NutritionService {
       calorieProgress: this.calculateProgress(calories, goals.calories),
       macros: this.buildMacroSummaries(macros, goals),
       meals: [...meals].sort((a, b) => a.time.localeCompare(b.time)),
+      water: this.buildWaterSummary(log, goals.waterMl),
+    };
+  }
+
+  private buildWaterSummary(log: DailyLog | undefined, goalMl: number): WaterSummary {
+    const current = Math.max(0, Math.round(log?.waterMl ?? 0));
+    const goal = Math.max(0, Math.round(goalMl));
+    const entries = [...(log?.waterEntries ?? [])].sort((a, b) => b.time.localeCompare(a.time));
+
+    return {
+      current,
+      goal,
+      remaining: Math.max(goal - current, 0),
+      progress: this.calculateProgress(current, goal),
+      entries,
     };
   }
 

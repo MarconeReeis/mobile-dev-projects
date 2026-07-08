@@ -1,11 +1,16 @@
-<div class="week-chart">
+<div
+  class="week-chart"
+  [style.--bar-fill-color]="fillColor"
+  [style.--bar-active-fill-color]="activeFillColor"
+  [style.--bar-active-label-color]="activeLabelColor"
+>
   <div class="bars">
     @for (bar of bars; track bar.dateKey) {
       <div class="bar-column" [class.selected]="bar.isSelected">
         <div class="bar-track">
           <div
             class="bar-fill"
-            [style.height.%]="barHeight(bar.calories)"
+            [style.height.%]="barHeight(bar.value)"
           ></div>
         </div>
         <span class="label">{{ bar.label }}</span>

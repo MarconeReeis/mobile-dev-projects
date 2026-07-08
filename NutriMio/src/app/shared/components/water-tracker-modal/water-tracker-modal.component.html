@@ -1,0 +1,87 @@
+<div class="water-modal">
+  <header class="modal-header">
+    <h2>Registrar consumo de água</h2>
+    <button type="button" class="close-button" aria-label="Fechar" (click)="onClose()">
+      <ion-icon name="close-outline"></ion-icon>
+    </button>
+  </header>
+
+  <section class="progress-summary">
+    <div class="summary-row">
+      <span class="value">
+        <strong>{{ water.current | number }}</strong> / {{ water.goal | number }} ml
+      </span>
+      <span class="percent">{{ water.progress }}%</span>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" [style.width.%]="water.progress"></div>
+    </div>
+  </section>
+
+  <section class="block">
+    <span class="block-label">Atalhos rápidos</span>
+    <div class="quick-grid">
+      @for (option of quickOptions; track option) {
+        <button type="button" class="quick-button" (click)="onQuickAdd(option)">
+          <ion-icon name="water-outline"></ion-icon>
+          <span>+{{ option }} ml</span>
+        </button>
+      }
+    </div>
+  </section>
+
+  <section class="block">
+    <span class="block-label">Quantidade personalizada</span>
+    <div class="custom-row">
+      <label class="custom-input">
+        <span>Quantidade (ml)</span>
+        <input
+          type="number"
+          inputmode="numeric"
+          min="1"
+          step="50"
+          placeholder="0"
+          [(ngModel)]="customAmount"
+          (keyup.enter)="onAddCustom()"
+        />
+      </label>
+      <button
+        type="button"
+        class="add-button"
+        [disabled]="!isCustomValid"
+        (click)="onAddCustom()"
+      >
+        Adicionar
+      </button>
+    </div>
+  </section>
+
+  <section class="block">
+    <span class="block-label">Registros de hoje</span>
+    @if (water.entries.length) {
+      <ul class="entries-list">
+        @for (entry of water.entries; track entry.id) {
+          <li class="entry">
+            <div class="entry-icon" aria-hidden="true">
+              <ion-icon name="water-outline"></ion-icon>
+            </div>
+            <div class="entry-info">
+              <span class="entry-amount">{{ entry.amountMl | number }} ml</span>
+              <span class="entry-time">{{ entry.time }}</span>
+            </div>
+            <button
+              type="button"
+              class="entry-remove"
+              aria-label="Remover registro"
+              (click)="onRemove(entry.id)"
+            >
+              <ion-icon name="trash-outline"></ion-icon>
+            </button>
+          </li>
+        }
+      </ul>
+    } @else {
+      <div class="entries-empty">Nenhum registro ainda hoje.</div>
+    }
+  </section>
+</div>

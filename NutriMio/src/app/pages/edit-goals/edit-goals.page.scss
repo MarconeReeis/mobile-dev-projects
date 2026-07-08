@@ -197,6 +197,98 @@
   }
 }
 
+.age-section {
+  margin-bottom: 24px;
+}
+
+.hydration-section {
+  margin-bottom: 20px;
+}
+
+.hydration-card {
+  background: var(--nutrimio-surface);
+  border: 1px solid var(--nutrimio-border);
+  border-radius: var(--nutrimio-radius-md);
+  padding: 16px;
+  margin-bottom: 10px;
+}
+
+.hydration-card-main {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.hydration-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(66, 165, 245, 0.14);
+
+  ion-icon {
+    font-size: 1.25rem;
+    color: var(--nutrimio-macro-water);
+  }
+
+  &.muted {
+    background: var(--nutrimio-background);
+
+    ion-icon {
+      color: var(--nutrimio-text-muted);
+    }
+  }
+}
+
+.hydration-copy {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+
+  strong {
+    font-size: 0.9375rem;
+    color: var(--nutrimio-text-primary);
+  }
+
+  span {
+    font-size: 0.8125rem;
+    color: var(--nutrimio-text-secondary);
+  }
+}
+
+.reminders-card .hydration-card-main {
+  margin-bottom: 14px;
+}
+
+.reminder-options {
+  display: flex;
+  gap: 8px;
+}
+
+.reminder-chip {
+  flex: 1;
+  height: 36px;
+  border: 1px solid var(--nutrimio-border);
+  border-radius: 999px;
+  background: var(--nutrimio-background);
+  color: var(--nutrimio-text-secondary);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: not-allowed;
+  opacity: 0.7;
+
+  &.selected {
+    border-color: var(--ion-color-primary);
+    color: var(--ion-color-primary);
+    background: var(--nutrimio-primary-soft);
+  }
+}
+
 .summary-card {
   background: var(--nutrimio-primary-soft);
   border-radius: var(--nutrimio-radius-lg);

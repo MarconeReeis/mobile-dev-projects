@@ -22,11 +22,19 @@ export interface MealLogEntry {  id: string;
   foods: Food[];
 }
 
+export interface WaterEntry {
+  id: string;
+  amountMl: number;
+  time: string;
+}
+
 export interface DailyLog {
   date: string;
   calories: number;
   macros: MacroNutrients;
   meals: MealLogEntry[];
+  waterMl: number;
+  waterEntries: WaterEntry[];
 }
 
 export type MealType = 'breakfast' | 'lunch' | 'snack' | 'dinner' | 'supper';
@@ -65,6 +73,16 @@ export interface MacroSummary {
   progress: number;
 }
 
+export interface WaterSummary {
+  current: number;
+  goal: number;
+  remaining: number;
+  progress: number;
+  entries: WaterEntry[];
+}
+
+export const WATER_QUICK_ADD_OPTIONS: number[] = [150, 200, 250, 300, 500];
+
 export interface DailySummary {
   calories: number;
   calorieGoal: number;
@@ -72,4 +90,5 @@ export interface DailySummary {
   calorieProgress: number;
   macros: MacroSummary[];
   meals: MealLogEntry[];
+  water: WaterSummary;
 }

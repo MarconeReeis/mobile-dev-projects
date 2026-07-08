@@ -1,7 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { AsyncPipe, DecimalPipe } from '@angular/common';
 import { Router } from '@angular/router';
-import { IonButton, IonContent, IonIcon } from '@ionic/angular/standalone';
+import { IonButton, IonContent, IonIcon, IonModal } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { addOutline, notificationsOutline, restaurantOutline } from 'ionicons/icons';
 import { Observable } from 'rxjs';
@@ -13,6 +13,8 @@ import { EmptyStateComponent } from '../../shared/components/empty-state/empty-s
 import { CircularProgressComponent } from '../../shared/components/circular-progress/circular-progress.component';
 import { MacroCardComponent } from '../../shared/components/macro-card/macro-card.component';
 import { MealItemComponent } from '../../shared/components/meal-item/meal-item.component';
+import { WaterCardComponent } from '../../shared/components/water-card/water-card.component';
+import { WaterTrackerModalComponent } from '../../shared/components/water-tracker-modal/water-tracker-modal.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -24,10 +26,13 @@ import { MealItemComponent } from '../../shared/components/meal-item/meal-item.c
     IonContent,
     IonButton,
     IonIcon,
+    IonModal,
     CircularProgressComponent,
     MacroCardComponent,
     MealItemComponent,
     EmptyStateComponent,
+    WaterCardComponent,
+    WaterTrackerModalComponent,
   ],
 })
 export class DashboardPage implements OnInit {
@@ -38,6 +43,7 @@ export class DashboardPage implements OnInit {
   readonly headerDate = formatHeaderDate();
   readonly summary$: Observable<DailySummary | null> = this.nutritionService.dailySummary$;
   user: UserProfile = this.userService.getUser();
+  isWaterModalOpen = false;
 
   constructor() {
     addIcons({ notificationsOutline, addOutline, restaurantOutline });
@@ -55,5 +61,21 @@ export class DashboardPage implements OnInit {
 
   onViewAllMeals(): void {
     void this.router.navigate(['/tabs/meals']);
+  }
+
+  openWaterModal(): void {
+    this.isWaterModalOpen = true;
+  }
+
+  closeWaterModal(): void {
+    this.isWaterModalOpen = false;
+  }
+
+  async onAddWater(amountMl: number): Promise<void> {
+    await this.nutritionService.addWater(amountMl);
+  }
+
+  async onRemoveWater(entryId: string): Promise<void> {
+    await this.nutritionService.removeWaterEntry(entryId);
   }
 }

@@ -22,8 +22,15 @@ export interface DayHistoryDetail {
 export interface WeekBar {
   label: string;
   dateKey: string;
-  calories: number;
+  value: number;
   isSelected: boolean;
+}
+
+export interface WaterDayHistory {
+  dateKey: string;
+  consumed: number;
+  goal: number;
+  progress: number;
 }
 
 export interface MonthTrendPoint {

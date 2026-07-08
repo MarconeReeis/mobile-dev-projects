@@ -98,6 +98,48 @@
       }
     </section>
 
+    <section class="card water-card">
+      <div class="water-card-header">
+        <div class="water-title">
+          <div class="water-icon" aria-hidden="true">
+            <ion-icon name="water-outline"></ion-icon>
+          </div>
+          <div>
+            <h2>Hidratação</h2>
+            <span class="water-date">{{ selectedWaterDateLabel() }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="water-stats">
+        <div class="water-stat">
+          <span class="stat-label">Consumido</span>
+          <strong class="stat-value consumed">{{ selectedWaterDay().consumed | number }} ml</strong>
+        </div>
+        <div class="water-stat">
+          <span class="stat-label">Meta</span>
+          <strong class="stat-value">{{ selectedWaterDay().goal | number }} ml</strong>
+        </div>
+        <div class="water-stat">
+          <span class="stat-label">Atingido</span>
+          <strong class="stat-value">{{ selectedWaterDay().progress }}%</strong>
+        </div>
+      </div>
+
+      <span class="water-week-label">Últimos 7 dias</span>
+      @if (hasAnyWaterLogs()) {
+        <app-week-chart
+          [bars]="waterWeekBars()"
+          [goal]="waterGoal()"
+          fillColor="rgba(66, 165, 245, 0.18)"
+          activeFillColor="var(--nutrimio-macro-water)"
+          activeLabelColor="var(--nutrimio-macro-water)"
+        ></app-week-chart>
+      } @else {
+        <p class="inline-empty">Registre água na dashboard para acompanhar sua hidratação.</p>
+      }
+    </section>
+
     <button type="button" class="adjust-goals-button" (click)="onAdjustGoals()">
       Ajustar metas
     </button>

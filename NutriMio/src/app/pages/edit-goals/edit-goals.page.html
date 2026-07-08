@@ -29,6 +29,18 @@
       </div>
     </section>
 
+    <section class="age-section">
+      <label class="field-label" for="user-age">IDADE (ANOS)</label>
+      <ion-input
+        id="user-age"
+        class="field-input"
+        type="number"
+        min="1"
+        [(ngModel)]="age"
+        (ionInput)="onAgeChange()"
+      ></ion-input>
+    </section>
+
     <section class="objective-section">
       <span class="section-label">OBJETIVO</span>
       <div class="objective-chips">
@@ -114,13 +126,59 @@
         </label>
         <ion-input id="goal-sugar" class="goal-input" type="number" [(ngModel)]="goals.sugar"></ion-input>
       </div>
+    </section>
 
-      <div class="goal-field">
-        <label class="goal-label" for="goal-water">
-          <span class="dot water"></span>
-          ÁGUA (ML)
-        </label>
-        <ion-input id="goal-water" class="goal-input" type="number" [(ngModel)]="goals.waterMl"></ion-input>
+    <section class="hydration-section">
+      <span class="section-label">HIDRATAÇÃO</span>
+
+      <div class="hydration-card">
+        <div class="hydration-card-main">
+          <div class="hydration-icon" aria-hidden="true">
+            <ion-icon name="water-outline"></ion-icon>
+          </div>
+          <div class="hydration-copy">
+            <strong>Meta automática</strong>
+            <span>Peso × {{ waterMlPerKg }} ml · {{ goals.waterMl | number }} ml/dia</span>
+          </div>
+          <ion-toggle
+            [checked]="waterGoalAuto"
+            (ionChange)="onWaterGoalAutoChange($event.detail.checked)"
+          ></ion-toggle>
+        </div>
+      </div>
+
+      @if (!waterGoalAuto) {
+        <div class="goal-field">
+          <label class="goal-label" for="goal-water">
+            <span class="dot water"></span>
+            ÁGUA (ML)
+          </label>
+          <ion-input id="goal-water" class="goal-input" type="number" [(ngModel)]="goals.waterMl"></ion-input>
+        </div>
+      }
+
+      <div class="hydration-card reminders-card">
+        <div class="hydration-card-main">
+          <div class="hydration-icon muted" aria-hidden="true">
+            <ion-icon name="notifications-outline"></ion-icon>
+          </div>
+          <div class="hydration-copy">
+            <strong>Lembretes de hidratação</strong>
+            <span>Em breve · notificações periódicas</span>
+          </div>
+        </div>
+        <div class="reminder-options" aria-disabled="true">
+          @for (option of reminderOptions; track option) {
+            <button
+              type="button"
+              class="reminder-chip"
+              [class.selected]="hydrationReminderInterval === option"
+              disabled
+            >
+              {{ option === 'off' ? 'Off' : option }}
+            </button>
+          }
+        </div>
       </div>
     </section>
 
@@ -129,7 +187,8 @@
       <p class="summary-text">
         Para <strong>{{ objectiveSummary }}</strong>, você consumirá
         <strong>{{ goals.calories | number }} kcal</strong> por dia, com foco em
-        <strong>{{ goals.protein }}g de proteína</strong>.
+        <strong>{{ goals.protein }}g de proteína</strong> e meta de
+        <strong>{{ goals.waterMl | number }} ml de água</strong>.
       </p>
       <div class="summary-badges">
         <span class="badge protein">{{ goals.protein }}g P</span>

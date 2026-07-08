@@ -15,6 +15,16 @@ export function formatHeaderDate(date: Date = new Date()): string {
   return formatted.charAt(0).toUpperCase() + formatted.slice(1);
 }
 
+export function formatShortDayMonth(dateKey: string): string {
+  const [year, month, day] = dateKey.split('-').map(Number);
+  const formatted = new Intl.DateTimeFormat('pt-BR', {
+    day: '2-digit',
+    month: 'short',
+  }).format(new Date(year, month - 1, day));
+
+  return formatted.replace('.', '');
+}
+
 export function formatTime(time: string): string {
   return time;
 }

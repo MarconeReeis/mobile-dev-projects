@@ -9,4 +9,5 @@ export const STORAGE_KEYS = {
 
 /** v4: remove dados mockados e passa a usar apenas storage real */
 /** v5: adiciona referenceQuantity nos alimentos salvos em refeições */
-export const CURRENT_DATA_MIGRATION_VERSION = 5;
+/** v6: adiciona idade e preferências de meta de água automática */
+export const CURRENT_DATA_MIGRATION_VERSION = 6;

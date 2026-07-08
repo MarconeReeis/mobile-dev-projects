@@ -12,6 +12,8 @@ export interface UserSettings {
   darkTheme: boolean;
   notifications: boolean;
   metricUnits: boolean;
+  waterGoalAuto: boolean;
+  hydrationReminderInterval: '1h' | '2h' | 'off';
 }
 
 export interface UserProfile {
@@ -23,6 +25,7 @@ export interface UserProfile {
   isPremium: boolean;
   premiumSince: string;
   fitnessObjective: FitnessObjective;
+  age: number;
   weight: UserWeight;
   goals: MacroGoals;
   settings: UserSettings;

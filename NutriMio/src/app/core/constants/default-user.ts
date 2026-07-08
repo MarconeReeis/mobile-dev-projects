@@ -13,6 +13,7 @@ export function createDefaultUser(): UserProfile {
   const goals = calculateSuggestedGoals({
     currentWeight: DEFAULT_WEIGHT.current,
     objective: fitnessObjective,
+    age: 30,
   });
 
   return {
@@ -24,12 +25,15 @@ export function createDefaultUser(): UserProfile {
     isPremium: false,
     premiumSince: '',
     fitnessObjective,
+    age: 30,
     weight: DEFAULT_WEIGHT,
     goals,
     settings: {
       darkTheme: false,
       notifications: true,
       metricUnits: true,
+      waterGoalAuto: true,
+      hydrationReminderInterval: 'off',
     },
   };
 }

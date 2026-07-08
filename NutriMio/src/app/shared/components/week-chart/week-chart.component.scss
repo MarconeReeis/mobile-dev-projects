@@ -15,10 +15,6 @@
   flex-direction: column;
   align-items: center;
   gap: 8px;
-
-  &.selected .bar-fill {
-    background: var(--ion-color-primary);
-  }
 }
 
 .bar-track {
@@ -33,12 +29,11 @@
   width: 12px;
   min-height: 4px;
   border-radius: 999px;
-  background: var(--nutrimio-progress-track);
-  transition: height 0.3s ease;
+  background: var(--bar-fill-color, var(--nutrimio-progress-track));
 }
 
 .bar-column.selected .bar-fill {
-  background: var(--ion-color-primary);
+  background: var(--bar-active-fill-color, var(--ion-color-primary));
 }
 
 .label {
@@ -48,6 +43,6 @@
 }
 
 .bar-column.selected .label {
-  color: var(--ion-color-primary);
+  color: var(--bar-active-label-color, var(--ion-color-primary));
   font-weight: 600;
 }

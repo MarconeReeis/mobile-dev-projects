@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { STORAGE_KEYS, CURRENT_DATA_MIGRATION_VERSION } from '../core/constants/storage-keys';
+import { calculateSuggestedWaterGoal } from '../core/utils/goals-calculator';
 import { createDefaultUser } from '../core/constants/default-user';
 import { DailyLog, UserProfile } from '../models';
 import { StorageService } from './storage.service';
@@ -49,6 +50,10 @@ export class StorageMigrationService {
       await this.migrateMealReferenceQuantities();
     }
 
+    if (currentVersion < 6) {
+      await this.migrateUserWaterPreferences();
+    }
+
     await this.storage.set(
       STORAGE_KEYS.DATA_MIGRATION_VERSION,
       CURRENT_DATA_MIGRATION_VERSION,
@@ -78,5 +83,40 @@ export class StorageMigrationService {
     if (changed) {
       await this.storage.set(STORAGE_KEYS.DAILY_LOGS, stored);
     }
+  }
+
+  private async migrateUserWaterPreferences(): Promise<void> {
+    const defaults = createDefaultUser();
+    const profile = await this.storage.get<Partial<UserProfile>>(STORAGE_KEYS.USER_PROFILE);
+
+    if (!profile) {
+      return;
+    }
+
+    const age = profile.age ?? defaults.age;
+    const currentWeight = profile.weight?.current ?? defaults.weight.current;
+    const waterGoalAuto = profile.settings?.waterGoalAuto ?? true;
+    const hydrationReminderInterval = profile.settings?.hydrationReminderInterval ?? 'off';
+    const goals = {
+      ...defaults.goals,
+      ...profile.goals,
+      waterMl: waterGoalAuto
+        ? calculateSuggestedWaterGoal(currentWeight, age)
+        : (profile.goals?.waterMl ?? defaults.goals.waterMl),
+    };
+
+    await this.storage.set(STORAGE_KEYS.USER_PROFILE, {
+      ...defaults,
+      ...profile,
+      age,
+      goals,
+      weight: { ...defaults.weight, ...profile.weight },
+      settings: {
+        ...defaults.settings,
+        ...profile.settings,
+        waterGoalAuto,
+        hydrationReminderInterval,
+      },
+    });
   }
 }

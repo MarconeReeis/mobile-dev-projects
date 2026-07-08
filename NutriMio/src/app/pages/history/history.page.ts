@@ -3,14 +3,14 @@ import { Router } from '@angular/router';
 import { DecimalPipe } from '@angular/common';
 import { IonContent, IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { chevronBackOutline, chevronForwardOutline, flagOutline, statsChartOutline } from 'ionicons/icons';
+import { chevronBackOutline, chevronForwardOutline, flagOutline, statsChartOutline, waterOutline } from 'ionicons/icons';
 import {
   addMonths,
   buildCalendarDays,
   formatMonthYear,
   getCalendarHeaders,
 } from '../../core/utils/calendar.utils';
-import { toDateKey } from '../../core/utils/date.utils';
+import { formatShortDayMonth, toDateKey } from '../../core/utils/date.utils';
 import { CalendarDay, DayHistoryDetail, DayStatus } from '../../models';
 import { NutritionService } from '../../services/nutrition.service';
 import { EmptyStateComponent } from '../../shared/components/empty-state/empty-state.component';
@@ -61,16 +61,32 @@ export class HistoryPage {
     this.nutritionService.getWeekBars(this.selectedDateKey()),
   );
 
+  readonly waterWeekBars = computed(() =>
+    this.nutritionService.getWaterWeekBars(this.selectedDateKey()),
+  );
+
+  readonly selectedWaterDay = computed(() =>
+    this.nutritionService.getWaterDayDetail(this.selectedDateKey()),
+  );
+
+  readonly selectedWaterDateLabel = computed(() =>
+    formatShortDayMonth(this.selectedDateKey()),
+  );
+
   readonly monthTrend = computed(() =>
     this.nutritionService.getMonthTrend(this.viewYear(), this.viewMonth()),
   );
 
   readonly calorieGoal = computed(() => this.nutritionService.getCalorieGoal());
 
+  readonly waterGoal = computed(() => this.nutritionService.getWaterGoal());
+
   readonly hasAnyLogs = computed(() => this.nutritionService.hasAnyLogs());
 
+  readonly hasAnyWaterLogs = computed(() => this.nutritionService.hasAnyWaterLogs());
+
   constructor() {
-    addIcons({ chevronBackOutline, chevronForwardOutline, flagOutline, statsChartOutline });
+    addIcons({ chevronBackOutline, chevronForwardOutline, flagOutline, statsChartOutline, waterOutline });
   }
 
   isSelected(day: CalendarDay): boolean {

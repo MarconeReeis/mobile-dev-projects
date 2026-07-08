@@ -1,0 +1,29 @@
+<button type="button" class="water-card" (click)="onRegister()">
+  <div class="water-top">
+    <div class="water-icon" aria-hidden="true">
+      <ion-icon name="water-outline"></ion-icon>
+    </div>
+
+    <div class="water-info">
+      <span class="title">Hidratação</span>
+      <span class="goal">Meta {{ water.goal | number }} ml</span>
+    </div>
+
+    <div class="water-value">
+      <span class="current">{{ water.current | number }}<small>ml</small></span>
+      <span class="percent">{{ water.progress }}%</span>
+    </div>
+  </div>
+
+  <div class="progress-track">
+    <div class="progress-fill" [style.width.%]="water.progress"></div>
+  </div>
+
+  <div class="water-footer">
+    <span class="hint">{{ hint }}</span>
+    <span class="register-action">
+      <ion-icon name="add-outline" aria-hidden="true"></ion-icon>
+      Registrar água
+    </span>
+  </div>
+</button>

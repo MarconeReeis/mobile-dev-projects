@@ -153,6 +153,19 @@
   gap: 10px;
 }
 
+.water-modal-sheet {
+  --height: auto;
+  --max-height: 88vh;
+  --width: 100%;
+  --border-radius: 24px 24px 0 0;
+  --box-shadow: 0 -6px 24px rgba(26, 31, 28, 0.16);
+  align-items: flex-end;
+
+  &::part(content) {
+    overflow-y: auto;
+  }
+}
+
 .add-meal-button {
   position: fixed;
   left: 50%;

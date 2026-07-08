@@ -42,12 +42,16 @@ export class UserService {
     goals: MacroGoals;
     weight: UserWeight;
     fitnessObjective: FitnessObjective;
+    age: number;
+    settings: UserSettings;
   }): Promise<void> {
     const user = {
       ...this.getUser(),
       goals: payload.goals,
       weight: payload.weight,
       fitnessObjective: payload.fitnessObjective,
+      age: payload.age,
+      settings: payload.settings,
     };
     await this.save(user);
   }
@@ -70,6 +74,7 @@ export class UserService {
       goals: { ...defaults.goals, ...stored.goals },
       settings: { ...defaults.settings, ...stored.settings },
       fitnessObjective: stored.fitnessObjective ?? defaults.fitnessObjective,
+      age: stored.age ?? defaults.age,
       fullName: stored.fullName ?? defaults.fullName,
       name: stored.name ?? defaults.name,
       initials: stored.initials ?? defaults.initials,
