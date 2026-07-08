@@ -81,7 +81,7 @@ export interface WaterSummary {
   entries: WaterEntry[];
 }
 
-export const WATER_QUICK_ADD_OPTIONS: number[] = [150, 200, 250, 300, 500];
+export const WATER_QUICK_ADD_OPTIONS: number[] = [150, 200, 250, 300, 500, 600];
 
 export interface DailySummary {
   calories: number;

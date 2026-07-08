@@ -61,18 +61,10 @@ export class FoodSelectItemComponent {
   }
 
   get quantityStep(): number {
-    if (this.food.unit === 'g' || this.food.unit === 'ml') {
-      return 1;
-    }
-
     return this.referenceQuantity;
   }
 
   get minQuantity(): number {
-    if (this.food.unit === 'g' || this.food.unit === 'ml') {
-      return 0.1;
-    }
-
     return this.referenceQuantity;
   }
 
