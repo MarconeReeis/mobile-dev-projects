@@ -1,25 +1,23 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { STORAGE_KEYS } from '../core/constants/storage-keys';
 import { createId } from '../core/utils/meal.utils';
 import { Food } from '../models';
-import { StorageService } from './storage.service';
+import { FirestoreDataService } from './firestore-data.service';
 
 @Injectable({ providedIn: 'root' })
 export class FoodCatalogService {
   private readonly foodsSubject = new BehaviorSubject<Food[]>([]);
   readonly foods$: Observable<Food[]> = this.foodsSubject.asObservable();
 
-  constructor(private readonly storage: StorageService) {}
+  constructor(private readonly data: FirestoreDataService) {}
 
   async load(): Promise<void> {
-    const stored = await this.storage.get<Food[]>(STORAGE_KEYS.FOOD_CATALOG);
-    const foods = stored ?? [];
-    this.foodsSubject.next(foods);
+    const foods = await this.data.getFoods();
+    this.foodsSubject.next(foods.sort((a, b) => a.name.localeCompare(b.name, 'pt-BR')));
+  }
 
-    if (!stored) {
-      await this.persist(foods);
-    }
+  clear(): void {
+    this.foodsSubject.next([]);
   }
 
   getFoods(): Food[] {
@@ -41,9 +39,8 @@ export class FoodCatalogService {
 
   async addFood(food: Omit<Food, 'id'>): Promise<Food> {
     const newFood: Food = { ...food, id: createId() };
-    const foods = [...this.foodsSubject.value, newFood];
-    await this.persist(foods);
-    this.foodsSubject.next(foods);
+    this.data.saveFood(newFood);
+    this.foodsSubject.next([...this.foodsSubject.value, newFood]);
     return newFood;
   }
 
@@ -57,18 +54,13 @@ export class FoodCatalogService {
 
     const updated: Food = { ...food, id };
     foods[index] = updated;
-    await this.persist(foods);
+    this.data.saveFood(updated);
     this.foodsSubject.next(foods);
     return updated;
   }
 
   async deleteFood(id: string): Promise<void> {
-    const foods = this.foodsSubject.value.filter((food) => food.id !== id);
-    await this.persist(foods);
-    this.foodsSubject.next(foods);
-  }
-
-  private async persist(foods: Food[]): Promise<void> {
-    await this.storage.set(STORAGE_KEYS.FOOD_CATALOG, foods);
+    this.data.deleteFood(id);
+    this.foodsSubject.next(this.foodsSubject.value.filter((food) => food.id !== id));
   }
 }

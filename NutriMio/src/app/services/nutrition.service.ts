@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { STORAGE_KEYS } from '../core/constants/storage-keys';
 import { toDateKey } from '../core/utils/date.utils';
 import { addDays, getWeekStart, parseDateKey, toDateKeyFromParts } from '../core/utils/calendar.utils';
 import { createId, roundMacros, roundNutrition, toFoodTag } from '../core/utils/meal.utils';
@@ -25,7 +24,7 @@ import {
   WaterDayHistory,
   WeekBar,
 } from '../models';
-import { StorageService } from './storage.service';
+import { FirestoreDataService } from './firestore-data.service';
 import { UserService } from './user.service';
 
 const MACRO_CONFIG: Array<{
@@ -51,15 +50,18 @@ export class NutritionService {
   private logs = new Map<string, DailyLog>();
 
   constructor(
-    private readonly storage: StorageService,
+    private readonly data: FirestoreDataService,
     private readonly userService: UserService,
   ) {}
 
   async load(): Promise<void> {
-    const stored = await this.storage.get<Record<string, DailyLog>>(STORAGE_KEYS.DAILY_LOGS);
-    this.logs = new Map(
-      Object.entries(stored ?? {}).map(([key, log]) => [key, this.normalizeDailyLog(log)]),
-    );
+    const stored = await this.data.getDailyLogs();
+    this.logs = new Map(stored.map((log) => [log.date, this.normalizeDailyLog(log)]));
+    this.refreshToday();
+  }
+
+  clear(): void {
+    this.logs.clear();
     this.refreshToday();
   }
 
@@ -287,7 +289,7 @@ export class NutritionService {
     this.addMealToLog(log, meal);
     this.logs.set(dateKey, log);
 
-    await this.persistLogs();
+    this.data.saveDailyLog(log);
     await this.refreshToday();
   }
 
@@ -311,7 +313,7 @@ export class NutritionService {
     log.waterMl = Math.max(0, log.waterMl + amount);
     this.logs.set(dateKey, log);
 
-    await this.persistLogs();
+    this.data.saveDailyLog(log);
     await this.refreshToday();
   }
 
@@ -333,7 +335,7 @@ export class NutritionService {
     log.waterMl = Math.max(0, log.waterMl - entry.amountMl);
     this.logs.set(dateKey, log);
 
-    await this.persistLogs();
+    this.data.saveDailyLog(log);
     await this.refreshToday();
   }
 
@@ -446,14 +448,6 @@ export class NutritionService {
       waterMl: 0,
       waterEntries: [],
     };
-  }
-
-  private async persistLogs(): Promise<void> {
-    const data: Record<string, DailyLog> = {};
-    this.logs.forEach((value, key) => {
-      data[key] = value;
-    });
-    await this.storage.set(STORAGE_KEYS.DAILY_LOGS, data);
   }
 
   private buildSummary(dateKey: string): DailySummary {

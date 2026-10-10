@@ -1,0 +1,26 @@
+<ion-content [fullscreen]="true" class="login-content">
+  <div class="login-page">
+    <section class="brand">
+      <img class="brand-logo" src="assets/icon/icon-app.svg" alt="NutriMio" width="88" height="88" />
+      <h1>NutriMio</h1>
+      <p>Seus alimentos, refeições e metas diárias.</p>
+    </section>
+
+    <section class="card info-card">
+      <ion-icon name="cloud-done-outline" aria-hidden="true"></ion-icon>
+      <p>
+        Entre com sua conta Google para salvar seus dados na nuvem. Eles ficam seguros mesmo se
+        você reinstalar o app ou trocar de celular.
+      </p>
+    </section>
+
+    @if (errorMessage()) {
+      <p class="error" role="alert">{{ errorMessage() }}</p>
+    }
+
+    <button type="button" class="google-button" [disabled]="isLoading()" (click)="signInWithGoogle()">
+      <ion-icon name="logo-google" aria-hidden="true"></ion-icon>
+      {{ isLoading() ? 'Entrando...' : 'Continuar com Google' }}
+    </button>
+  </div>
+</ion-content>

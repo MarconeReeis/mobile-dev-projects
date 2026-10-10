@@ -1,21 +1,25 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import {
+  AlertController,
   IonContent,
   IonIcon,
-  IonToast,
   IonToggle,
+  NavController,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
   bookOutline,
+  discOutline,
   flameOutline,
-  flagOutline,
+  logOutOutline,
   moonOutline,
   notificationsOutline,
   resizeOutline,
 } from 'ionicons/icons';
 import { UserProfile } from '../../models';
+import { AppInitService } from '../../services/app-init.service';
+import { AuthService } from '../../services/auth.service';
 import { NutritionService } from '../../services/nutrition.service';
 import { UserService } from '../../services/user.service';
 
@@ -23,23 +27,30 @@ import { UserService } from '../../services/user.service';
   selector: 'app-profile',
   templateUrl: './profile.page.html',
   styleUrls: ['./profile.page.scss'],
-  imports: [IonContent, IonIcon, IonToggle, IonToast],
+  imports: [IonContent, IonIcon, IonToggle],
 })
 export class ProfilePage implements OnInit {
   private readonly router = inject(Router);
   private readonly userService = inject(UserService);
   private readonly nutritionService = inject(NutritionService);
+  private readonly appInit = inject(AppInitService);
+  private readonly alertCtrl = inject(AlertController);
+  private readonly navCtrl = inject(NavController);
+  private readonly authService = inject(AuthService);
 
   user: UserProfile = this.userService.getUser();
   streakDays = 0;
   totalMeals = 0;
-  showLogoutToast = false;
+  photoUrl: string | null = null;
+  photoFailed = false;
+  accountLabel = '';
 
   constructor() {
     addIcons({
       flameOutline,
       bookOutline,
-      flagOutline,
+      discOutline,
+      logOutOutline,
       moonOutline,
       notificationsOutline,
       resizeOutline,
@@ -51,6 +62,7 @@ export class ProfilePage implements OnInit {
       this.user = user;
     });
 
+    this.refreshAccount();
     this.refreshStats();
   }
 
@@ -63,11 +75,18 @@ export class ProfilePage implements OnInit {
     this.totalMeals = this.nutritionService.getTotalMealsLogged();
   }
 
-  get premiumLabel(): string {
-    if (this.user.isPremium && this.user.premiumSince) {
-      return `Premium · desde ${this.user.premiumSince}`;
-    }
-    return 'Uso pessoal';
+  private refreshAccount(): void {
+    const account = this.authService.getCurrentUser();
+    this.photoUrl = account?.photoURL ?? null;
+    this.photoFailed = false;
+
+    const createdAt = account?.metadata.creationTime;
+    this.accountLabel = createdAt
+      ? `Conta Google · desde ${new Date(createdAt).toLocaleDateString('pt-BR', {
+          month: 'short',
+          year: 'numeric',
+        })}`
+      : 'Conta Google';
   }
 
   onEditGoals(): void {
@@ -86,7 +105,20 @@ export class ProfilePage implements OnInit {
     await this.userService.updateSettings({ metricUnits: checked });
   }
 
-  onLogout(): void {
-    this.showLogoutToast = true;
+  async onLogout(): Promise<void> {
+    const alert = await this.alertCtrl.create({
+      header: 'Sair da conta',
+      message: 'Seus dados continuam salvos na nuvem. Deseja sair?',
+      buttons: [
+        { text: 'Cancelar', role: 'cancel' },
+        { text: 'Sair', role: 'destructive', handler: () => void this.logout() },
+      ],
+    });
+    await alert.present();
+  }
+
+  private async logout(): Promise<void> {
+    await this.appInit.endSession();
+    await this.navCtrl.navigateRoot('/login');
   }
 }

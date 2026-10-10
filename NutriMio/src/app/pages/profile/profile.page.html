@@ -6,11 +6,21 @@
     </header>
 
     <section class="card user-card">
-      <div class="avatar">{{ user.initials }}</div>
+      @if (photoUrl && !photoFailed) {
+        <img
+          class="avatar"
+          [src]="photoUrl"
+          [alt]="user.fullName"
+          referrerpolicy="no-referrer"
+          (error)="photoFailed = true"
+        />
+      } @else {
+        <div class="avatar">{{ user.initials }}</div>
+      }
       <div class="user-info">
         <h2>{{ user.fullName }}</h2>
         <p class="email">{{ user.email }}</p>
-        <span class="premium-badge">{{ premiumLabel }}</span>
+        <span class="account-badge">{{ accountLabel }}</span>
       </div>
     </section>
 
@@ -56,7 +66,9 @@
     <section class="card settings-card">
       <button type="button" class="settings-item" (click)="onEditGoals()">
         <div class="settings-left">
-          <ion-icon name="flag-outline" aria-hidden="true"></ion-icon>
+          <span class="settings-icon">
+            <ion-icon name="disc-outline" aria-hidden="true"></ion-icon>
+          </span>
           <span>Metas diárias</span>
         </div>
         <span class="edit-link">Editar</span>
@@ -64,7 +76,9 @@
 
       <div class="settings-item">
         <div class="settings-left">
-          <ion-icon name="moon-outline" aria-hidden="true"></ion-icon>
+          <span class="settings-icon">
+            <ion-icon name="moon-outline" aria-hidden="true"></ion-icon>
+          </span>
           <span>Tema escuro</span>
         </div>
         <ion-toggle
@@ -75,7 +89,9 @@
 
       <div class="settings-item">
         <div class="settings-left">
-          <ion-icon name="notifications-outline" aria-hidden="true"></ion-icon>
+          <span class="settings-icon">
+            <ion-icon name="notifications-outline" aria-hidden="true"></ion-icon>
+          </span>
           <span>Notificações</span>
         </div>
         <ion-toggle
@@ -86,7 +102,9 @@
 
       <div class="settings-item last">
         <div class="settings-left">
-          <ion-icon name="resize-outline" aria-hidden="true"></ion-icon>
+          <span class="settings-icon">
+            <ion-icon name="resize-outline" aria-hidden="true"></ion-icon>
+          </span>
           <span>Unidades métricas</span>
         </div>
         <ion-toggle
@@ -97,15 +115,9 @@
     </section>
 
     <button type="button" class="logout-button" (click)="onLogout()">
+      <ion-icon name="log-out-outline" aria-hidden="true"></ion-icon>
       Sair da conta
     </button>
   </div>
 </ion-content>
 
-<ion-toast
-  [isOpen]="showLogoutToast"
-  message="Autenticação estará disponível em breve."
-  duration="2500"
-  position="bottom"
-  (didDismiss)="showLogoutToast = false"
-></ion-toast>

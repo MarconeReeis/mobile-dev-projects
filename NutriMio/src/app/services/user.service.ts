@@ -1,31 +1,34 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { STORAGE_KEYS } from '../core/constants/storage-keys';
+import { User } from 'firebase/auth';
 import { createDefaultUser } from '../core/constants/default-user';
 import { MacroGoals, UserProfile, UserSettings, UserWeight, FitnessObjective } from '../models';
-import { StorageService } from './storage.service';
+import { FirestoreDataService } from './firestore-data.service';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
   private readonly userSubject = new BehaviorSubject<UserProfile>(createDefaultUser());
   readonly user$: Observable<UserProfile> = this.userSubject.asObservable();
 
-  constructor(private readonly storage: StorageService) {}
+  constructor(private readonly data: FirestoreDataService) {}
 
-  async load(): Promise<void> {
-    const stored = await this.storage.get<Partial<UserProfile>>(STORAGE_KEYS.USER_PROFILE);
+  async load(account: User): Promise<void> {
+    const stored = await this.data.getProfile();
 
     if (!stored) {
-      const user = createDefaultUser();
-      await this.save(user);
+      await this.save(this.createProfileFromAccount(account));
       return;
     }
 
     this.userSubject.next(this.mergeUser(stored));
   }
 
+  clear(): void {
+    this.userSubject.next(createDefaultUser());
+  }
+
   async save(user: UserProfile): Promise<void> {
-    await this.storage.set(STORAGE_KEYS.USER_PROFILE, user);
+    this.data.saveProfile(user);
     this.userSubject.next(user);
   }
 
@@ -62,6 +65,22 @@ export class UserService {
       settings: { ...this.getUser().settings, ...settings },
     };
     await this.save(user);
+  }
+
+  private createProfileFromAccount(account: User): UserProfile {
+    const defaults = createDefaultUser();
+    const fullName = account.displayName?.trim() || defaults.fullName;
+    const parts = fullName.split(/\s+/);
+    const initials = (parts[0][0] + (parts.length > 1 ? parts[parts.length - 1][0] : '')).toUpperCase();
+
+    return {
+      ...defaults,
+      id: account.uid,
+      fullName,
+      name: parts[0],
+      initials,
+      email: account.email ?? '',
+    };
   }
 
   private mergeUser(stored: Partial<UserProfile>): UserProfile {
