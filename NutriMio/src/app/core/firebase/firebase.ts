@@ -26,4 +26,8 @@ export const firebaseAuth: Auth = Capacitor.isNativePlatform()
 export const firestore: Firestore = initializeFirestore(firebaseApp, {
   ignoreUndefinedProperties: true,
   localCache: persistentLocalCache({ tabManager: persistentSingleTabManager(undefined) }),
+  // No WKWebView a conexão padrão do Firestore fica tentando abrir um canal
+  // que o iOS não entrega. Essa tentativa leva cerca de 1 a 2 minutos e só
+  // depois o SDK muda de estratégia. No iPhone usamos long-polling desde o início.
+  ...(Capacitor.getPlatform() === 'ios' ? { experimentalForceLongPolling: true } : {}),
 });
