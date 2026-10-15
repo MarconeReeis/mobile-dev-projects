@@ -1,34 +1,51 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { User } from 'firebase/auth';
 import { createDefaultUser } from '../core/constants/default-user';
+import { connectStream } from '../core/utils/stream.utils';
 import { MacroGoals, UserProfile, UserSettings, UserWeight, FitnessObjective } from '../models';
-import { FirestoreDataService } from './firestore-data.service';
+import { DataRepository } from './data/data-repository.service';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
   private readonly userSubject = new BehaviorSubject<UserProfile>(createDefaultUser());
   readonly user$: Observable<UserProfile> = this.userSubject.asObservable();
 
-  constructor(private readonly data: FirestoreDataService) {}
+  private subscription?: Subscription;
 
-  async load(account: User): Promise<void> {
-    const stored = await this.data.getProfile();
+  constructor(private readonly data: DataRepository) {}
 
-    if (!stored) {
-      await this.save(this.createProfileFromAccount(account));
-      return;
-    }
+  /**
+   * Passa a acompanhar o perfil da origem atual. Com login, `account`
+   * é usado para criar o perfil na primeira vez que a conta é usada.
+   */
+  connect(account: User | null): Promise<void> {
+    this.disconnect();
 
-    this.userSubject.next(this.mergeUser(stored));
+    const connection = connectStream(
+      this.data.profile$(),
+      async (stored) => {
+        if (stored) {
+          this.userSubject.next(this.mergeUser(stored));
+          return;
+        }
+
+        await this.save(await this.createInitialProfile(account));
+      },
+      'perfil',
+    );
+    this.subscription = connection.subscription;
+    return connection.ready;
   }
 
-  clear(): void {
+  disconnect(): void {
+    this.subscription?.unsubscribe();
+    this.subscription = undefined;
     this.userSubject.next(createDefaultUser());
   }
 
   async save(user: UserProfile): Promise<void> {
-    this.data.saveProfile(user);
+    await this.data.saveProfile(user);
     this.userSubject.next(user);
   }
 
@@ -67,14 +84,20 @@ export class UserService {
     await this.save(user);
   }
 
-  private createProfileFromAccount(account: User): UserProfile {
-    const defaults = createDefaultUser();
-    const fullName = account.displayName?.trim() || defaults.fullName;
+  /** Na primeira vez com login, aproveita as metas que já estavam no dispositivo. */
+  private async createInitialProfile(account: User | null): Promise<UserProfile> {
+    if (!account) {
+      return createDefaultUser();
+    }
+
+    const localProfile = await this.data.readLocalProfile();
+    const base = localProfile ? this.mergeUser(localProfile) : createDefaultUser();
+    const fullName = account.displayName?.trim() || base.fullName;
     const parts = fullName.split(/\s+/);
     const initials = (parts[0][0] + (parts.length > 1 ? parts[parts.length - 1][0] : '')).toUpperCase();
 
     return {
-      ...defaults,
+      ...base,
       id: account.uid,
       fullName,
       name: parts[0],

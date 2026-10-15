@@ -1,14 +1,19 @@
 import { Injectable } from '@angular/core';
 import { User } from 'firebase/auth';
-import { STORAGE_KEYS } from '../core/constants/storage-keys';
-import { DailyLog, Food, UserProfile } from '../models';
+import { delay } from '../core/utils/stream.utils';
 import { AuthService } from './auth.service';
-import { FirestoreDataService } from './firestore-data.service';
+import { DataRepository } from './data/data-repository.service';
 import { FoodCatalogService } from './food-catalog.service';
 import { NutritionService } from './nutrition.service';
 import { StorageMigrationService } from './storage-migration.service';
 import { StorageService } from './storage.service';
 import { UserService } from './user.service';
+
+/**
+ * Tempo máximo esperando a primeira leitura dos dados. Passado isso o app abre
+ * mesmo assim e as telas se atualizam sozinhas quando os dados chegarem.
+ */
+const SESSION_READY_TIMEOUT_MS = 3000;
 
 @Injectable({ providedIn: 'root' })
 export class AppInitService {
@@ -16,7 +21,7 @@ export class AppInitService {
     private readonly storage: StorageService,
     private readonly migration: StorageMigrationService,
     private readonly auth: AuthService,
-    private readonly data: FirestoreDataService,
+    private readonly data: DataRepository,
     private readonly userService: UserService,
     private readonly foodCatalog: FoodCatalogService,
     private readonly nutritionService: NutritionService,
@@ -25,57 +30,44 @@ export class AppInitService {
   async init(): Promise<void> {
     await this.storage.init();
     await this.migration.run();
-
-    const user = await this.auth.waitForAuthReady();
-
-    if (user) {
-      await this.startSession(user);
-    }
-  }
-
-  /** Carrega os dados do usuário logado a partir do Firestore. */
-  async startSession(user: User): Promise<void> {
-    try {
-      await this.importLocalData();
-    } catch (error) {
-      // Sem conexão: tenta de novo na próxima abertura do app.
-      console.warn('[AppInit] Importação dos dados locais adiada', error);
-    }
-
-    await Promise.all([
-      this.userService.load(user).catch((error) => this.logLoadError('perfil', error)),
-      this.foodCatalog.load().catch((error) => this.logLoadError('alimentos', error)),
-      this.nutritionService.load().catch((error) => this.logLoadError('registros', error)),
-    ]);
-  }
-
-  async endSession(): Promise<void> {
-    await this.auth.signOutUser();
-    this.userService.clear();
-    this.foodCatalog.clear();
-    this.nutritionService.clear();
+    await this.startSession(await this.auth.waitForAuthReady());
   }
 
   /**
-   * Os dados antigos do storage do dispositivo são mantidos como backup;
-   * apenas copiamos para a nuvem na primeira vez que a conta é usada.
+   * Sem login os dados ficam no dispositivo; com login, no Firestore da conta.
    */
-  private async importLocalData(): Promise<void> {
-    const [profile, foods, logs] = await Promise.all([
-      this.storage.get<UserProfile>(STORAGE_KEYS.USER_PROFILE),
-      this.storage.get<Food[]>(STORAGE_KEYS.FOOD_CATALOG),
-      this.storage.get<Record<string, DailyLog>>(STORAGE_KEYS.DAILY_LOGS),
+  async startSession(account: User | null): Promise<void> {
+    this.disconnect();
+
+    if (account) {
+      this.data.useCloud(account.uid);
+      this.data
+        .importGuestDataToCloud()
+        .catch((error) => console.warn('[AppInit] Dados do dispositivo serão enviados depois', error));
+    } else {
+      this.data.useLocal();
+    }
+
+    const ready = Promise.all([
+      this.userService.connect(account),
+      this.foodCatalog.connect(),
+      this.nutritionService.connect(),
     ]);
 
-    await this.data.importLocalDataOnce({
-      profile,
-      foods: foods ?? [],
-      logs: Object.entries(logs ?? {}).map(([date, log]) => ({ ...log, date })),
-    });
+    await Promise.race([ready, delay(SESSION_READY_TIMEOUT_MS)]);
   }
 
-  private logLoadError(label: string, error: unknown): void {
-    console.error(`[AppInit] Falha ao carregar ${label}`, error);
+  async signOut(): Promise<void> {
+    // Encerra os listeners antes do logout para o Firestore não negar acesso a eles.
+    this.disconnect();
+    await this.auth.signOutUser();
+    await this.startSession(null);
+  }
+
+  private disconnect(): void {
+    this.userService.disconnect();
+    this.foodCatalog.disconnect();
+    this.nutritionService.disconnect();
   }
 }
 

@@ -42,4 +42,8 @@ export class LoginPage {
       this.isLoading.set(false);
     }
   }
+
+  continueWithoutAccount(): void {
+    void this.navCtrl.navigateBack('/tabs/dashboard');
+  }
 }

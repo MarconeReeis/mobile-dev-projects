@@ -9,8 +9,8 @@
     <section class="card info-card">
       <ion-icon name="cloud-done-outline" aria-hidden="true"></ion-icon>
       <p>
-        Entre com sua conta Google para salvar seus dados na nuvem. Eles ficam seguros mesmo se
-        você reinstalar o app ou trocar de celular.
+        Entre com sua conta Google para salvar seus alimentos e refeições na nuvem e acessá-los
+        em qualquer dispositivo. O que você já cadastrou aqui vai junto.
       </p>
     </section>
 
@@ -22,5 +22,10 @@
       <ion-icon name="logo-google" aria-hidden="true"></ion-icon>
       {{ isLoading() ? 'Entrando...' : 'Continuar com Google' }}
     </button>
+
+    <button type="button" class="skip-button" [disabled]="isLoading()" (click)="continueWithoutAccount()">
+      Agora não
+    </button>
+    <p class="skip-hint">Sem login, seus dados ficam salvos apenas neste dispositivo.</p>
   </div>
 </ion-content>

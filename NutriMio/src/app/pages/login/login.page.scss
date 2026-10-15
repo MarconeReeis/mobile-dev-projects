@@ -100,3 +100,24 @@
     cursor: not-allowed;
   }
 }
+
+.skip-button {
+  height: 44px;
+  border: none;
+  background: transparent;
+  color: var(--nutrimio-text-secondary);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.5;
+  }
+}
+
+.skip-hint {
+  margin: -12px 0 0;
+  font-size: 0.8rem;
+  text-align: center;
+  color: var(--nutrimio-text-muted);
+}

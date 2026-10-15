@@ -1,22 +1,35 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { createId } from '../core/utils/meal.utils';
+import { connectStream } from '../core/utils/stream.utils';
 import { Food } from '../models';
-import { FirestoreDataService } from './firestore-data.service';
+import { DataRepository } from './data/data-repository.service';
 
 @Injectable({ providedIn: 'root' })
 export class FoodCatalogService {
   private readonly foodsSubject = new BehaviorSubject<Food[]>([]);
   readonly foods$: Observable<Food[]> = this.foodsSubject.asObservable();
 
-  constructor(private readonly data: FirestoreDataService) {}
+  private subscription?: Subscription;
 
-  async load(): Promise<void> {
-    const foods = await this.data.getFoods();
-    this.foodsSubject.next(foods.sort((a, b) => a.name.localeCompare(b.name, 'pt-BR')));
+  constructor(private readonly data: DataRepository) {}
+
+  /** Passa a acompanhar os alimentos da origem atual (dispositivo ou nuvem). */
+  connect(): Promise<void> {
+    this.disconnect();
+
+    const connection = connectStream(
+      this.data.foods$(),
+      (foods) => this.foodsSubject.next(sortFoods(foods)),
+      'alimentos',
+    );
+    this.subscription = connection.subscription;
+    return connection.ready;
   }
 
-  clear(): void {
+  disconnect(): void {
+    this.subscription?.unsubscribe();
+    this.subscription = undefined;
     this.foodsSubject.next([]);
   }
 
@@ -39,8 +52,8 @@ export class FoodCatalogService {
 
   async addFood(food: Omit<Food, 'id'>): Promise<Food> {
     const newFood: Food = { ...food, id: createId() };
-    this.data.saveFood(newFood);
-    this.foodsSubject.next([...this.foodsSubject.value, newFood]);
+    await this.data.saveFood(newFood);
+    this.foodsSubject.next(sortFoods([...this.foodsSubject.value, newFood]));
     return newFood;
   }
 
@@ -54,13 +67,17 @@ export class FoodCatalogService {
 
     const updated: Food = { ...food, id };
     foods[index] = updated;
-    this.data.saveFood(updated);
-    this.foodsSubject.next(foods);
+    await this.data.saveFood(updated);
+    this.foodsSubject.next(sortFoods(foods));
     return updated;
   }
 
   async deleteFood(id: string): Promise<void> {
-    this.data.deleteFood(id);
+    await this.data.deleteFood(id);
     this.foodsSubject.next(this.foodsSubject.value.filter((food) => food.id !== id));
   }
+}
+
+function sortFoods(foods: Food[]): Food[] {
+  return [...foods].sort((a, b) => a.name.localeCompare(b.name, 'pt-BR'));
 }

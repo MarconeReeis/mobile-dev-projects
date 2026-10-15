@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { toDateKey } from '../core/utils/date.utils';
 import { addDays, getWeekStart, parseDateKey, toDateKeyFromParts } from '../core/utils/calendar.utils';
+import { connectStream } from '../core/utils/stream.utils';
 import { createId, roundMacros, roundNutrition, toFoodTag } from '../core/utils/meal.utils';
 import {
   DailyLog,
@@ -24,7 +25,7 @@ import {
   WaterDayHistory,
   WeekBar,
 } from '../models';
-import { FirestoreDataService } from './firestore-data.service';
+import { DataRepository } from './data/data-repository.service';
 import { UserService } from './user.service';
 
 const MACRO_CONFIG: Array<{
@@ -48,20 +49,36 @@ export class NutritionService {
   readonly todayMealSlots$: Observable<MealCategorySlot[]> = this.mealSlotsSubject.asObservable();
 
   private logs = new Map<string, DailyLog>();
+  private subscription?: Subscription;
 
   constructor(
-    private readonly data: FirestoreDataService,
+    private readonly data: DataRepository,
     private readonly userService: UserService,
-  ) {}
-
-  async load(): Promise<void> {
-    const stored = await this.data.getDailyLogs();
-    this.logs = new Map(stored.map((log) => [log.date, this.normalizeDailyLog(log)]));
-    this.refreshToday();
+  ) {
+    // Mantém o resumo sempre montado (mesmo sem dados) e atualizado com as metas.
+    this.userService.user$.subscribe(() => this.refreshToday());
   }
 
-  clear(): void {
-    this.logs.clear();
+  /** Passa a acompanhar os registros da origem atual (dispositivo ou nuvem). */
+  connect(): Promise<void> {
+    this.disconnect();
+
+    const connection = connectStream(
+      this.data.dailyLogs$(),
+      (logs) => {
+        this.logs = new Map(logs.map((log) => [log.date, this.normalizeDailyLog(log)]));
+        this.refreshToday();
+      },
+      'registros diários',
+    );
+    this.subscription = connection.subscription;
+    return connection.ready;
+  }
+
+  disconnect(): void {
+    this.subscription?.unsubscribe();
+    this.subscription = undefined;
+    this.logs = new Map();
     this.refreshToday();
   }
 
@@ -289,7 +306,7 @@ export class NutritionService {
     this.addMealToLog(log, meal);
     this.logs.set(dateKey, log);
 
-    this.data.saveDailyLog(log);
+    await this.data.saveDailyLog(log);
     await this.refreshToday();
   }
 
@@ -313,7 +330,7 @@ export class NutritionService {
     log.waterMl = Math.max(0, log.waterMl + amount);
     this.logs.set(dateKey, log);
 
-    this.data.saveDailyLog(log);
+    await this.data.saveDailyLog(log);
     await this.refreshToday();
   }
 
@@ -335,7 +352,7 @@ export class NutritionService {
     log.waterMl = Math.max(0, log.waterMl - entry.amountMl);
     this.logs.set(dateKey, log);
 
-    this.data.saveDailyLog(log);
+    await this.data.saveDailyLog(log);
     await this.refreshToday();
   }
 

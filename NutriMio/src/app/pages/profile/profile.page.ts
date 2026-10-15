@@ -12,11 +12,13 @@ import {
   bookOutline,
   discOutline,
   flameOutline,
+  logoGoogle,
   logOutOutline,
   moonOutline,
   notificationsOutline,
   resizeOutline,
 } from 'ionicons/icons';
+import { User } from 'firebase/auth';
 import { UserProfile } from '../../models';
 import { AppInitService } from '../../services/app-init.service';
 import { AuthService } from '../../services/auth.service';
@@ -41,6 +43,7 @@ export class ProfilePage implements OnInit {
   user: UserProfile = this.userService.getUser();
   streakDays = 0;
   totalMeals = 0;
+  isLoggedIn = false;
   photoUrl: string | null = null;
   photoFailed = false;
   accountLabel = '';
@@ -51,6 +54,7 @@ export class ProfilePage implements OnInit {
       bookOutline,
       discOutline,
       logOutOutline,
+      logoGoogle,
       moonOutline,
       notificationsOutline,
       resizeOutline,
@@ -62,8 +66,10 @@ export class ProfilePage implements OnInit {
       this.user = user;
     });
 
-    this.refreshAccount();
-    this.refreshStats();
+    this.authService.user$.subscribe((account) => this.refreshAccount(account));
+
+    // Os registros podem chegar da nuvem depois que a tela abriu.
+    this.nutritionService.dailySummary$.subscribe(() => this.refreshStats());
   }
 
   ionViewWillEnter(): void {
@@ -75,12 +81,17 @@ export class ProfilePage implements OnInit {
     this.totalMeals = this.nutritionService.getTotalMealsLogged();
   }
 
-  private refreshAccount(): void {
-    const account = this.authService.getCurrentUser();
+  private refreshAccount(account: User | null): void {
+    this.isLoggedIn = account !== null;
     this.photoUrl = account?.photoURL ?? null;
     this.photoFailed = false;
 
-    const createdAt = account?.metadata.creationTime;
+    if (!account) {
+      this.accountLabel = 'Dados salvos neste dispositivo';
+      return;
+    }
+
+    const createdAt = account.metadata.creationTime;
     this.accountLabel = createdAt
       ? `Conta Google · desde ${new Date(createdAt).toLocaleDateString('pt-BR', {
           month: 'short',
@@ -108,7 +119,8 @@ export class ProfilePage implements OnInit {
   async onLogout(): Promise<void> {
     const alert = await this.alertCtrl.create({
       header: 'Sair da conta',
-      message: 'Seus dados continuam salvos na nuvem. Deseja sair?',
+      message:
+        'Seus dados continuam salvos na nuvem. Sem login, o app volta a usar apenas os dados deste dispositivo.',
       buttons: [
         { text: 'Cancelar', role: 'cancel' },
         { text: 'Sair', role: 'destructive', handler: () => void this.logout() },
@@ -117,8 +129,11 @@ export class ProfilePage implements OnInit {
     await alert.present();
   }
 
+  onLogin(): void {
+    void this.navCtrl.navigateForward('/login');
+  }
+
   private async logout(): Promise<void> {
-    await this.appInit.endSession();
-    await this.navCtrl.navigateRoot('/login');
+    await this.appInit.signOut();
   }
 }

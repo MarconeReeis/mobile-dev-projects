@@ -19,7 +19,9 @@
       }
       <div class="user-info">
         <h2>{{ user.fullName }}</h2>
-        <p class="email">{{ user.email }}</p>
+        @if (user.email) {
+          <p class="email">{{ user.email }}</p>
+        }
         <span class="account-badge">{{ accountLabel }}</span>
       </div>
     </section>
@@ -114,10 +116,18 @@
       </div>
     </section>
 
-    <button type="button" class="logout-button" (click)="onLogout()">
-      <ion-icon name="log-out-outline" aria-hidden="true"></ion-icon>
-      Sair da conta
-    </button>
+    @if (isLoggedIn) {
+      <button type="button" class="logout-button" (click)="onLogout()">
+        <ion-icon name="log-out-outline" aria-hidden="true"></ion-icon>
+        Sair da conta
+      </button>
+    } @else {
+      <button type="button" class="login-button" (click)="onLogin()">
+        <ion-icon name="logo-google" aria-hidden="true"></ion-icon>
+        Entrar com Google
+      </button>
+      <p class="login-hint">Entre para salvar seus alimentos na nuvem e acessá-los em qualquer dispositivo.</p>
+    }
   </div>
 </ion-content>
 
