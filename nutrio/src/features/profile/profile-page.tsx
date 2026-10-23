@@ -30,6 +30,7 @@ import {
   useToday,
   useUpdateProfile,
 } from "@/features/profile/api";
+import { saveTextFile } from "@/lib/save-file";
 import { cn } from "@/lib/utils";
 
 import {
@@ -258,17 +259,20 @@ function PrivacyCard() {
 
   function download() {
     exportData.mutate(undefined, {
-      onSuccess: (data) => {
-        const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = `nutrio-dados-${data.exportedAt.slice(0, 10)}.json`;
-        a.click();
-        URL.revokeObjectURL(url);
-        toast.success("Arquivo de dados gerado", {
-          description: `${data.foods.length} alimentos, ${data.meals.length} refeições e ${data.goalVersions.length} versões de metas.`,
-        });
+      onSuccess: async (data) => {
+        try {
+          const saved = await saveTextFile(
+            `nutrio-dados-${data.exportedAt.slice(0, 10)}.json`,
+            JSON.stringify(data, null, 2),
+            "application/json",
+          );
+          if (!saved) return;
+          toast.success("Arquivo de dados gerado", {
+            description: `${data.foods.length} alimentos, ${data.meals.length} refeições e ${data.goalVersions.length} versões de metas.`,
+          });
+        } catch {
+          toast.error("Não foi possível salvar o arquivo.");
+        }
       },
       onError: () => toast.error("Não foi possível exportar os dados."),
     });

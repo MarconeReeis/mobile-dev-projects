@@ -45,8 +45,8 @@ Objetivo: o app inteiro navegável e fiel ao protótipo, rodando sobre um reposi
 
 ## Fase 3 — App mobile
 
-- [ ] Capacitor (iOS/Android), ícones e splash
-- [ ] Teclado numérico decimal, haptics, status bar
+- [~] Capacitor iOS: projeto gerado (SPM), ícone e splash do Nutrio, barra de status, teclado e exportação via folha de compartilhamento (guia em `docs/IOS.md`). Falta: rodar no iPhone, Android, deep links para os e-mails de login
+- [~] Teclado numérico decimal (inputMode decimal), status bar e barra do teclado feitos; haptics pendente
 - [ ] PWA instalável como alternativa
 - [ ] Publicação TestFlight / Play Console (uso interno)
 

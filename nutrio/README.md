@@ -40,6 +40,15 @@ npm run db:stop
 - Schema, RLS e funções: `supabase/migrations/`.
 - Copie `.env.example` para `.env.local` com a URL e a chave **pública**. A `service_role` nunca vai no frontend.
 
+## iPhone (Capacitor)
+
+```bash
+npm run ios        # build + cap sync + abre o Xcode (no Mac)
+npm run cap:sync   # depois de mudar o código
+```
+
+Passo a passo completo, assinatura e live reload: [docs/IOS.md](docs/IOS.md).
+
 ## Estrutura
 
 ```
