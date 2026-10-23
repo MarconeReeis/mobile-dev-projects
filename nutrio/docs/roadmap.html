@@ -1,0 +1,431 @@
+<title>Roadmap do Nutrio</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Urbanist:wght@600;700;800&display=swap">
+<style>
+  /* Layout: coluna única de leitura; resumo geral no topo, fases como linha do tempo, depois ideias e decisões. */
+  :root {
+    --bg: oklch(0.965 0.005 120);
+    --surface: oklch(1 0 0);
+    --fg: oklch(0.2 0.012 150);
+    --muted: oklch(0.5 0.012 150);
+    --line: oklch(0.91 0.006 120);
+    --soft: oklch(0.945 0.005 120);
+    --lime: oklch(0.82 0.19 128);
+    --lime-soft: oklch(0.93 0.085 125);
+    --lime-strong: oklch(0.55 0.15 140);
+    --on-lime: oklch(0.2 0.03 140);
+    --amber: oklch(0.78 0.15 75);
+    --amber-soft: oklch(0.95 0.05 80);
+    --ink: oklch(0.2 0.012 150);
+    --on-ink: oklch(0.98 0.005 120);
+    --font-display: "Urbanist", ui-sans-serif, system-ui, sans-serif;
+    --font-body: "Figtree", ui-sans-serif, system-ui, sans-serif;
+    --radius: 20px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: oklch(0.17 0.01 150);
+      --surface: oklch(0.22 0.012 150);
+      --fg: oklch(0.95 0.006 120);
+      --muted: oklch(0.7 0.012 140);
+      --line: oklch(0.3 0.012 150);
+      --soft: oklch(0.26 0.012 150);
+      --lime: oklch(0.82 0.19 128);
+      --lime-soft: oklch(0.33 0.07 130);
+      --lime-strong: oklch(0.78 0.17 130);
+      --on-lime: oklch(0.2 0.03 140);
+      --amber: oklch(0.8 0.14 75);
+      --amber-soft: oklch(0.34 0.06 75);
+      --ink: oklch(0.95 0.006 120);
+      --on-ink: oklch(0.18 0.01 150);
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: oklch(0.17 0.01 150);
+    --surface: oklch(0.22 0.012 150);
+    --fg: oklch(0.95 0.006 120);
+    --muted: oklch(0.7 0.012 140);
+    --line: oklch(0.3 0.012 150);
+    --soft: oklch(0.26 0.012 150);
+    --lime: oklch(0.82 0.19 128);
+    --lime-soft: oklch(0.33 0.07 130);
+    --lime-strong: oklch(0.78 0.17 130);
+    --on-lime: oklch(0.2 0.03 140);
+    --amber: oklch(0.8 0.14 75);
+    --amber-soft: oklch(0.34 0.06 75);
+    --ink: oklch(0.95 0.006 120);
+    --on-ink: oklch(0.18 0.01 150);
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-body);
+    font-size: 15px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  .page {
+    max-width: 860px;
+    margin: 0 auto;
+    padding-block: 40px 64px;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+    display: grid;
+    gap: 40px;
+  }
+  h1, h2, h3 { font-family: var(--font-display); letter-spacing: -0.02em; text-wrap: balance; margin: 0; }
+  p { margin: 0; }
+  code {
+    font-family: ui-monospace, "SFMono-Regular", Menlo, monospace;
+    font-size: 0.86em;
+    background: var(--soft);
+    padding: 1px 5px;
+    border-radius: 6px;
+  }
+  .num { font-variant-numeric: tabular-nums; }
+
+  /* Cabeçalho */
+  header { display: grid; gap: 20px; }
+  .brand { display: flex; align-items: center; gap: 10px; }
+  .brand .mark {
+    width: 36px; height: 36px; border-radius: 11px; background: var(--lime); color: var(--on-lime);
+    display: grid; place-items: center;
+  }
+  .brand span { font-family: var(--font-display); font-weight: 800; font-size: 20px; }
+  header h1 { font-size: clamp(32px, 6vw, 44px); font-weight: 800; line-height: 1.05; }
+  header .lede { color: var(--muted); max-width: 60ch; }
+
+  .overview {
+    background: var(--surface);
+    border-radius: var(--radius);
+    padding: 22px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 18px 24px;
+    align-items: center;
+    box-shadow: 0 1px 2px oklch(0.2 0.012 150 / 5%), 0 10px 28px -16px oklch(0.2 0.012 150 / 18%);
+  }
+  .overview .label { font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  .overview .big { font-family: var(--font-display); font-size: 40px; font-weight: 800; line-height: 1.1; }
+  .overview .big small { font-size: 16px; font-weight: 600; color: var(--muted); }
+  .overview .next {
+    background: var(--ink); color: var(--on-ink); border-radius: 16px; padding: 14px 16px; max-width: 280px;
+  }
+  .overview .next .label { color: inherit; opacity: 0.7; }
+  .overview .next strong { font-family: var(--font-display); font-size: 18px; display: block; margin-top: 2px; }
+  .overview .bar { grid-column: 1 / -1; }
+
+  .bar { display: flex; height: 10px; border-radius: 999px; background: var(--soft); overflow: hidden; }
+  .bar i { display: block; height: 100%; }
+  .bar .d { background: var(--lime); }
+  .bar .p { background: repeating-linear-gradient(-45deg, var(--amber) 0 4px, var(--amber-soft) 4px 8px); }
+
+  .legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: 13px; color: var(--muted); grid-column: 1 / -1; }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+
+  /* Status: forma + cor (não depende só da cor) */
+  .st { width: 18px; height: 18px; flex: none; border-radius: 50%; display: inline-grid; place-items: center; }
+  .st.done { background: var(--lime); color: var(--on-lime); }
+  .st.prog { border: 2px solid var(--amber); background: linear-gradient(90deg, var(--amber) 50%, transparent 50%); }
+  .st.todo { border: 2px solid var(--line); }
+  .st svg { width: 11px; height: 11px; }
+
+  /* Fases */
+  .phases { display: grid; gap: 14px; }
+  .section-title { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  .section-title h2 { font-size: 26px; font-weight: 800; }
+  .section-title p { color: var(--muted); font-size: 14px; }
+
+  .phase {
+    background: var(--surface);
+    border-radius: var(--radius);
+    border: 1px solid var(--line);
+    overflow: hidden;
+  }
+  .phase.current { border-color: var(--lime-strong); box-shadow: 0 0 0 3px var(--lime-soft); }
+  .phase summary {
+    list-style: none; cursor: pointer;
+    display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 6px 16px; align-items: center;
+    padding: 18px 20px;
+  }
+  .phase summary::-webkit-details-marker { display: none; }
+  .phase summary:focus-visible { outline: 3px solid var(--lime-strong); outline-offset: -3px; border-radius: var(--radius); }
+  .phase .tag {
+    font-family: var(--font-display); font-weight: 800; font-size: 13px;
+    width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center;
+    background: var(--soft);
+  }
+  .phase.complete .tag { background: var(--lime); color: var(--on-lime); }
+  .phase.current .tag { background: var(--ink); color: var(--on-ink); }
+  .phase h3 { font-size: 19px; font-weight: 700; }
+  .phase .goal { color: var(--muted); font-size: 14px; }
+  .phase .count { text-align: right; font-size: 13px; color: var(--muted); white-space: nowrap; }
+  .phase .count b { color: var(--fg); font-size: 15px; }
+  .phase .bar { grid-column: 2 / -1; height: 6px; }
+  .chev { transition: transform 0.2s; color: var(--muted); }
+  .phase[open] .chev { transform: rotate(180deg); }
+  .phase .badge {
+    display: inline-block; margin-left: 8px; vertical-align: 3px;
+    font-family: var(--font-body); font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+    padding: 2px 8px; border-radius: 999px; background: var(--lime-soft); color: var(--fg);
+  }
+
+  .items { list-style: none; margin: 0; padding: 4px 20px 18px; display: grid; gap: 2px; border-top: 1px solid var(--line); }
+  .items li { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 12px; padding: 10px 0; align-items: start; }
+  .items li + li { border-top: 1px dashed var(--line); }
+  .items .st { margin-top: 2px; }
+  .items .t { min-width: 0; }
+  .items .t b { font-weight: 700; }
+  .items .missing { display: block; font-size: 13px; color: var(--muted); margin-top: 2px; }
+  .items .missing::before { content: "Falta: "; font-weight: 600; color: var(--fg); }
+  .items li.done .t { color: var(--muted); }
+  .items li.done .t b { color: var(--fg); }
+
+  /* Ideias */
+  .ideas { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
+  .idea { background: var(--soft); border-radius: var(--radius); padding: 18px 20px; display: grid; gap: 10px; align-content: start; }
+  .idea h3 { font-size: 17px; font-weight: 700; }
+  .idea ul { margin: 0; padding-left: 18px; display: grid; gap: 6px; font-size: 14px; }
+
+  /* Decisões */
+  .decisions { display: grid; gap: 12px; }
+  .decision {
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 18px 20px; display: grid; grid-template-columns: 180px minmax(0, 1fr); gap: 8px 20px;
+  }
+  .decision h3 { font-size: 17px; font-weight: 700; }
+  .decision .opts { display: flex; flex-wrap: wrap; gap: 6px; }
+  .decision .opt { font-size: 13px; font-weight: 600; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--line); }
+  .decision .opt.lean { background: var(--lime-soft); border-color: transparent; }
+  .decision p { grid-column: 2; color: var(--muted); font-size: 14px; }
+
+  footer { color: var(--muted); font-size: 13px; }
+
+  @media (max-width: 640px) {
+    .overview { grid-template-columns: 1fr; }
+    .overview .next { max-width: none; }
+    .phase summary { grid-template-columns: auto minmax(0, 1fr); }
+    .phase .count { grid-column: 2; text-align: left; }
+    .phase .chev { display: none; }
+    .decision { grid-template-columns: 1fr; }
+    .decision p { grid-column: 1; }
+  }
+  @media (prefers-reduced-motion: reduce) { .chev { transition: none; } }
+</style>
+
+<div class="page">
+  <header>
+    <div class="brand">
+      <span class="mark" aria-hidden="true">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>
+      </span>
+      <span>Nutrio</span>
+    </div>
+    <h1>Roadmap</h1>
+    <p class="lede">Diário alimentar e acompanhamento de nutrientes. Primeiro um app pessoal; se funcionar bem, um produto.</p>
+
+    <section class="overview" aria-label="Progresso geral">
+      <div>
+        <p class="label">Progresso geral</p>
+        <p class="big num" id="overall">—</p>
+      </div>
+      <div class="next">
+        <p class="label">Próximo passo</p>
+        <strong>Testar com uma conta real</strong>
+        <p style="font-size:13px;opacity:.8;margin-top:4px">Cadastro, login e o fluxo completo gravando no Supabase.</p>
+      </div>
+      <div class="bar" id="overall-bar" role="img"></div>
+      <div class="legend">
+        <span><i class="st done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></i> Feito</span>
+        <span><i class="st prog"></i> Em andamento</span>
+        <span><i class="st todo"></i> A fazer</span>
+      </div>
+    </section>
+  </header>
+
+  <section class="phases" aria-labelledby="fases">
+    <div class="section-title">
+      <h2 id="fases">Fases</h2>
+      <p>Toque numa fase para abrir ou fechar a lista.</p>
+    </div>
+    <div id="phase-list" class="phases"></div>
+  </section>
+
+  <section aria-labelledby="ideias" style="display:grid;gap:14px">
+    <div class="section-title">
+      <h2 id="ideias">Ideias para o futuro</h2>
+      <p>Fora do escopo agora, ficam anotadas.</p>
+    </div>
+    <div class="ideas">
+      <article class="idea">
+        <h3>Registro mais rápido</h3>
+        <ul>
+          <li>Leitor de código de barras</li>
+          <li>Base pública de composição (TACO/TBCA) para importar alimentos</li>
+          <li>Reconhecimento de alimento por foto</li>
+          <li>Refeições salvas, como "meu café de sempre"</li>
+          <li>Copiar o dia inteiro; registrar por voz</li>
+        </ul>
+      </article>
+      <article class="idea">
+        <h3>Acompanhamento</h3>
+        <ul>
+          <li>Água (o NutriMio já tem essa lógica)</li>
+          <li>Peso e medidas com gráfico de evolução</li>
+          <li>Relatórios semanais e mensais, médias por nutriente</li>
+          <li>Lembretes de refeição</li>
+          <li>Integração com Apple Health e Google Fit</li>
+        </ul>
+      </article>
+      <article class="idea">
+        <h3>Produto e comercial</h3>
+        <ul>
+          <li>Modo nutricionista: o profissional define metas e acompanha pacientes</li>
+          <li>Plano gratuito + assinatura (relatórios, PDF, sincronização)</li>
+          <li>Relatório em PDF para o profissional</li>
+          <li>Internacionalização (o nome funciona em PT e EN)</li>
+        </ul>
+      </article>
+    </div>
+  </section>
+
+  <section class="decisions" aria-labelledby="decisoes">
+    <div class="section-title">
+      <h2 id="decisoes">Decisões</h2>
+      <p>Opção destacada = escolhida ou tendência atual.</p>
+    </div>
+    <article class="decision">
+      <h3>Back-end</h3>
+      <div class="opts"><span class="opt lean">Supabase — decidido em 22/10</span><span class="opt">Firebase (Firestore)</span></div>
+      <p>Dados relacionais, RLS, exclusão em cascata, relatórios e modo nutricionista em SQL, sem lock-in. O offline, ponto forte do Firebase, será coberto com cache persistido e fila de escritas.</p>
+    </article>
+    <article class="decision">
+      <h3>Plataforma inicial</h3>
+      <div class="opts"><span class="opt lean">Web/PWA primeiro</span><span class="opt">Capacitor desde já</span></div>
+      <p>Começar na web e adicionar o Capacitor na fase 3.</p>
+    </article>
+    <article class="decision">
+      <h3>Repositório</h3>
+      <div class="opts"><span class="opt">Pasta em mobile-dev-projects</span><span class="opt lean">Repositório próprio</span></div>
+      <p>Para comercializar, um repositório próprio facilita CI e colaboradores.</p>
+    </article>
+  </section>
+
+  <footer>Fonte: <code>nutrio/docs/ROADMAP.md</code> · atualizado em 21/10/2026</footer>
+</div>
+
+<script>
+  // Status: "d" feito, "p" em andamento, "t" a fazer. `missing` aparece como "Falta: …".
+  const PHASES = [
+    {
+      id: "F0", title: "Fundação", goal: "Base do projeto e regras de cálculo.",
+      items: [
+        ["d", "Projeto React + Vite + TypeScript"],
+        ["d", "Tailwind CSS v4 com o design system do protótipo"],
+        ["d", "Componentes shadcn/ui usados no protótipo"],
+        ["d", "TanStack Router (rotas por arquivo) + TanStack Query"],
+        ["d", "Shell responsivo: menu lateral no desktop, navegação inferior no celular"],
+        ["d", "Camada de domínio com testes das regras de cálculo"],
+        ["d", "Formatação pt-BR: vírgula decimal, DD/MM/AAAA, datas locais"],
+        ["d", "Vitest, oxlint e Prettier"],
+      ],
+    },
+    {
+      id: "F1", title: "Telas com dados mockados", goal: "O app inteiro navegável e fiel ao protótipo, sobre um repositório em memória.", current: true,
+      items: [
+        ["d", "<b>Camada de dados:</b> interfaces de repositório + implementação em memória com dados de demonstração"],
+        ["d", "<b>Hooks</b> de leitura e escrita por área; toda escrita atualiza o cache"],
+        ["d", "<b>Resumo:</b> anel de calorias, macros, outros nutrientes, refeições do dia e gráfico de 7 dias"],
+        ["d", "<b>Refeições:</b> lista por data, criar, editar, reordenar, duplicar, excluir, editar quantidade e mover item"],
+        ["d", "<b>Registrar alimento:</b> busca, recentes, favoritos, quantidade em g/ml/porção, prévia e cadastro de alimento novo sem sair do registro"],
+        ["d", "<b>Alimentos:</b> busca, filtro por categoria, favoritos, detalhe, criar, editar, porções, duplicar, arquivar e excluir (só se nunca registrado)"],
+        ["d", "<b>Metas:</b> meta ou limite por nutriente, versões por data de início sem mudar dias anteriores, histórico, estimativa 4/4/9"],
+        ["t", "Metas no celular: barra fixa de salvar"],
+        ["d", "<b>Perfil:</b> dados pessoais opcionais, fuso horário (define o “hoje”), exportação em JSON e exclusão de conta"],
+        ["d", "Estados de carregamento, vazio e erro; avisos de sucesso; prevenção de envio duplo"],
+      ],
+    },
+    {
+      id: "F2", title: "Persistência e contas", goal: "Dados reais, login e segurança por usuário.",
+      items: [
+        ["d", "<b>Back-end decidido: Supabase</b> (Postgres + RLS + Auth, região São Paulo)"],
+        ["d", "Schema, RLS e funções aplicados no Supabase + 33 testes de isolamento passando no banco real"],
+        ["d", "Repositórios Supabase com tipos gerados do banco (as telas não mudaram)"],
+        ["t", "Offline no MVP: cache persistido + fila de escritas"],
+        ["p", "Autenticação: cadastro, login, sair, recuperação de senha, rotas protegidas", "testar de ponta a ponta com uma conta real"],
+        ["t", "Modelo de dados: perfil, alimentos, porções, versões de metas, refeições e itens"],
+        ["t", "Segurança por usuário (RLS ou Security Rules) + testes de isolamento"],
+        
+        ["t", "Funcionamento offline e cache local"],
+        ["p", "Exportação dos dados (JSON) e exclusão de conta", "telas prontas no mock; falta apagar no back-end e no login"],
+      ],
+    },
+    {
+      id: "F3", title: "App mobile", goal: "Do navegador para o celular.",
+      items: [
+        ["t", "Capacitor (iOS/Android), ícones e splash"],
+        ["t", "Teclado numérico decimal, haptics, status bar"],
+        ["t", "PWA instalável como alternativa"],
+        ["t", "Publicação no TestFlight e Play Console (uso interno)"],
+      ],
+    },
+    {
+      id: "F4", title: "Qualidade e produto", goal: "Pronto para outras pessoas usarem.",
+      items: [
+        ["t", "Testes de componente e testes ponta a ponta (Playwright) do fluxo completo"],
+        ["t", "CI no GitHub Actions: lint, typecheck, testes, build"],
+        ["t", "Monitoramento de erros sem dados pessoais"],
+        ["t", "Modo escuro"],
+        ["t", "Acessibilidade: revisão com leitor de tela e contraste"],
+        ["t", "Termos de uso e aviso de privacidade (LGPD)"],
+      ],
+    },
+  ];
+
+  const CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>';
+  const STATUS = {
+    d: { cls: "done", label: "Feito", icon: CHECK },
+    p: { cls: "prog", label: "Em andamento", icon: "" },
+    t: { cls: "todo", label: "A fazer", icon: "" },
+  };
+
+  const count = (items, s) => items.filter((i) => i[0] === s).length;
+  const bar = (done, prog, total) =>
+    `<i class="d" style="width:${(done / total) * 100}%"></i><i class="p" style="width:${(prog / total) * 100}%"></i>`;
+
+  const all = PHASES.flatMap((p) => p.items);
+  const doneAll = count(all, "d"), progAll = count(all, "p");
+  document.getElementById("overall").innerHTML =
+    `${doneAll} de ${all.length} <small>itens feitos · ${progAll} em andamento</small>`;
+  const ob = document.getElementById("overall-bar");
+  ob.innerHTML = bar(doneAll, progAll, all.length);
+  ob.setAttribute("aria-label", `${doneAll} de ${all.length} itens feitos, ${progAll} em andamento`);
+
+  document.getElementById("phase-list").innerHTML = PHASES.map((p) => {
+    const d = count(p.items, "d"), pr = count(p.items, "p"), n = p.items.length;
+    const complete = d === n;
+    const cls = ["phase", complete ? "complete" : "", p.current ? "current" : ""].join(" ");
+    const badge = complete ? '<span class="badge">Concluída</span>' : p.current ? '<span class="badge">Agora</span>' : "";
+    const items = p.items.map(([s, text, missing]) => {
+      const st = STATUS[s];
+      return `<li class="${st.cls}"><i class="st ${st.cls}" role="img" aria-label="${st.label}">${st.icon}</i>
+        <span class="t">${text}${missing ? `<span class="missing">${missing}</span>` : ""}</span></li>`;
+    }).join("");
+    return `<details class="${cls}" ${p.current ? "open" : ""}>
+      <summary>
+        <span class="tag">${p.id}</span>
+        <span><h3>${p.title}${badge}</h3><p class="goal">${p.goal}</p></span>
+        <span class="count num"><b>${d}/${n}</b> feitos${pr ? ` · ${pr} em andamento` : ""}
+          <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-3px;margin-left:6px"><path d="M6 9l6 6 6-6"/></svg></span>
+        <span class="bar" aria-hidden="true">${bar(d, pr, n)}</span>
+      </summary>
+      <ul class="items">${items}</ul>
+    </details>`;
+  }).join("");
+</script>
