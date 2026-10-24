@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { fromGoalForm, sameGoals, toGoalForm } from "./goal-form";
+import { fromGoalForm, sameGoals, toGoalForm, toWaterField } from "./goal-form";
 
 describe("editor de metas", () => {
   it("preenche a partir da versão e sugere limite para sódio sem meta", () => {
@@ -46,5 +46,25 @@ describe("editor de metas", () => {
     expect(sameGoals(base, { kcal: { value: 2000, kind: "target" } })).toBe(true);
     expect(sameGoals(base, { kcal: { value: 2000, kind: "limit" } })).toBe(false);
     expect(sameGoals(base, { ...base, fiber: { value: 30, kind: "target" } })).toBe(false);
+  });
+});
+
+describe("meta de água no editor", () => {
+  it("aceita versão só com água e lê vírgula", () => {
+    expect(fromGoalForm(toGoalForm(undefined), {}, "2,5")).toMatchObject({ ok: true, waterMl: 2.5 });
+    expect(fromGoalForm(toGoalForm(undefined), {}, "2500")).toEqual({ ok: true, goals: {}, waterMl: 2500 });
+  });
+
+  it("acusa água inválida e versão totalmente vazia", () => {
+    expect(fromGoalForm(toGoalForm(undefined), {}, "0")).toMatchObject({
+      ok: false,
+      waterError: expect.any(String),
+    });
+    expect(fromGoalForm(toGoalForm(undefined), {}, "")).toMatchObject({ ok: false, empty: true });
+  });
+
+  it("texto do campo a partir do valor salvo", () => {
+    expect(toWaterField(2500)).toBe("2500");
+    expect(toWaterField(undefined)).toBe("");
   });
 });

@@ -1,9 +1,10 @@
 // Implementação em memória dos repositórios. Os dados somem ao recarregar a página.
 
 import { normalizeFoodInput, type FoodInput } from "@/domain/nutrition/foods";
-import { GoalValidationError, normalizeGoals } from "@/domain/nutrition/goals";
+import { GoalValidationError, normalizeGoalVersion } from "@/domain/nutrition/goals";
 import { insertionIndex, normalizeMealFields } from "@/domain/nutrition/meals";
-import type { Food, ISODate, Meal, MealItem } from "@/domain/nutrition/types";
+import type { Food, ISODate, Meal, MealItem, WaterEntry } from "@/domain/nutrition/types";
+import { validateWaterMl } from "@/domain/nutrition/water";
 import { normalizeProfile } from "@/domain/profile/types";
 import { today as getToday } from "@/lib/dates";
 
@@ -233,15 +234,16 @@ export function createMockRepositories({ latencyMs = 150, seed }: Options = {}):
       listVersions: () =>
         respond([...db.goalVersions].sort((a, b) => b.startDate.localeCompare(a.startDate))),
 
-      async saveVersion(startDate, goals) {
+      async saveVersion(startDate, goals, waterMl) {
         if (!/^\d{4}-\d{2}-\d{2}$/.test(startDate)) throw new GoalValidationError("Data de início inválida.");
-        const clean = normalizeGoals(goals);
+        const clean = normalizeGoalVersion(goals, waterMl);
         const existing = db.goalVersions.find((v) => v.startDate === startDate);
         if (existing) {
-          existing.goals = clean;
+          existing.goals = clean.goals;
+          existing.waterMl = clean.waterMl;
           return respond({ version: existing, replaced: true });
         }
-        const version = { id: crypto.randomUUID(), startDate, goals: clean };
+        const version = { id: crypto.randomUUID(), startDate, ...clean };
         db.goalVersions.push(version);
         return respond({ version, replaced: false });
       },
@@ -250,6 +252,21 @@ export function createMockRepositories({ latencyMs = 150, seed }: Options = {}):
         if (!db.goalVersions.some((v) => v.id === versionId))
           throw new NotFoundError("Versão de metas", versionId);
         db.goalVersions = db.goalVersions.filter((v) => v.id !== versionId);
+        await respond(undefined);
+      },
+    },
+
+    water: {
+      listRange: (start, end) => respond(db.waterEntries.filter((e) => e.date >= start && e.date <= end)),
+
+      async add(date, ml, time) {
+        const entry: WaterEntry = { id: crypto.randomUUID(), date, time, ml: validateWaterMl(ml) };
+        db.waterEntries.push(entry);
+        return respond(entry);
+      },
+
+      async remove(entryId) {
+        db.waterEntries = db.waterEntries.filter((e) => e.id !== entryId);
         await respond(undefined);
       },
     },
@@ -274,12 +291,14 @@ export function createMockRepositories({ latencyMs = 150, seed }: Options = {}):
           foods: db.foods,
           meals: [...db.meals].sort(byDateAndOrder),
           goalVersions: db.goalVersions,
+          waterEntries: db.waterEntries,
         }),
 
       async deleteAccount() {
         db.foods = [];
         db.meals = [];
         db.goalVersions = [];
+        db.waterEntries = [];
         db.profile = { name: "", email: "", timezone: Intl.DateTimeFormat().resolvedOptions().timeZone };
         await respond(undefined);
       },

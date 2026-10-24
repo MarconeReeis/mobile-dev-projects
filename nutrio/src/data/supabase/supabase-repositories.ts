@@ -4,9 +4,10 @@
 import type { PostgrestError } from "@supabase/supabase-js";
 
 import { normalizeFoodInput } from "@/domain/nutrition/foods";
-import { normalizeGoals } from "@/domain/nutrition/goals";
+import { normalizeGoalVersion } from "@/domain/nutrition/goals";
 import { normalizeMealFields } from "@/domain/nutrition/meals";
 import type { Meal } from "@/domain/nutrition/types";
+import { validateWaterMl } from "@/domain/nutrition/water";
 import { normalizeProfile } from "@/domain/profile/types";
 import { today } from "@/lib/dates";
 
@@ -20,6 +21,7 @@ import {
   mealFromRow,
   profileFromRow,
   profileToRow,
+  waterFromRow,
 } from "./mappers";
 
 const FOOD_SELECT = "*, food_portions(*)";
@@ -288,10 +290,14 @@ export function createSupabaseRepositories(db: Supabase): Repositories {
         return rows.map(goalVersionFromRow);
       },
 
-      async saveVersion(startDate, goals) {
-        const clean = normalizeGoals(goals);
+      async saveVersion(startDate, goals, waterMl) {
+        const clean = normalizeGoalVersion(goals, waterMl);
         const [result] = must(
-          await db.rpc("save_goal_version", { p_start_date: startDate, p_goals: goalsToJson(clean) }),
+          await db.rpc("save_goal_version", {
+            p_start_date: startDate,
+            p_goals: goalsToJson(clean.goals),
+            p_water_ml: clean.waterMl,
+          }),
         );
         if (!result) throw new DatabaseError("O servidor não confirmou a versão de metas.");
         const row = must(
@@ -305,15 +311,46 @@ export function createSupabaseRepositories(db: Supabase): Repositories {
       },
     },
 
+    water: {
+      async listRange(start, end) {
+        const rows = must(
+          await db
+            .from("water_entries")
+            .select("*")
+            .gte("date", start)
+            .lte("date", end)
+            .order("date")
+            .order("created_at"),
+        );
+        return rows.map(waterFromRow);
+      },
+
+      async add(date, ml, time) {
+        const row = must(
+          await db
+            .from("water_entries")
+            .insert({ date, ml: validateWaterMl(ml), time: time ?? null })
+            .select("*")
+            .single(),
+        );
+        return waterFromRow(row);
+      },
+
+      async remove(entryId) {
+        check((await db.from("water_entries").delete().eq("id", entryId)).error);
+      },
+    },
+
     profile,
 
     account: {
       async exportData() {
-        const [profileData, foods, meals, goalVersions] = await Promise.all([
+        const [profileData, foods, meals, goalVersions, water] = await Promise.all([
           profile.get(),
           db.from("foods").select(FOOD_SELECT),
           db.from("meals").select(MEAL_SELECT).order("date").order("position"),
           db.from("goal_versions").select(GOAL_SELECT).order("start_date", { ascending: false }),
+          db.from("water_entries").select("*").order("date").order("created_at"),
         ]);
         return {
           app: "Nutrio" as const,
@@ -323,6 +360,7 @@ export function createSupabaseRepositories(db: Supabase): Repositories {
           foods: must(foods).map(foodFromRow),
           meals: must(meals).map(mealFromRow),
           goalVersions: must(goalVersions).map(goalVersionFromRow),
+          waterEntries: must(water).map(waterFromRow),
         };
       },
 

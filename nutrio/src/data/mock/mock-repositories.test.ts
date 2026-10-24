@@ -151,6 +151,7 @@ describe("cadastro de alimentos", () => {
     name: "Queijo minas frescal",
     category: "Laticínios",
     base: "g" as const,
+    baseAmount: 100,
     per100: { kcal: 264, protein: 17.4, carbs: 3.2, fat: 20.2 },
     portions: [{ name: "1 fatia", amount: 30 }],
   };
@@ -265,5 +266,35 @@ describe("perfil e conta", () => {
     expect(data.meals).toEqual([]);
     expect(data.goalVersions).toEqual([]);
     expect(data.profile.name).toBe("");
+  });
+});
+
+describe("água", () => {
+  it("lista o dia, registra e remove", async () => {
+    const before = await repos.water.listRange(TODAY, TODAY);
+    expect(before.map((e) => e.ml)).toEqual([300, 250, 500, 250]);
+    const added = await repos.water.add(TODAY, 350, "18:05");
+    expect(added).toMatchObject({ date: TODAY, ml: 350, time: "18:05" });
+    await repos.water.remove(before[0]!.id);
+    const after = await repos.water.listRange(TODAY, TODAY);
+    expect(after).toHaveLength(4);
+    expect(after.some((e) => e.id === before[0]!.id)).toBe(false);
+  });
+
+  it("anteontem fica sem registros e lançamento para outro dia não tem horário", async () => {
+    expect(await repos.water.listRange("2026-10-19", "2026-10-19")).toEqual([]);
+    expect((await repos.water.add("2026-10-19", 500)).time).toBeUndefined();
+  });
+
+  it("rejeita quantidade inválida", async () => {
+    await expect(repos.water.add(TODAY, 0)).rejects.toThrow();
+    await expect(repos.water.add(TODAY, 25000)).rejects.toThrow();
+  });
+
+  it("meta de água fica na versão de metas", async () => {
+    const [current] = await repos.goals.listVersions();
+    expect(current!.waterMl).toBe(2500);
+    const { version } = await repos.goals.saveVersion(TODAY, {}, 3000);
+    expect(version).toMatchObject({ waterMl: 3000, goals: {} });
   });
 });

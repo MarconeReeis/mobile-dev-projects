@@ -5,7 +5,8 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { SHEET_ON_MOBILE } from "@/components/ui/dialog-sheet";
-import { NUTRIENT_KEYS, NUTRIENTS } from "@/domain/nutrition/nutrients";
+import { fromPer100 } from "@/domain/nutrition/foods";
+import { NUTRIENT_KEYS, NUTRIENTS, type NutrientKey } from "@/domain/nutrition/nutrients";
 import type { Food } from "@/domain/nutrition/types";
 import { useDuplicateFood } from "@/features/foods/api";
 import { formatNumber, formatNutrient } from "@/lib/format";
@@ -79,6 +80,9 @@ function Content({
 function FoodDetail({ food, onEdit, onDone }: { food: Food; onEdit: () => void; onDone: () => void }) {
   const duplicate = useDuplicateFood();
   const missing = NUTRIENT_KEYS.filter((k) => food.per100[k] == null).length;
+  const atBase = fromPer100(food.per100, food.baseAmount);
+  // Com referência diferente de 100, mostra também por 100 para comparar com outros alimentos.
+  const showPer100 = food.baseAmount !== 100;
 
   return (
     <>
@@ -89,23 +93,43 @@ function FoodDetail({ food, onEdit, onDone }: { food: Food; onEdit: () => void; 
         </p>
         <DialogTitle className="font-display text-2xl">{food.name}</DialogTitle>
         <DialogDescription>
-          {food.brand ? `${food.brand} · ` : ""}Valores por 100 {food.base}
+          {food.brand ? `${food.brand} · ` : ""}Valores por {formatNumber(food.baseAmount)} {food.base}
         </DialogDescription>
       </DialogHeader>
 
-      <dl className="divide-y rounded-2xl border">
-        {NUTRIENT_KEYS.map((k) => {
-          const v = food.per100[k];
-          return (
-            <div key={k} className="flex items-baseline justify-between gap-4 px-4 py-2 text-sm">
-              <dt className={cn(k === "kcal" && "font-semibold")}>{NUTRIENTS[k].label}</dt>
-              <dd className={cn("tabular", v == null ? "text-muted-foreground italic" : "font-semibold")}>
-                {v == null ? "não informado" : formatNutrient(k, v)}
-              </dd>
-            </div>
-          );
-        })}
-      </dl>
+      <div className="overflow-hidden rounded-2xl border">
+        <table className="w-full text-sm">
+          <thead className="bg-muted/60 text-xs text-muted-foreground">
+            <tr>
+              <th scope="col" className="px-4 py-2 text-left font-medium">
+                Nutriente
+              </th>
+              <th scope="col" className="px-4 py-2 text-right font-medium">
+                por {formatNumber(food.baseAmount)} {food.base}
+              </th>
+              {showPer100 && (
+                <th scope="col" className="px-4 py-2 text-right font-medium">
+                  por 100 {food.base}
+                </th>
+              )}
+            </tr>
+          </thead>
+          <tbody className="divide-y">
+            {NUTRIENT_KEYS.map((k) => (
+              <tr key={k}>
+                <th
+                  scope="row"
+                  className={cn("px-4 py-2 text-left font-normal", k === "kcal" && "font-semibold")}
+                >
+                  {NUTRIENTS[k].label}
+                </th>
+                <NutrientCell nutrient={k} value={atBase[k]} strong />
+                {showPer100 && <NutrientCell nutrient={k} value={food.per100[k]} />}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
       {missing > 0 && (
         <p className="-mt-2 text-xs text-muted-foreground">
           {missing} {missing === 1 ? "nutriente não informado" : "nutrientes não informados"}: os totais do
@@ -156,5 +180,26 @@ function FoodDetail({ food, onEdit, onDone }: { food: Food; onEdit: () => void; 
         </Button>
       </div>
     </>
+  );
+}
+
+function NutrientCell({
+  nutrient,
+  value,
+  strong,
+}: {
+  nutrient: NutrientKey;
+  value: number | null | undefined;
+  strong?: boolean;
+}) {
+  return (
+    <td
+      className={cn(
+        "px-4 py-2 text-right tabular",
+        value == null ? "text-muted-foreground italic" : strong ? "font-semibold" : "text-muted-foreground",
+      )}
+    >
+      {value == null ? "não informado" : formatNutrient(nutrient, value)}
+    </td>
   );
 }

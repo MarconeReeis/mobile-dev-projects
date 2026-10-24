@@ -1,6 +1,6 @@
 // Dados de demonstração. Gerados em relação a "hoje" para o app sempre ter histórico recente.
 
-import type { Food, GoalVersion, ISODate, Meal, MealItem } from "@/domain/nutrition/types";
+import type { Food, GoalVersion, ISODate, Meal, MealItem, WaterEntry } from "@/domain/nutrition/types";
 import type { Profile } from "@/domain/profile/types";
 import { addDays } from "@/lib/dates";
 
@@ -8,10 +8,12 @@ export type Seed = {
   foods: Food[];
   meals: Meal[];
   goalVersions: GoalVersion[];
+  waterEntries: WaterEntry[];
   profile: Profile;
 };
 
-type FoodSeed = Omit<Food, "favorite" | "archived" | "portions"> & {
+type FoodSeed = Omit<Food, "favorite" | "archived" | "portions" | "baseAmount"> & {
+  baseAmount?: number;
   favorite?: boolean;
   archived?: boolean;
   portions: { name: string; amount: number }[];
@@ -356,6 +358,7 @@ const FOODS: FoodSeed[] = [
 export function createSeed(today: ISODate): Seed {
   const foods: Food[] = FOODS.map((f) => ({
     ...f,
+    baseAmount: f.baseAmount ?? 100,
     favorite: f.favorite ?? false,
     archived: f.archived ?? false,
     portions: f.portions.map((p, i) => ({ id: `${f.id}-p${i}`, ...p })),
@@ -465,6 +468,7 @@ export function createSeed(today: ISODate): Seed {
     {
       id: "goals-v1",
       startDate: addDays(today, -67),
+      waterMl: 2000,
       goals: {
         kcal: { value: 2300, kind: "target" },
         protein: { value: 120, kind: "target" },
@@ -477,6 +481,7 @@ export function createSeed(today: ISODate): Seed {
     {
       id: "goals-v2",
       startDate: addDays(today, -20),
+      waterMl: 2500,
       goals: {
         kcal: { value: 2100, kind: "target" },
         protein: { value: 130, kind: "target" },
@@ -502,5 +507,20 @@ export function createSeed(today: ISODate): Seed {
     timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
   };
 
-  return { foods, meals, goalVersions, profile };
+  // Água nos últimos 7 dias; anteontem fica sem registros, como as refeições.
+  const WATER_TIMES = ["07:15", "09:30", "11:45", "13:20", "15:10", "17:40", "20:00"];
+  const waterPatterns: [offset: number, ml: number[]][] = [
+    [-6, [300, 250, 500, 250, 300, 500, 250]],
+    [-5, [250, 500, 250, 300, 500]],
+    [-4, [500, 500, 250, 500, 300, 500, 250]],
+    [-3, [250, 250, 300, 500, 250]],
+    [-1, [500, 300, 500, 250, 500, 500]],
+    [0, [300, 250, 500, 250]],
+  ];
+  const waterEntries: WaterEntry[] = waterPatterns.flatMap(([offset, mls]) => {
+    const date = addDays(today, offset);
+    return mls.map((ml, i) => ({ id: `${date}-w${i}`, date, time: WATER_TIMES[i], ml }));
+  });
+
+  return { foods, meals, goalVersions, waterEntries, profile };
 }

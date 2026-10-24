@@ -3,7 +3,7 @@
 
 import type { FoodInput } from "@/domain/nutrition/foods";
 import type { MealFields } from "@/domain/nutrition/meals";
-import type { Food, GoalVersion, ISODate, Meal } from "@/domain/nutrition/types";
+import type { Food, GoalVersion, ISODate, Meal, WaterEntry } from "@/domain/nutrition/types";
 import type { Profile, ProfileInput } from "@/domain/profile/types";
 
 export type AddMealItemInput = {
@@ -73,8 +73,17 @@ export interface GoalsRepository {
   saveVersion(
     startDate: ISODate,
     goals: GoalVersion["goals"],
+    waterMl?: number,
   ): Promise<{ version: GoalVersion; replaced: boolean }>;
   deleteVersion(versionId: string): Promise<void>;
+}
+
+export interface WaterRepository {
+  /** Registros de água de um intervalo de datas (inclusivo). */
+  listRange(start: ISODate, end: ISODate): Promise<WaterEntry[]>;
+  /** `time` (HH:mm) é opcional: lançamentos para outro dia ficam sem horário. */
+  add(date: ISODate, ml: number, time?: string): Promise<WaterEntry>;
+  remove(entryId: string): Promise<void>;
 }
 
 export interface ProfileRepository {
@@ -91,6 +100,7 @@ export type AccountExport = {
   foods: Food[];
   meals: Meal[];
   goalVersions: GoalVersion[];
+  waterEntries: WaterEntry[];
 };
 
 export interface AccountRepository {
@@ -103,6 +113,7 @@ export type Repositories = {
   foods: FoodsRepository;
   meals: MealsRepository;
   goals: GoalsRepository;
+  water: WaterRepository;
   profile: ProfileRepository;
   account: AccountRepository;
 };

@@ -51,6 +51,7 @@ export type Database = {
           added_sugar: number | null;
           archived: boolean;
           base: Database["public"]["Enums"]["food_base"];
+          base_amount: number;
           brand: string | null;
           calcium: number | null;
           carbs: number | null;
@@ -78,6 +79,7 @@ export type Database = {
           added_sugar?: number | null;
           archived?: boolean;
           base: Database["public"]["Enums"]["food_base"];
+          base_amount?: number;
           brand?: string | null;
           calcium?: number | null;
           carbs?: number | null;
@@ -105,6 +107,7 @@ export type Database = {
           added_sugar?: number | null;
           archived?: boolean;
           base?: Database["public"]["Enums"]["food_base"];
+          base_amount?: number;
           brand?: string | null;
           calcium?: number | null;
           carbs?: number | null;
@@ -169,6 +172,7 @@ export type Database = {
           start_date: string;
           updated_at: string;
           user_id: string;
+          water_ml: number | null;
         };
         Insert: {
           created_at?: string;
@@ -176,6 +180,7 @@ export type Database = {
           start_date: string;
           updated_at?: string;
           user_id?: string;
+          water_ml?: number | null;
         };
         Update: {
           created_at?: string;
@@ -183,6 +188,7 @@ export type Database = {
           start_date?: string;
           updated_at?: string;
           user_id?: string;
+          water_ml?: number | null;
         };
         Relationships: [];
       };
@@ -369,6 +375,33 @@ export type Database = {
         };
         Relationships: [];
       };
+      water_entries: {
+        Row: {
+          created_at: string;
+          date: string;
+          id: string;
+          ml: number;
+          time: string | null;
+          user_id: string;
+        };
+        Insert: {
+          created_at?: string;
+          date: string;
+          id?: string;
+          ml: number;
+          time?: string | null;
+          user_id?: string;
+        };
+        Update: {
+          created_at?: string;
+          date?: string;
+          id?: string;
+          ml?: number;
+          time?: string | null;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
     };
     Views: {
       [_ in never]: never;
@@ -446,7 +479,7 @@ export type Database = {
         Returns: string;
       };
       save_goal_version: {
-        Args: { p_goals: Json; p_start_date: string };
+        Args: { p_goals: Json; p_start_date: string; p_water_ml?: number };
         Returns: {
           replaced: boolean;
           version_id: string;

@@ -24,7 +24,13 @@ export type Food = {
   brand?: string;
   category?: string;
   base: FoodBase;
+  /** Valores normalizados por 100 g/ml: é o que os cálculos usam. */
   per100: Nutrients;
+  /**
+   * Quantidade de referência em que o usuário informou os valores (ex.: 35 g da embalagem).
+   * Só muda a forma de editar e exibir; os cálculos usam sempre `per100`.
+   */
+  baseAmount: number;
   portions: Portion[];
   favorite: boolean;
   archived: boolean;
@@ -61,6 +67,17 @@ export type GoalVersion = {
   id: string;
   startDate: ISODate;
   goals: Partial<Record<NutrientKey, Goal>>;
+  /** Meta diária de água em ml (sempre uma meta a atingir). */
+  waterMl?: number;
+};
+
+/** Um registro de água no dia. */
+export type WaterEntry = {
+  id: string;
+  date: ISODate;
+  /** HH:mm; ausente quando registrado depois, para outro dia. */
+  time?: string;
+  ml: number;
 };
 
 export type Total = {

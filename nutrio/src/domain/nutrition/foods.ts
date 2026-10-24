@@ -9,7 +9,10 @@ export type FoodInput = {
   brand?: string;
   category?: string;
   base: FoodBase;
+  /** Valores por 100 g/ml (já convertidos da quantidade de referência). */
   per100: Nutrients;
+  /** Quantidade em que os valores foram informados (ex.: 35 g). Padrão: 100. */
+  baseAmount: number;
   portions: { id?: string; name: string; amount: number }[];
   notes?: string;
 };
@@ -43,6 +46,10 @@ export function normalizeFoodInput(input: FoodInput): FoodInput {
   if (!name) throw new FoodValidationError("O nome do alimento é obrigatório.");
   if (input.base !== "g" && input.base !== "ml") throw new FoodValidationError("Base inválida.");
 
+  if (!Number.isFinite(input.baseAmount) || input.baseAmount <= 0) {
+    throw new FoodValidationError("A quantidade de referência deve ser maior que zero.");
+  }
+
   const per100: Nutrients = {};
   for (const key of NUTRIENT_KEYS) {
     const v = input.per100[key];
@@ -69,6 +76,7 @@ export function normalizeFoodInput(input: FoodInput): FoodInput {
     category: input.category?.trim() || undefined,
     base: input.base,
     per100,
+    baseAmount: input.baseAmount,
     portions,
     notes: input.notes?.trim() || undefined,
   };
@@ -83,4 +91,23 @@ export function matchesFoodQuery(food: Pick<Food, "name" | "brand">, query: stri
       .toLowerCase();
   const q = fold(query.trim());
   return !q || fold(`${food.name} ${food.brand ?? ""}`).includes(q);
+}
+
+/** Converte valores informados por `baseAmount` (ex.: por 35 g) para valores por 100. */
+export function toPer100(values: Nutrients, baseAmount: number): Nutrients {
+  return mapNutrients(values, (v) => (v * 100) / baseAmount);
+}
+
+/** Valores por 100 vistos na quantidade de referência (para editar e exibir). */
+export function fromPer100(per100: Nutrients, baseAmount: number): Nutrients {
+  return mapNutrients(per100, (v) => (v * baseAmount) / 100);
+}
+
+function mapNutrients(values: Nutrients, fn: (v: number) => number): Nutrients {
+  const out: Nutrients = {};
+  for (const key of NUTRIENT_KEYS) {
+    const v = values[key];
+    out[key] = v === null || v === undefined ? null : fn(v);
+  }
+  return out;
 }

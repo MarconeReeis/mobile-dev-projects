@@ -1,4 +1,4 @@
-import { Calculator, History, Info, RotateCcw, Save, Trash2 } from "lucide-react";
+import { Calculator, Droplet, History, Info, RotateCcw, Save, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -27,13 +27,14 @@ import {
 } from "@/domain/nutrition/goals";
 import { NUTRIENTS, type NutrientKey } from "@/domain/nutrition/nutrients";
 import type { GoalKind, GoalVersion, ISODate } from "@/domain/nutrition/types";
+import { WATER_GOAL_PRESETS_ML } from "@/domain/nutrition/water";
 import { useDeleteGoalVersion, useGoalVersions, useSaveGoalVersion } from "@/features/goals/api";
 import { useToday } from "@/features/profile/api";
 import { formatDate } from "@/lib/dates";
-import { formatNutrient } from "@/lib/format";
+import { formatNumber, formatNutrient } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
-import { fromGoalForm, sameGoals, toGoalForm, type GoalFormValues } from "./goal-form";
+import { fromGoalForm, sameGoals, toGoalForm, toWaterField, type GoalFormValues } from "./goal-form";
 
 const KIND_LABEL: Record<GoalKind, string> = { target: "Meta a atingir", limit: "Limite máximo" };
 const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
@@ -76,15 +77,17 @@ function GoalsEditor({ versions }: { versions: GoalVersion[] }) {
   // A versão-base do editor: a vigente, ou outra escolhida no histórico ("Usar como base").
   const [base, setBase] = useState<GoalVersion | undefined>(current);
   const [form, setForm] = useState<GoalFormValues>(() => toGoalForm(base?.goals));
+  const [water, setWater] = useState(() => toWaterField(base?.waterMl));
   const [startDate, setStartDate] = useState<ISODate>(today);
   const [showErrors, setShowErrors] = useState(false);
   const [confirm, setConfirm] = useState<"replace" | "past" | null>(null);
   const save = useSaveGoalVersion();
 
-  const result = fromGoalForm(form, base?.goals);
+  const result = fromGoalForm(form, base?.goals, water);
   const errors = showErrors && !result.ok ? result.errors : {};
+  const waterError = showErrors && !result.ok ? result.waterError : undefined;
   const draft: Goals = result.ok ? result.goals : {};
-  const dirty = !base || !result.ok || !sameGoals(draft, base.goals);
+  const dirty = !base || !result.ok || !sameGoals(draft, base.goals) || result.waterMl !== base.waterMl;
   const estimate = macroEnergyEstimate(draft);
   const validDate = ISO_DATE.test(startDate);
   const sameDate = versions.find((v) => v.startDate === startDate);
@@ -92,6 +95,7 @@ function GoalsEditor({ versions }: { versions: GoalVersion[] }) {
   function loadBase(version: GoalVersion) {
     setBase(version);
     setForm(toGoalForm(version.goals));
+    setWater(toWaterField(version.waterMl));
     setShowErrors(false);
     toast(`Editor preenchido com as metas de ${formatDate(version.startDate)}`, {
       description: "Escolha a data de início e salve para criar uma nova versão.",
@@ -113,7 +117,7 @@ function GoalsEditor({ versions }: { versions: GoalVersion[] }) {
   function doSave() {
     if (!result.ok) return;
     save.mutate(
-      { startDate, goals: result.goals },
+      { startDate, goals: result.goals, waterMl: result.waterMl },
       {
         onSuccess: ({ version, replaced }) => {
           setBase(version);
@@ -223,6 +227,61 @@ function GoalsEditor({ versions }: { versions: GoalVersion[] }) {
             </p>
             <ul className="mt-3 divide-y">{MAIN_GOAL_KEYS.map(row)}</ul>
           </section>
+          <section className="surface p-5 lg:p-6" aria-labelledby="hidratacao">
+            <h2 id="hidratacao" className="text-xl font-bold">
+              Hidratação
+            </h2>
+            <p className="text-sm text-muted-foreground">
+              Meta diária de água, acompanhada no resumo do dia.
+            </p>
+            <div className="mt-3 grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 py-3">
+              <label htmlFor="meta-agua" className="flex min-w-0 items-center gap-2.5 font-medium">
+                <Droplet className="h-4 w-4 shrink-0 fill-water text-water" aria-hidden />
+                <span className="truncate">Água</span>
+              </label>
+              <div className="relative w-32 sm:w-[140px]">
+                <Input
+                  id="meta-agua"
+                  inputMode="decimal"
+                  value={water}
+                  placeholder="sem meta"
+                  onChange={(e) => setWater(e.target.value)}
+                  aria-invalid={!!waterError}
+                  aria-describedby={waterError ? "meta-agua-erro" : undefined}
+                  className="h-10 rounded-xl pr-10 text-right tabular"
+                />
+                <span className="pointer-events-none absolute top-1/2 right-3 -translate-y-1/2 text-xs text-muted-foreground">
+                  ml
+                </span>
+              </div>
+              {waterError && (
+                <p
+                  id="meta-agua-erro"
+                  className="col-span-full text-right text-xs font-medium text-destructive"
+                >
+                  {waterError}
+                </p>
+              )}
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {WATER_GOAL_PRESETS_ML.map((v) => (
+                <button
+                  key={v}
+                  type="button"
+                  onClick={() => setWater(String(v))}
+                  aria-pressed={water === String(v)}
+                  className={cn(
+                    "rounded-full px-3 py-1.5 text-sm font-medium tabular transition-colors",
+                    water === String(v)
+                      ? "bg-water text-ink"
+                      : "bg-water-soft text-water-strong hover:bg-water/25",
+                  )}
+                >
+                  {formatNumber(v / 1000)} L
+                </button>
+              ))}
+            </div>
+          </section>
           <section className="surface p-5 lg:p-6" aria-labelledby="opcionais">
             <h2 id="opcionais" className="text-xl font-bold">
               Opcionais
@@ -289,6 +348,7 @@ function GoalsEditor({ versions }: { versions: GoalVersion[] }) {
                   variant="ghost"
                   onClick={() => {
                     setForm(toGoalForm(base.goals));
+                    setWater(toWaterField(base.waterMl));
                     setShowErrors(false);
                   }}
                 >
@@ -377,7 +437,8 @@ function HistoryCard({
                   {g.kcal ? formatNutrient("kcal", g.kcal.value) : "kcal —"} · P{" "}
                   {g.protein ? formatNutrient("protein", g.protein.value) : "—"} · C{" "}
                   {g.carbs ? formatNutrient("carbs", g.carbs.value) : "—"} · G{" "}
-                  {g.fat ? formatNutrient("fat", g.fat.value) : "—"}
+                  {g.fat ? formatNutrient("fat", g.fat.value) : "—"} · Água{" "}
+                  {p.version.waterMl ? `${formatNumber(p.version.waterMl / 1000)} L` : "—"}
                 </p>
                 <div className="mt-2 flex gap-1">
                   <Button variant="ghost" size="sm" onClick={() => onUseAsBase(p.version)}>

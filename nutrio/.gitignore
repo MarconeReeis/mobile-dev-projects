@@ -30,6 +30,7 @@ src/routeTree.gen.ts
 .env
 .env.*
 !.env.example
+!.env.demo
 
 # Cache do TanStack Router
 .tanstack

@@ -18,7 +18,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { portionToAmount } from "@/domain/nutrition/calculations";
-import { matchesFoodQuery } from "@/domain/nutrition/foods";
+import { fromPer100, matchesFoodQuery } from "@/domain/nutrition/foods";
 import { DEFAULT_MEAL_NAMES, suggestMealName } from "@/domain/nutrition/meals";
 import type { Food, ISODate } from "@/domain/nutrition/types";
 import { useFoods, useRecentFoods } from "@/features/foods/api";
@@ -93,6 +93,12 @@ export function AddFoodDialog({
       </DialogContent>
     </Dialog>
   );
+}
+
+/** Calorias na quantidade de referência do alimento. */
+function kcalAtBase(food: Food) {
+  const kcal = fromPer100(food.per100, food.baseAmount).kcal;
+  return kcal == null ? "—" : formatNutrient("kcal", kcal);
 }
 
 function BackButton({ onClick }: { onClick: () => void }) {
@@ -185,12 +191,10 @@ function SearchStep({
                 <span className="min-w-0">
                   <span className="block truncate font-medium">{f.name}</span>
                   <span className="block truncate text-xs text-muted-foreground">
-                    {f.brand ? `${f.brand} · ` : ""}por 100 {f.base}
+                    {f.brand ? `${f.brand} · ` : ""}por {formatNumber(f.baseAmount)} {f.base}
                   </span>
                 </span>
-                <span className="text-sm font-semibold tabular">
-                  {f.per100.kcal == null ? "—" : formatNutrient("kcal", f.per100.kcal)}
-                </span>
+                <span className="text-sm font-semibold tabular">{kcalAtBase(f)}</span>
               </button>
             </li>
           ))}
@@ -225,7 +229,8 @@ function QuantityStep({
   onDone: () => void;
 }) {
   const firstPortion = food.portions[0];
-  const [qty, setQty] = useState(firstPortion ? "1" : "100");
+  // Sem porção, sugere a quantidade de referência do cadastro (ex.: 35 g).
+  const [qty, setQty] = useState(firstPortion ? "1" : formatNumber(food.baseAmount, 3));
   const [unit, setUnit] = useState<Unit>(
     firstPortion ? { kind: "portion", id: firstPortion.id } : { kind: "base" },
   );
@@ -273,7 +278,7 @@ function QuantityStep({
         <BackButton onClick={onBack} />
         <DialogTitle className="font-display text-2xl">{food.name}</DialogTitle>
         <DialogDescription>
-          {food.brand ? `${food.brand} · ` : ""}Valores por 100 {food.base}
+          {food.brand ? `${food.brand} · ` : ""}Valores por {formatNumber(food.baseAmount)} {food.base}
         </DialogDescription>
       </DialogHeader>
 

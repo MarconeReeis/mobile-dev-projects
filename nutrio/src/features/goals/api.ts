@@ -32,8 +32,8 @@ function useGoalsMutation<TInput, TResult>(mutationFn: (input: TInput) => Promis
 }
 
 export const useSaveGoalVersion = () =>
-  useGoalsMutation(({ startDate, goals }: { startDate: ISODate; goals: Goals }) =>
-    repositories.goals.saveVersion(startDate, goals),
+  useGoalsMutation(({ startDate, goals, waterMl }: { startDate: ISODate; goals: Goals; waterMl?: number }) =>
+    repositories.goals.saveVersion(startDate, goals, waterMl),
   );
 
 export const useDeleteGoalVersion = () =>

@@ -1,9 +1,11 @@
 // Schema do formulário de alimento: os campos chegam como texto (vírgula decimal)
 // e viram um `FoodInput`. Campo vazio = não informado; "0" = zero.
+// Os nutrientes são digitados "por X g/ml" (quantidade de referência livre, ex.: 35 g da
+// embalagem) e convertidos para valores por 100 ao salvar.
 
 import { z } from "zod";
 
-import type { FoodInput } from "@/domain/nutrition/foods";
+import { fromPer100, toPer100, type FoodInput } from "@/domain/nutrition/foods";
 import { NUTRIENT_KEYS, type NutrientKey } from "@/domain/nutrition/nutrients";
 import type { Food } from "@/domain/nutrition/types";
 import { parseDecimal } from "@/lib/format";
@@ -23,6 +25,7 @@ export const foodFormSchema = z.object({
   brand: z.string().max(60, "Use até 60 caracteres."),
   category: z.string().max(40, "Use até 40 caracteres."),
   base: z.enum(["g", "ml"]),
+  baseAmount: positive,
   nutrients: z.object(
     Object.fromEntries(NUTRIENT_KEYS.map((k) => [k, optionalNonNegative])) as Record<
       NutrientKey,
@@ -47,12 +50,16 @@ const show = (v: number | null | undefined) => (v === null || v === undefined ? 
 
 /** Valores iniciais do formulário a partir de um alimento (ou vazios). */
 export function toFormValues(food?: Partial<Food>): FoodFormValues {
+  const baseAmount = food?.baseAmount ?? 100;
+  // Mostra os valores na quantidade em que foram informados (ex.: por 35 g).
+  const atBase = fromPer100(food?.per100 ?? {}, baseAmount);
   return {
     name: food?.name ?? "",
     brand: food?.brand ?? "",
     category: food?.category ?? "",
     base: food?.base ?? "g",
-    nutrients: Object.fromEntries(NUTRIENT_KEYS.map((k) => [k, show(food?.per100?.[k])])) as Record<
+    baseAmount: show(baseAmount),
+    nutrients: Object.fromEntries(NUTRIENT_KEYS.map((k) => [k, show(atBase[k])])) as Record<
       NutrientKey,
       string
     >,
@@ -63,12 +70,15 @@ export function toFormValues(food?: Partial<Food>): FoodFormValues {
 
 /** Converte os valores validados do formulário na entrada do repositório. */
 export function toFoodInput(values: FoodFormValues): FoodInput {
+  const baseAmount = parseDecimal(values.baseAmount)!;
+  const atBase = Object.fromEntries(NUTRIENT_KEYS.map((k) => [k, parseDecimal(values.nutrients[k])]));
   return {
     name: values.name,
     brand: values.brand,
     category: values.category,
     base: values.base,
-    per100: Object.fromEntries(NUTRIENT_KEYS.map((k) => [k, parseDecimal(values.nutrients[k])])),
+    per100: toPer100(atBase, baseAmount),
+    baseAmount,
     portions: values.portions.map((p) => ({ id: p.id, name: p.name, amount: parseDecimal(p.amount)! })),
     notes: values.notes,
   };

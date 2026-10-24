@@ -35,6 +35,7 @@ const foodRow: FoodRow = {
   brand: null,
   category: "Padaria",
   base: "g",
+  base_amount: 35,
   favorite: true,
   archived: false,
   notes: null,
@@ -54,12 +55,13 @@ describe("mapeadores Supabase", () => {
     });
     expect(food.per100).toMatchObject({ kcal: 253, satFat: 0.8, transFat: 0, sodium: null, vitC: null });
     expect(food.brand).toBeUndefined();
+    expect(food.baseAmount).toBe(35);
     expect(food.portions.map((p) => p.name)).toEqual(["1 fatia", "2 fatias"]);
   });
 
   it("ida e volta das colunas do alimento", () => {
-    const row = foodToRow({ name: "Pão", base: "g", per100: foodFromRow(foodRow).per100, portions: [] });
-    expect(row).toMatchObject({ sat_fat: 0.8, trans_fat: 0, vit_c: null, brand: null });
+    const row = foodToRow({ name: "Pão", base: "g", baseAmount: 100, per100: foodFromRow(foodRow).per100, portions: [] });
+    expect(row).toMatchObject({ sat_fat: 0.8, trans_fat: 0, vit_c: null, brand: null, base_amount: 100 });
   });
 
   it("refeição: horário curto, itens ordenados e porção só quando completa", () => {
@@ -104,11 +106,13 @@ describe("mapeadores Supabase", () => {
       id: "g1",
       user_id: "u1",
       start_date: "2026-10-01",
+      water_ml: 2500,
       created_at: "",
       updated_at: "",
       goal_targets: [{ version_id: "g1", user_id: "u1", nutrient: "sat_fat", value: 20, kind: "limit" }],
     });
     expect(v.goals.satFat).toEqual({ value: 20, kind: "limit" });
+    expect(v.waterMl).toBe(2500);
     expect(goalsToJson(v.goals)).toEqual({ sat_fat: { value: 20, kind: "limit" } });
   });
 });

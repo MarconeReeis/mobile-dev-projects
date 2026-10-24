@@ -53,6 +53,9 @@
   --color-fat-soft: var(--fat-soft);
   --color-fiber: var(--fiber);
   --color-fiber-soft: var(--fiber-soft);
+  --color-water: var(--water);
+  --color-water-soft: var(--water-soft);
+  --color-water-strong: var(--water-strong);
   --color-over: var(--over);
   --color-over-soft: var(--over-soft);
 
@@ -110,6 +113,9 @@
   --fat-soft: oklch(0.94 0.03 245);
   --fiber: oklch(0.62 0.12 165);
   --fiber-soft: oklch(0.94 0.04 165);
+  --water: oklch(0.72 0.13 225);
+  --water-soft: oklch(0.94 0.04 220);
+  --water-strong: oklch(0.48 0.12 235);
   --over: oklch(0.6 0.13 55);
   --over-soft: oklch(0.95 0.04 60);
 

@@ -3,7 +3,7 @@
 import type { FoodInput } from "@/domain/nutrition/foods";
 import type { Goals } from "@/domain/nutrition/goals";
 import { NUTRIENT_KEYS, type NutrientKey } from "@/domain/nutrition/nutrients";
-import type { Food, GoalVersion, Meal, MealItem, Nutrients } from "@/domain/nutrition/types";
+import type { Food, GoalVersion, Meal, MealItem, Nutrients, WaterEntry } from "@/domain/nutrition/types";
 import type { Profile, ProfileInput } from "@/domain/profile/types";
 
 import type { Database } from "./database.types";
@@ -16,6 +16,7 @@ export type MealItemRow = Tables["meal_items"]["Row"];
 export type GoalVersionRow = Tables["goal_versions"]["Row"];
 export type GoalTargetRow = Tables["goal_targets"]["Row"];
 export type ProfileRow = Tables["profiles"]["Row"];
+export type WaterRow = Tables["water_entries"]["Row"];
 type DbNutrient = Database["public"]["Enums"]["nutrient_key"];
 
 /** Nome da coluna/enum no banco para cada nutriente do app. */
@@ -60,6 +61,7 @@ export function foodFromRow(row: FoodRow & { food_portions?: PortionRow[] }): Fo
     category: row.category ?? undefined,
     base: row.base,
     per100: nutrientsFromRow(row),
+    baseAmount: row.base_amount,
     portions: [...(row.food_portions ?? [])]
       .sort((a, b) => a.position - b.position)
       .map((p) => ({ id: p.id, name: p.name, amount: p.amount })),
@@ -76,6 +78,7 @@ export function foodToRow(input: FoodInput) {
     brand: input.brand ?? null,
     category: input.category ?? null,
     base: input.base,
+    base_amount: input.baseAmount,
     notes: input.notes ?? null,
     ...nutrientsToRow(input.per100),
   };
@@ -119,7 +122,11 @@ export function goalVersionFromRow(row: GoalVersionRow & { goal_targets?: GoalTa
   for (const t of row.goal_targets ?? []) {
     goals[NUTRIENT_FROM_COLUMN[t.nutrient]] = { value: t.value, kind: t.kind };
   }
-  return { id: row.id, startDate: row.start_date, goals };
+  return { id: row.id, startDate: row.start_date, goals, waterMl: row.water_ml ?? undefined };
+}
+
+export function waterFromRow(row: WaterRow): WaterEntry {
+  return { id: row.id, date: row.date, time: shortTime(row.time), ml: row.ml };
 }
 
 /** Metas no formato esperado pela função `save_goal_version` ({"sat_fat": {...}}). */

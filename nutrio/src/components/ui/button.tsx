@@ -17,6 +17,7 @@ const buttonVariants = cva(
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary-strong underline-offset-4 hover:underline",
         fab: "bg-primary text-primary-foreground shadow-float hover:brightness-95 active:scale-95",
+        water: "bg-water-soft text-water-strong hover:bg-water/25 active:scale-[0.98]",
       },
       size: {
         default: "h-10 px-5",

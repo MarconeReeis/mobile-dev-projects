@@ -47,6 +47,27 @@ export class GoalValidationError extends Error {
 
 /** Valida as metas: valores positivos e ao menos uma meta definida. */
 export function normalizeGoals(goals: Goals): Goals {
+  const out = cleanGoals(goals);
+  if (Object.keys(out).length === 0) throw new GoalValidationError("Defina ao menos uma meta.");
+  return out;
+}
+
+/**
+ * Valida uma versão de metas completa: nutrientes e meta de água (ml).
+ * Basta uma das duas existir; uma versão só com meta de água é válida.
+ */
+export function normalizeGoalVersion(goals: Goals, waterMl?: number): { goals: Goals; waterMl?: number } {
+  if (waterMl !== undefined && (!Number.isFinite(waterMl) || waterMl <= 0)) {
+    throw new GoalValidationError("A meta de água deve ser maior que zero.");
+  }
+  const clean = cleanGoals(goals);
+  if (Object.keys(clean).length === 0 && waterMl === undefined) {
+    throw new GoalValidationError("Defina ao menos uma meta.");
+  }
+  return { goals: clean, waterMl };
+}
+
+function cleanGoals(goals: Goals): Goals {
   const out: Goals = {};
   for (const key of NUTRIENT_KEYS) {
     const goal: Goal | undefined = goals[key];
@@ -58,7 +79,6 @@ export function normalizeGoals(goals: Goals): Goals {
       throw new GoalValidationError("Tipo de meta inválido.");
     out[key] = { value: goal.value, kind: goal.kind };
   }
-  if (Object.keys(out).length === 0) throw new GoalValidationError("Defina ao menos uma meta.");
   return out;
 }
 

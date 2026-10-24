@@ -12,6 +12,7 @@ import { SUGGESTED_CATEGORIES } from "@/domain/nutrition/foods";
 import { NUTRIENTS, type NutrientKey } from "@/domain/nutrition/nutrients";
 import type { Food } from "@/domain/nutrition/types";
 import { useCreateFood, useFoods, useUpdateFood } from "@/features/foods/api";
+import { formatNumber, parseDecimal } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
 import { foodFormSchema, toFoodInput, toFormValues, type FoodFormValues } from "../food-form-schema";
@@ -49,6 +50,9 @@ export function FoodForm({
   const { errors } = form.formState;
   const portions = useFieldArray({ control: form.control, name: "portions" });
   const base = useWatch({ control: form.control, name: "base" });
+  const baseAmountText = useWatch({ control: form.control, name: "baseAmount" });
+  const baseAmount = parseDecimal(baseAmountText);
+  const baseLabel = baseAmount && baseAmount > 0 ? `${formatNumber(baseAmount)} ${base}` : `… ${base}`;
 
   const categories = [
     ...new Set([
@@ -112,33 +116,59 @@ export function FoodForm({
           </Field>
         </div>
         <div className="space-y-1.5">
-          <p className="text-sm font-medium" id={id("base-label")}>
-            Base da informação nutricional
-          </p>
-          <div className="flex gap-2" role="radiogroup" aria-labelledby={id("base-label")}>
-            {(["g", "ml"] as const).map((b) => (
-              <button
-                key={b}
-                type="button"
-                role="radio"
-                aria-checked={base === b}
-                onClick={() => form.setValue("base", b)}
-                className={cn(
-                  "rounded-full px-4 py-2 text-sm font-semibold transition-colors",
-                  base === b
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-muted text-muted-foreground hover:text-foreground",
-                )}
-              >
-                por 100 {b}
-              </button>
-            ))}
+          <Label htmlFor={id("base-amount")}>Valores nutricionais informados por</Label>
+          <div className="flex flex-wrap items-center gap-2">
+            <Input
+              id={id("base-amount")}
+              inputMode="decimal"
+              className="h-10 w-24 rounded-xl text-right tabular"
+              aria-invalid={!!errors.baseAmount}
+              aria-describedby={id("base-hint")}
+              {...form.register("baseAmount")}
+            />
+            <div className="flex gap-1 rounded-full bg-muted p-1" role="radiogroup" aria-label="Unidade">
+              {(["g", "ml"] as const).map((b) => (
+                <button
+                  key={b}
+                  type="button"
+                  role="radio"
+                  aria-checked={base === b}
+                  onClick={() => form.setValue("base", b)}
+                  className={cn(
+                    "rounded-full px-4 py-1.5 text-sm font-semibold transition-colors",
+                    base === b
+                      ? "bg-primary text-primary-foreground"
+                      : "text-muted-foreground hover:text-foreground",
+                  )}
+                >
+                  {b}
+                </button>
+              ))}
+            </div>
           </div>
+          {errors.baseAmount ? (
+            <p className="text-xs font-medium text-destructive">{errors.baseAmount.message}</p>
+          ) : (
+            <p id={id("base-hint")} className="text-xs text-muted-foreground">
+              Digite como está na embalagem (ex.: porção de 35 {base}). O app converte para 100 {base} nos
+              cálculos.
+            </p>
+          )}
         </div>
       </fieldset>
 
-      <NutrientFieldset legend="Energia e macronutrientes" keys={MACRO_FIELDS} form={form} id={id} />
-      <NutrientFieldset legend="Outros nutrientes" keys={OTHER_FIELDS} form={form} id={id} />
+      <NutrientFieldset
+        legend={`Energia e macronutrientes · por ${baseLabel}`}
+        keys={MACRO_FIELDS}
+        form={form}
+        id={id}
+      />
+      <NutrientFieldset
+        legend={`Outros nutrientes · por ${baseLabel}`}
+        keys={OTHER_FIELDS}
+        form={form}
+        id={id}
+      />
 
       <fieldset className="grid gap-3">
         <legend className={LEGEND}>Porções</legend>

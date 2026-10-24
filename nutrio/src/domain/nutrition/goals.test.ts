@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { macroEnergyEstimate, normalizeGoals, versionPeriods } from "./goals";
+import { macroEnergyEstimate, normalizeGoals, normalizeGoalVersion, versionPeriods } from "./goals";
 import type { GoalVersion } from "./types";
 
 describe("normalizeGoals", () => {
@@ -53,5 +53,16 @@ describe("macroEnergyEstimate", () => {
 
   it("sem macros, sem estimativa", () => {
     expect(macroEnergyEstimate({ kcal: { value: 2000, kind: "target" } })).toBeNull();
+  });
+});
+
+describe("normalizeGoalVersion", () => {
+  it("aceita versão só com meta de água", () => {
+    expect(normalizeGoalVersion({}, 2500)).toEqual({ goals: {}, waterMl: 2500 });
+  });
+
+  it("rejeita versão vazia e meta de água inválida", () => {
+    expect(() => normalizeGoalVersion({})).toThrow(/ao menos uma/);
+    expect(() => normalizeGoalVersion({ kcal: { value: 2000, kind: "target" } }, 0)).toThrow(/água/);
   });
 });

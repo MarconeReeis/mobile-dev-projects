@@ -15,6 +15,7 @@ import { useMealsOn } from "@/features/meals/api";
 import { AddFoodDialog } from "@/features/meals/components/add-food-dialog";
 import { MealCard } from "@/features/meals/components/meal-card";
 import { useProfile } from "@/features/profile/api";
+import { WaterCard } from "@/features/water/components/water-card";
 import { formatDate, weekdayLong } from "@/lib/dates";
 import { formatNutrient } from "@/lib/format";
 
@@ -101,6 +102,8 @@ function DayContent({ date, meals, goals }: { date: ISODate; meals: Meal[]; goal
           </div>
         ))}
       </section>
+
+      <WaterCard date={date} />
 
       {meals.length === 0 ? (
         <section className="flex flex-col items-center gap-3 surface px-6 py-12 text-center lg:col-span-2">

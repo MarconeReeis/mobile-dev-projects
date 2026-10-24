@@ -23,11 +23,27 @@ export function toGoalForm(goals: Goals | undefined): GoalFormValues {
   );
 }
 
-export type GoalFormResult =
-  { ok: true; goals: Goals } | { ok: false; errors: Partial<Record<NutrientKey, string>>; empty: boolean };
+/** Texto do campo de meta de água (ml) a partir do valor salvo. */
+export function toWaterField(waterMl: number | undefined): string {
+  return waterMl === undefined ? "" : editable.format(waterMl);
+}
 
-/** Valida o editor. Mantém metas de nutrientes que não aparecem no editor (`keep`). */
-export function fromGoalForm(values: GoalFormValues, keep: Goals = {}): GoalFormResult {
+export type GoalFormResult =
+  | { ok: true; goals: Goals; waterMl?: number }
+  | {
+      ok: false;
+      errors: Partial<Record<NutrientKey, string>>;
+      waterError?: string;
+      /** Nenhuma meta definida (nem nutrientes, nem água). */
+      empty: boolean;
+    };
+
+/**
+ * Valida o editor. Mantém metas de nutrientes que não aparecem no editor (`keep`).
+ * `water` é o texto da meta de água em ml; vazio = sem meta de água.
+ * A versão é válida com nutrientes, só com água, ou com os dois.
+ */
+export function fromGoalForm(values: GoalFormValues, keep: Goals = {}, water = ""): GoalFormResult {
   const goals: Goals = {};
   for (const [k, g] of Object.entries(keep) as [NutrientKey, Goals[NutrientKey]][]) {
     if (g && !EDITABLE_GOAL_KEYS.includes(k)) goals[k] = g;
@@ -41,9 +57,14 @@ export function fromGoalForm(values: GoalFormValues, keep: Goals = {}): GoalForm
     if (!Number.isFinite(n) || n <= 0) errors[k] = "Use um número maior que zero.";
     else goals[k] = { value: n, kind: field.kind };
   }
-  const empty = Object.keys(goals).length === 0;
-  if (Object.keys(errors).length > 0 || empty) return { ok: false, errors, empty };
-  return { ok: true, goals };
+  const waterParsed = parseDecimal(water);
+  const waterInvalid = waterParsed !== null && (!Number.isFinite(waterParsed) || waterParsed <= 0);
+  const waterError = waterInvalid ? "Use um número maior que zero." : undefined;
+  const waterMl = waterParsed !== null && !waterInvalid ? waterParsed : undefined;
+
+  const empty = Object.keys(goals).length === 0 && waterMl === undefined;
+  if (Object.keys(errors).length > 0 || waterError || empty) return { ok: false, errors, waterError, empty };
+  return { ok: true, goals, waterMl };
 }
 
 /** Compara o editor com uma versão salva (mesmos números e tipos). */

@@ -10,7 +10,9 @@ insert into auth.users (id, email, raw_user_meta_data, aud, role) values
   ('22222222-2222-2222-2222-222222222222', 'bia@teste.dev', '{"name": "Bia"}', 'authenticated', 'authenticated');
 
 select results_eq(
-  $$ select name, timezone from public.profiles order by name $$,
+  $$ select name, timezone from public.profiles
+      where user_id in ('11111111-1111-1111-1111-111111111111', '22222222-2222-2222-2222-222222222222')
+      order by name $$,
   $$ values ('Ana'::text, 'America/Manaus'::text), ('Bia', 'America/Sao_Paulo') $$,
   'cadastro cria o perfil com nome e fuso dos metadados'
 );
@@ -101,6 +103,48 @@ select throws_ok(
   'meta deve ser maior que zero'
 );
 
+-- Meta de água na versão.
+select results_eq(
+  $$ select replaced from public.save_goal_version('2026-10-15', '{}', 2500) $$,
+  $$ values (false) $$,
+  'versão só com meta de água é aceita'
+);
+select is(
+  (select water_ml from public.goal_versions where start_date = '2026-10-15'),
+  2500::numeric,
+  'meta de água gravada na versão'
+);
+select throws_ok(
+  $$ select * from public.save_goal_version('2026-10-16', '{}') $$,
+  '22023', null,
+  'versão sem nenhuma meta é rejeitada'
+);
+
+-- Registros de água.
+insert into public.water_entries (date, time, ml) values ('2026-10-21', '07:15', 300), ('2026-10-21', null, 250);
+select is(
+  (select sum(ml) from public.water_entries where date = '2026-10-21'),
+  550::numeric,
+  'registros de água somam o dia'
+);
+select throws_ok(
+  $$ insert into public.water_entries (date, ml) values ('2026-10-21', 0) $$,
+  '23514', null,
+  'registro de água precisa ser maior que zero'
+);
+
+-- Quantidade de referência do alimento.
+select is(
+  (select base_amount from public.foods where id = 'aaaaaaaa-0000-0000-0000-000000000001'),
+  100::numeric,
+  'alimento sem referência informada fica com 100'
+);
+select throws_ok(
+  $$ insert into public.foods (name, base, base_amount) values ('Ref zero', 'g', 0) $$,
+  '23514', null,
+  'quantidade de referência precisa ser maior que zero'
+);
+
 -- ---------------------------------------------------------------- usuária B
 set local request.jwt.claims to '{"sub": "22222222-2222-2222-2222-222222222222", "role": "authenticated"}';
 
@@ -110,6 +154,12 @@ select is((select count(*) from public.food_portions), 0::bigint, 'B não enxerg
 select is((select count(*) from public.meals), 0::bigint, 'B não enxerga refeições de A');
 select is((select count(*) from public.meal_items), 0::bigint, 'B não enxerga itens de A');
 select is((select count(*) from public.goal_versions), 0::bigint, 'B não enxerga metas de A');
+select is((select count(*) from public.water_entries), 0::bigint, 'B não enxerga registros de água de A');
+select throws_ok(
+  $$ insert into public.water_entries (user_id, date, ml) values ('11111111-1111-1111-1111-111111111111', '2026-10-21', 200) $$,
+  '42501', null,
+  'B não consegue registrar água em nome de A'
+);
 
 select is_empty(
   $$ update public.foods set name = 'hackeado' where id = 'aaaaaaaa-0000-0000-0000-000000000001' returning 1 $$,
@@ -175,7 +225,22 @@ select is(
   0::bigint,
   'metas de A foram removidas'
 );
-select is((select count(*) from auth.users), 1::bigint, 'conta de B continua existindo');
+select is(
+  (select count(*) from public.water_entries where user_id = '11111111-1111-1111-1111-111111111111'),
+  0::bigint,
+  'registros de água de A foram removidos'
+);
+-- Por id: o banco pode ter outras contas (reais) além das de teste.
+select is(
+  (select count(*) from auth.users where id = '11111111-1111-1111-1111-111111111111'),
+  0::bigint,
+  'conta de A foi removida'
+);
+select is(
+  (select count(*) from auth.users where id = '22222222-2222-2222-2222-222222222222'),
+  1::bigint,
+  'conta de B continua existindo'
+);
 
 select * from finish();
 rollback;

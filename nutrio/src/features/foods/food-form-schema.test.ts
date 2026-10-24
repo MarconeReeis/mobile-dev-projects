@@ -46,3 +46,37 @@ describe("formulário de alimento", () => {
     expect(input.portions[0]).toEqual({ id: "p1", name: "1 fatia", amount: 25 });
   });
 });
+
+describe("quantidade de referência no formulário", () => {
+  it("digitar valores por 35 g salva por 100 g e lembra a referência", () => {
+    const values = toFormValues();
+    values.name = "Biscoito integral";
+    values.baseAmount = "35";
+    values.nutrients.kcal = "140";
+    values.nutrients.protein = "3,5";
+    values.nutrients.sodium = "";
+    const input = toFoodInput(foodFormSchema.parse(values));
+    expect(input.baseAmount).toBe(35);
+    expect(input.per100.kcal).toBeCloseTo(400);
+    expect(input.per100.protein).toBeCloseTo(10);
+    expect(input.per100.sodium).toBeNull();
+  });
+
+  it("ao editar, os valores voltam na referência informada", () => {
+    const values = toFormValues({
+      name: "Biscoito",
+      base: "g",
+      baseAmount: 35,
+      per100: { kcal: 400, protein: 10 },
+    });
+    expect(values.baseAmount).toBe("35");
+    expect(values.nutrients.kcal).toBe("140");
+    expect(values.nutrients.protein).toBe("3,5");
+  });
+
+  it("referência vazia ou zero é inválida", () => {
+    const values = toFormValues({ name: "X", base: "g" });
+    values.baseAmount = "0";
+    expect(foodFormSchema.safeParse(values).success).toBe(false);
+  });
+});

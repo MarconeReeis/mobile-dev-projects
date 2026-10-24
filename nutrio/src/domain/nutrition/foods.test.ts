@@ -1,11 +1,12 @@
 import { describe, expect, it } from "vitest";
 
-import { matchesFoodQuery, normalizeFoodInput, type FoodInput } from "./foods";
+import { fromPer100, matchesFoodQuery, normalizeFoodInput, toPer100, type FoodInput } from "./foods";
 
 const base: FoodInput = {
   name: "  Queijo minas  ",
   brand: " ",
   base: "g",
+  baseAmount: 100,
   per100: { kcal: 264, protein: 17.4, fiber: 0 },
   portions: [{ name: " 1 fatia ", amount: 30 }],
 };
@@ -45,5 +46,24 @@ describe("matchesFoodQuery", () => {
     expect(matchesFoodQuery(food, "CAMIL")).toBe(true);
     expect(matchesFoodQuery(food, "arroz")).toBe(false);
     expect(matchesFoodQuery(food, "  ")).toBe(true);
+  });
+});
+
+describe("quantidade de referência livre", () => {
+  it("valores por 35 g viram valores por 100 g, e voltam", () => {
+    const per35 = { kcal: 140, protein: 7, sodium: null, fiber: 0 };
+    const per100 = toPer100(per35, 35);
+    expect(per100.kcal).toBeCloseTo(400);
+    expect(per100.protein).toBeCloseTo(20);
+    expect(per100.sodium).toBeNull();
+    expect(per100.fiber).toBe(0);
+    const back = fromPer100(per100, 35);
+    expect(back.kcal).toBeCloseTo(140, 10);
+    expect(back.protein).toBeCloseTo(7, 10);
+  });
+
+  it("rejeita quantidade de referência zero ou negativa", () => {
+    expect(() => normalizeFoodInput({ ...base, baseAmount: 0 })).toThrow(/referência/);
+    expect(() => normalizeFoodInput({ ...base, baseAmount: -35 })).toThrow();
   });
 });

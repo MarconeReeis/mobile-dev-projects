@@ -20,6 +20,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { fromPer100 } from "@/domain/nutrition/foods";
 import type { Food } from "@/domain/nutrition/types";
 import { useDeleteFood, useDuplicateFood, useSetArchived, useSetFavorite } from "@/features/foods/api";
 import { formatNumber, formatNutrient } from "@/lib/format";
@@ -33,7 +34,8 @@ export function FoodCard({ food, used }: { food: Food; used: boolean }) {
   const setArchived = useSetArchived();
   const duplicate = useDuplicateFood();
   const deleteFood = useDeleteFood();
-  const p = food.per100;
+  // Valores na quantidade em que o alimento foi cadastrado (ex.: por 35 g).
+  const p = fromPer100(food.per100, food.baseAmount);
 
   const fail = (msg: string) => () => toast.error(msg);
 
@@ -121,7 +123,9 @@ export function FoodCard({ food, used }: { food: Food; used: boolean }) {
         <span className="font-display text-3xl font-bold">
           {p.kcal == null ? "—" : formatNutrient("kcal", p.kcal, false)}
         </span>
-        <span className="text-sm text-muted-foreground">kcal / 100 {food.base}</span>
+        <span className="text-sm text-muted-foreground">
+          kcal / {formatNumber(food.baseAmount)} {food.base}
+        </span>
       </p>
 
       <dl className="mt-3 grid grid-cols-3 gap-2 text-sm tabular">

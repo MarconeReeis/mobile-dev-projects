@@ -30,6 +30,8 @@ Objetivo: o app inteiro navegável e fiel ao protótipo, rodando sobre um reposi
 - [x] **Metas:** meta × limite por nutriente (principais e opcionais), versões por data de início sem alterar dias anteriores, substituição na mesma data com confirmação, aviso ao aplicar em datas passadas, histórico com períodos, "usar como base", excluir versão, estimativa 4/4/9 informativa
 - [x] **Perfil:** nome, nascimento, peso, altura, atividade e objetivo (opcionais), fuso horário com fusos do Brasil em destaque (define o "hoje" do app), exportação dos dados em JSON, exclusão de conta com confirmação digitada, termos e aviso de privacidade marcados como pendentes, aviso de que não substitui profissional
 - [x] Estados de carregamento, vazio e erro; toasts de feedback; prevenção de envio duplo em todas as telas
+- [x] **Água:** card no Resumo (copos, % da meta, atalhos 200/500 ml, outro valor, registros do dia com remoção) e meta diária de água na tela de Metas, por versão
+- [x] **Base livre nos alimentos:** valores informados por qualquer quantidade (ex.: 35 g da embalagem), convertidos para 100 g nos cálculos; detalhe mostra os dois
 - [ ] Metas no celular: barra fixa de salvar (hoje o botão fica no fim da página)
 
 ## Fase 2 — Persistência e contas
@@ -75,7 +77,6 @@ Não entram no escopo agora, ficam anotadas.
 
 **Acompanhamento**
 
-- Água (o NutriMio já tem essa lógica)
 - Peso e medidas com gráfico de evolução
 - Relatórios semanais/mensais, médias por nutriente
 - Lembretes de refeição (notificações locais)
